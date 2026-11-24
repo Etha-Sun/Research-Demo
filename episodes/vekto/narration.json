@@ -4,35 +4,35 @@
   "Vek01Open": [
    {
     "id": "Vek01Open-1",
-    "seconds": 7.0,
-    "en": "Episode four: Vekto. This is unpublished work in progress, so treat what follows as a status report.",
-    "zh": "第四集：Vekto。这是尚未发表、仍在进行的工作，请把接下来的内容看作一份进展报告。"
+    "seconds": 2.8,
+    "en": "Vekto: proving SIMD kernel migrations equivalent.",
+    "zh": "Vekto：证明 SIMD kernel 迁移前后等价。"
    },
    {
     "id": "Vek01Open-2",
-    "seconds": 9.7,
-    "en": "We have seen counterexamples drive proof repair, and we have seen that a proof is only as good as its spec and its checker.",
-    "zh": "我们已经看到 counterexample 如何推动证明修复，也看到一个证明的可信程度取决于它的 spec 和它的 checker。"
+    "seconds": 11.7,
+    "en": "Agents now translate and optimise SIMD kernels written with C intrinsics, and tests decide what is accepted. But a kernel can pass its tests and still change its behaviour.",
+    "zh": "如今 agent 会翻译和优化用 C intrinsic 写的 SIMD kernel，由测试决定是否接受。但一个 kernel 可以通过测试，却仍然改变了行为。"
    },
    {
     "id": "Vek01Open-3",
-    "seconds": 11.7,
-    "en": "Now the code is real optimised SIMD kernels. Ported to another instruction set, does a kernel still compute the same thing, and which assumptions does that answer rely on?",
-    "zh": "这一集的代码是真实的、经过优化的 SIMD kernel。移植到另一套指令集之后，kernel 还算出同样的结果吗？这个回答又依赖哪些假设？"
+    "seconds": 8.2,
+    "en": "Vekto asks whether two kernels on different instruction sets give the same outputs for every input the spec's preconditions allow.",
+    "zh": "Vekto 要回答的是：两套指令集上的两个 kernel，在 spec 前置条件允许的每一个输入上，输出是否都相同。"
    }
   ],
   "Vek02Hook": [
    {
     "id": "Vek02Hook-1",
-    "seconds": 9.3,
-    "en": "Here is a kernel from XNNPACK, written for Arm NEON. It takes the element-wise maximum of two float arrays, four floats per step.",
-    "zh": "这是 XNNPACK 中一个为 Arm NEON 写的 kernel。它对两个 float 数组逐元素取最大值，每一步处理四个 float。"
+    "seconds": 7.8,
+    "en": "Here is an XNNPACK kernel for Arm NEON: the element-wise maximum of two float arrays, four floats per step.",
+    "zh": "这是 XNNPACK 中一个 Arm NEON kernel：对两个 float 数组逐元素取最大值，每一步处理四个 float。"
    },
    {
     "id": "Vek02Hook-2",
     "seconds": 8.2,
-    "en": "An LLM-driven pipeline, SALTy-RN, ported it to RISC-V Vector, RVV, and optimised it. We call this final optimised version B-opt.",
-    "zh": "一个由 LLM 驱动的流水线 SALTy-RN 把它移植到 RISC-V Vector（RVV）并做了优化。我们把这个最终优化版本叫作 Bopt。"
+    "en": "An LLM-driven pipeline, SALTy-RN, translated it to RISC-V Vector, RVV, and optimised it. We call this final optimised version B-opt.",
+    "zh": "一个由 LLM 驱动的流水线 SALTy-RN 把它翻译到 RISC-V Vector（RVV）并做了优化。我们把这个最终优化版本叫作 Bopt。"
    },
    {
     "id": "Vek02Hook-3",
@@ -48,9 +48,9 @@
    },
    {
     "id": "Vek02Hook-5",
-    "seconds": 8.2,
-    "en": "This reproduces under QEMU at vector lengths 128, 256 and 512 bits, and swapping the inputs gives the same difference.",
-    "zh": "这个结果在 QEMU 中、向量长度 128、256 和 512 位下都能复现；交换两个输入，差异依然存在。"
+    "seconds": 7.4,
+    "en": "This reproduces under QEMU at vector lengths 128, 256 and 512 bits, with the inputs in either order.",
+    "zh": "这个结果在 QEMU 中、向量长度 128、256 和 512 位下都能复现，两个输入交换顺序也一样。"
    }
   ],
   "Vek03Lanes": [
@@ -62,85 +62,79 @@
    },
    {
     "id": "Vek03Lanes-2",
-    "seconds": 9.7,
-    "en": "An intrinsic is a C function for one such instruction. vmaxq_f32 takes two registers of four floats and computes the maximum lane by lane.",
-    "zh": "intrinsic 是对应一条这类指令的 C 函数。vmaxq_f32 接收两个各含四个 float 的寄存器，逐 lane 取最大值。"
+    "seconds": 8.6,
+    "en": "An intrinsic is a C function for one such instruction: vmaxq_f32 takes the maximum of two four-float registers, lane by lane.",
+    "zh": "intrinsic 是对应一条这类指令的 C 函数：vmaxq_f32 对两个各含四个 float 的寄存器逐 lane 取最大值。"
    },
    {
     "id": "Vek03Lanes-3",
-    "seconds": 10.1,
-    "en": "NEON registers have a fixed width. In RVV the register width, VLEN, differs between chips, and the program asks vsetvl how many elements it gets.",
+    "seconds": 9.3,
+    "en": "NEON registers have a fixed width. RVV's register width, VLEN, varies between chips, and the program asks vsetvl how many elements it gets.",
     "zh": "NEON 的寄存器宽度是固定的。RVV 的寄存器宽度 VLEN 因芯片而异，程序用 vsetvl 询问这次能处理多少个元素。"
    },
    {
     "id": "Vek03Lanes-4",
     "seconds": 8.2,
-    "en": "In our counterexample only lane zero matters: NaN against 1.0. That one lane is where the two instruction sets disagree.",
-    "zh": "在我们的 counterexample 中，只有第 0 个 lane 起作用：NaN 对 1.0。两套指令集正是在这一个 lane 上产生分歧。"
+    "en": "In this counterexample only lane zero matters: NaN against 1.0. That one lane is where the two instruction sets disagree.",
+    "zh": "在这个 counterexample 中，只有第 0 个 lane 起作用：NaN 对 1.0。两套指令集正是在这一个 lane 上产生分歧。"
    }
   ],
   "Vek04Resolve": [
    {
     "id": "Vek04Resolve-1",
     "seconds": 10.1,
-    "en": "Why? Vekto gives every intrinsic a lane model. Arm FMAX propagates a NaN operand. RVV vfmax implements IEEE 754 maximumNumber, which ignores a single NaN.",
-    "zh": "为什么？Vekto 给每个 intrinsic 一个 lane 模型。Arm FMAX 会传播 NaN 操作数；RVV vfmax 实现 IEEE 754 的 maximumNumber，会忽略单个 NaN。"
+    "en": "Why? Vekto gives every intrinsic an explicit definition. Arm FMAX propagates a NaN operand. RVV vfmax implements IEEE 754 maximumNumber, which ignores a single NaN.",
+    "zh": "为什么？Vekto 给每个 intrinsic 一个显式定义。Arm FMAX 会传播 NaN 操作数；RVV vfmax 实现 IEEE 754 的 maximumNumber，会忽略单个 NaN。"
    },
    {
     "id": "Vek04Resolve-2",
-    "seconds": 13.2,
-    "en": "Which side is wrong? Nothing on XNNPACK's call path checks for NaN, so the input can occur. And there is no reference: the maintainers say min and max NaN behaviour is not guaranteed.",
-    "zh": "哪一边错了？XNNPACK 的调用路径上没有任何 NaN 检查，所以这个输入确实可能出现。而且没有参考语义：维护者表示 min/max 的 NaN 行为不作保证。"
+    "seconds": 12.0,
+    "en": "Can this input occur? Yes: nothing on XNNPACK's call path checks for NaN. And XNNPACK does not guarantee how min and max treat NaN, so neither side is the reference.",
+    "zh": "这个输入会出现吗？会：XNNPACK 的调用路径上没有任何 NaN 检查。而且 XNNPACK 不保证 min 和 max 如何处理 NaN，所以哪一边都不是参考。"
    },
    {
     "id": "Vek04Resolve-3",
-    "seconds": 9.0,
-    "en": "Vekto keeps the main result exactly as found: the original A is not equivalent to B-opt. It is recorded as divergence DIV-001.",
-    "zh": "Vekto 按原样保留主结果：原始 A 与 Bopt 不等价。它被登记为分歧记录 DIV-001。"
+    "seconds": 7.4,
+    "en": "So the result stands as found: the original A is not equivalent to B-opt, recorded as divergence DIV-001.",
+    "zh": "所以结果按原样成立：原始 A 与 Bopt 不等价，登记为分歧 DIV-001。"
    },
    {
     "id": "Vek04Resolve-4",
-    "seconds": 12.0,
-    "en": "Separately, under an explicit condition, C-001, no NaN inputs, the register records a conditional result as passed and rechecked, counted on its own. That early evidence cannot be re-run here.",
-    "zh": "另外，在显式条件 C-001（输入不含 NaN）下，登记表记录了一个条件结果，已通过并经复检，单独计数。这批早期证据无法在当前环境重跑。"
+    "seconds": 7.8,
+    "en": "Under an explicit precondition, C-001, no NaN inputs, the pair is proved equivalent. That conditional result is counted separately.",
+    "zh": "在显式前置条件 C-001（输入不含 NaN）下，这一对被证明等价。这个条件结果单独计数。"
    },
    {
     "id": "Vek04Resolve-5",
-    "seconds": 13.2,
-    "en": "The alternative, repairing B-opt to propagate NaN, adds four statements after each vfmax. On Saturn RTL that costs 18.8 percent more cycles, as a geometric mean, and the repair was tested, not proved.",
-    "zh": "另一种做法是修复 Bopt 让它传播 NaN：在每个 vfmax 之后加四条语句。在 Saturn RTL 上，这使周期数增加 18.8%（几何平均）；这个修复做过测试，但没有被证明。"
+    "seconds": 9.7,
+    "en": "Repairing B-opt to propagate NaN takes four statements after each vfmax and costs 18.8 percent more cycles on Saturn RTL, as a geometric mean.",
+    "zh": "修复 Bopt 让它传播 NaN，需要在每个 vfmax 之后加四条语句；在 Saturn RTL 上，周期数增加 18.8%（几何平均）。"
    }
   ],
   "Vek05Testing": [
    {
     "id": "Vek05Testing-1",
-    "seconds": 5.9,
-    "en": "Why didn't testing catch this? The repository records three ways that checks miss it.",
-    "zh": "为什么测试没有发现？仓库记录了检查漏掉它的三种方式。"
+    "seconds": 8.6,
+    "en": "Why didn't the checks catch this? First, XNNPACK's random test buffers replace NaN with zero, so its NaN assertion never fires.",
+    "zh": "为什么检查没有发现它？第一，XNNPACK 的随机测试缓冲区会把 NaN 替换成 0，所以它的 NaN 断言从未触发。"
    },
    {
     "id": "Vek05Testing-2",
-    "seconds": 7.8,
-    "en": "First, XNNPACK's random test buffers replace NaN with zero, so its NaN assertion never fires on a NaN input.",
-    "zh": "第一，XNNPACK 的随机测试缓冲区会把 NaN 替换成 0，所以它的 NaN 断言从未在 NaN 输入上触发。"
+    "seconds": 7.4,
+    "en": "Second, QEMU leaves RVV tail lanes unchanged by default, which hides a tail-lane bug, XNN-003, from XNNPACK's tests.",
+    "zh": "第二，QEMU 默认保持 RVV 尾部 lane 不变，这让一个尾部 lane bug（XNN-003）在 XNNPACK 的测试中无法暴露。"
    },
    {
     "id": "Vek05Testing-3",
-    "seconds": 9.0,
-    "en": "Second, QEMU leaves RVV tail lanes unchanged by default, so a tail-lane bug we found, XNN-003, stays hidden from XNNPACK's own tests.",
-    "zh": "第二，QEMU 默认保持 RVV 尾部 lane 不变，于是我们发现的一个尾部 lane bug（XNN-003）在 XNNPACK 自带的测试中无法暴露。"
+    "seconds": 9.3,
+    "en": "Third, SALTy-RN's bounded checker said VERIFIED for this pair, because its NEON model ignored NaN; with the model fixed, it finds the counterexample.",
+    "zh": "第三，SALTy-RN 的有界检查器对这一对给出了 VERIFIED，因为它的 NEON 模型忽略了 NaN；修正模型之后，它就找到了这个 counterexample。"
    },
    {
     "id": "Vek05Testing-4",
-    "seconds": 10.9,
-    "en": "Third, SALTy-RN's own bounded checker said VERIFIED for this vmax pair, because its NEON model ignored NaN. With the model fixed, the same harness found the counterexample.",
-    "zh": "第三，SALTy-RN 自带的有界检查器对这一对 vmax 给出了 VERIFIED，因为它对这条 NEON 指令的模型忽略了 NaN。修正模型之后，同一个测试框架就找到了这个 counterexample。"
-   },
-   {
-    "id": "Vek05Testing-5",
-    "seconds": 12.4,
-    "en": "This is Vero's lesson again: a verdict is only as good as the model and the spec behind it. Vekto aims for equivalence on every input that the spec's preconditions allow.",
-    "zh": "这又是 Vero 的教训：结论的可信程度取决于背后的模型和 spec。Vekto 的目标是：在 spec 前置条件允许的每一个输入上都证明等价。"
+    "seconds": 5.9,
+    "en": "Vekto's goal is equivalence for all inputs permitted by the preconditions in the spec.",
+    "zh": "Vekto 的目标是：对 spec 前置条件允许的所有输入证明等价。"
    }
   ],
   "Vek06Level": [
@@ -152,29 +146,29 @@
    },
    {
     "id": "Vek06Level-2",
-    "seconds": 13.2,
-    "en": "At the assembly level we would need separate ISA models for fixed-width NEON and length-agnostic RVV, plus a correspondence between them, and those models cover exceptions and privileged execution that kernels never use.",
-    "zh": "在汇编层，需要分别为固定宽度的 NEON 和与向量长度无关的 RVV 建立 ISA 模型，再建立两者的对应关系；这些模型还涵盖 kernel 用不到的异常处理和特权执行。"
+    "seconds": 10.1,
+    "en": "At the assembly level, NEON and RVV need separate ISA models plus a correspondence between them, and those models also cover exceptions and privileged execution.",
+    "zh": "在汇编层，NEON 和 RVV 需要各自的 ISA 模型以及两者之间的对应关系；这些模型还涵盖异常处理和特权执行。"
    },
    {
     "id": "Vek06Level-3",
-    "seconds": 12.0,
-    "en": "Vekto works at the C level. Every supported intrinsic gets an explicit C definition of its numerical and memory behaviour, and human experts review these definitions against the ISA documentation.",
-    "zh": "Vekto 选择在 C 层工作。每个支持的 intrinsic 都有一个显式的 C 定义，描述其数值行为和内存行为，并由人类专家对照 ISA 文档审查这些定义。"
+    "seconds": 10.9,
+    "en": "Vekto works at the C level. Each supported intrinsic gets an explicit C definition of its numerical and memory behaviour, which experts review against the ISA documentation.",
+    "zh": "Vekto 在 C 层工作。每个支持的 intrinsic 都有一个显式的 C 定义，描述其数值行为和内存行为，由专家对照 ISA 文档审查。"
    }
   ],
   "Vek07Pipeline": [
    {
     "id": "Vek07Pipeline-1",
     "seconds": 5.9,
-    "en": "Here is the pipeline. It starts from the original kernels, kept byte-identical to upstream.",
-    "zh": "这是整个流水线。它从原始 kernel 出发，它们与上游逐字节一致。"
+    "en": "Here is the Vekto pipeline. It starts from the original kernels, byte-identical to upstream.",
+    "zh": "这是 Vekto 的流水线。它从原始 kernel 出发，它们与上游逐字节一致。"
    },
    {
     "id": "Vek07Pipeline-2",
-    "seconds": 12.0,
-    "en": "The C verifier, QCP, mishandles vectors passed by value, so a deterministic rule tool rewrites just the vector statements into pointer form. No language model or person edits the sources.",
-    "zh": "C 验证器 QCP 处理按值传递的向量时有缺陷，所以由一个确定性的规则工具只把涉及向量的语句改写成指针形式。源代码不由语言模型或人工修改。"
+    "seconds": 7.8,
+    "en": "Because QCP mishandles vectors passed by value, a deterministic rule tool rewrites only the vector statements into pointer form.",
+    "zh": "由于 QCP 处理按值传递的向量时有缺陷，一个确定性的规则工具只把涉及向量的语句改写成指针形式。"
    },
    {
     "id": "Vek07Pipeline-3",
@@ -184,79 +178,55 @@
    },
    {
     "id": "Vek07Pipeline-4",
-    "seconds": 9.3,
-    "en": "Intrinsic calls resolve to one shared contract library, differentially tested against real instructions: natively for x86, under QEMU for NEON, RVV and Hexagon.",
-    "zh": "intrinsic 调用统一对应一个共享的契约库，并与真实指令做差分测试：x86 在本机运行，NEON、RVV 和 Hexagon 在 QEMU 中运行。"
+    "seconds": 8.6,
+    "en": "Intrinsic calls resolve to one shared library of C semantic shims, differentially tested against the real instructions, natively or under QEMU.",
+    "zh": "intrinsic 调用统一对应一个共享的 C semantic shim 库，并与真实指令做差分测试，在本机或 QEMU 中运行。"
    },
    {
     "id": "Vek07Pipeline-5",
-    "seconds": 8.2,
-    "en": "The human-reviewed part is small: spec.c holds only equivalent, which runs both kernels on one input and relates their outputs.",
-    "zh": "需要人工审查的部分很小：spec.c 只包含函数 equivalent，它在同一输入上运行两个 kernel，并给出它们输出之间的关系。"
+    "seconds": 9.7,
+    "en": "Experts review only the equivalence spec and the verification feedback. The spec's function, equivalent, runs both kernels on one input and relates their outputs.",
+    "zh": "专家只需审查等价性 spec 和验证反馈。spec 中的函数 equivalent 在同一输入上运行两个 kernel，并给出它们输出之间的关系。"
    },
    {
     "id": "Vek07Pipeline-6",
-    "seconds": 7.4,
-    "en": "Finally, check.py re-runs everything from an empty directory, and a package counts only if all twelve gates pass.",
-    "zh": "最后，check.py 在一个空目录中把一切从头重跑；只有十二道 gate 全部通过，这个包才算数。"
+    "seconds": 7.0,
+    "en": "check.py re-runs everything from an empty directory, and a package counts only if all twelve gates pass.",
+    "zh": "check.py 在一个空目录中把一切从头重跑；只有十二道 gate 全部通过，这个包才算数。"
    },
    {
     "id": "Vek07Pipeline-7",
-    "seconds": 12.8,
-    "en": "When a proof fails, it becomes a concrete input, replayed on the original code, then triaged into an explicit condition, a minimal fix, or a recorded divergence. Our NaN took that path.",
-    "zh": "证明失败时，失败被转化为一个具体输入，在原始代码上重放，再分流为显式条件、最小修复或登记在案的分歧。我们的 NaN 走的就是这条路。"
+    "seconds": 11.3,
+    "en": "When a proof fails, the failure becomes a concrete input, replayed on the original code. Experts then add a missing precondition, guide a repair, or record a divergence.",
+    "zh": "证明失败时，失败被转化为一个具体输入，并在原始代码上重放。专家随后补上缺失的前置条件、指导修复，或登记一条分歧。"
    }
   ],
   "Vek08Gates": [
    {
     "id": "Vek08Gates-1",
-    "seconds": 10.9,
-    "en": "The twelve gates read like a checklist. The first four pin the inputs: sources identical to upstream, the rewrite regenerated byte for byte, libraries pinned and rebuilt.",
-    "zh": "这十二道 gate 就像一张检查清单。前四道固定输入：源代码与上游一致，改写结果逐字节重新生成，各个库固定版本并重新编译。"
-   },
-   {
-    "id": "Vek08Gates-2",
-    "seconds": 8.6,
-    "en": "Then the proofs: every condition is closed with Qed, including the equivalence units, and Print Assumptions may list only whitelisted axioms.",
-    "zh": "接着是证明：每个 verification condition（包括等价性单元）都以 Qed 结束，Print Assumptions 只能列出白名单内的公理。"
-   },
-   {
-    "id": "Vek08Gates-3",
     "seconds": 11.3,
-    "en": "Next, trust checks: each kernel contract must be textually identical wherever it appears, and a scan rejects goals that a known QCP soundness bug could make vacuously true.",
-    "zh": "然后是信任检查：每个 kernel 契约在出现的每一处都必须文本一致；另有一次扫描，排除那些可能因 QCP 一个已知 soundness bug 而空洞成立的目标。"
-   },
-   {
-    "id": "Vek08Gates-4",
-    "seconds": 12.4,
-    "en": "A concrete witness shows the precondition is satisfiable, so the proof is not about an empty input set, and every callee must be a proved body or a pinned library contract.",
-    "zh": "一个具体见证说明前置条件可以满足，因此证明讨论的不是空的输入集合。并且每个被调用函数都必须是已证明的函数体，或是固定版本的库契约。"
-   },
-   {
-    "id": "Vek08Gates-5",
-    "seconds": 5.9,
-    "en": "Last, the library models and the two original kernels are tested against each other.",
-    "zh": "最后，库模型与两个原始 kernel 相互做测试比对。"
+    "en": "The twelve gates pin the sources and libraries, require every condition closed with Qed and only whitelisted axioms, and check contracts, callees, a satisfiable precondition, and differential tests.",
+    "zh": "十二道 gate 固定源代码和库，要求每个 condition 都以 Qed 结束且只用白名单公理，并检查契约、被调用函数、前置条件可满足性以及差分测试。"
    }
   ],
   "Vek09Walk": [
    {
     "id": "Vek09Walk-1",
     "seconds": 7.4,
-    "en": "Now one complete package, x24-transposec, which transposes blocks of three-byte pixels. The source is XNNPACK's x86 SSSE3 kernel.",
+    "en": "Now one complete package: x24-transposec, which transposes blocks of three-byte pixels. The source is XNNPACK's x86 SSSE3 kernel.",
     "zh": "现在看一个完整的包：x24-transposec，它转置由三字节像素构成的块。源程序是 XNNPACK 的 x86 SSSE3 kernel。"
    },
    {
     "id": "Vek09Walk-2",
-    "seconds": 9.7,
-    "en": "It works on four-by-four tiles with 16-byte loads, unpacks and byte shuffles. Its loads may read past the bytes it needs, which XNNPACK declares.",
-    "zh": "它按四乘四的 tile 工作，使用 16 字节加载、unpack 和字节 shuffle。它的加载可能读到所需字节之外，XNNPACK 对此做了声明。"
+    "seconds": 7.4,
+    "en": "It works on four-by-four tiles with 16-byte loads, unpacks and shuffles; XNNPACK declares that these loads may over-read.",
+    "zh": "它按四乘四的 tile 工作，使用 16 字节加载、unpack 和 shuffle；XNNPACK 声明这些加载可能越界读取。"
    },
    {
     "id": "Vek09Walk-3",
-    "seconds": 10.9,
-    "en": "The RVV target is new code. It handles one column per pass: vsetvl picks how many rows fit, and a strided segment load does the transpose itself.",
-    "zh": "RVV 目标程序是新写的代码。它每一轮处理一列：vsetvl 决定能放下多少行，一条 strided segment load 本身就完成了转置。"
+    "seconds": 9.7,
+    "en": "The RVV target is new code: one column per pass, vsetvl picks how many rows fit, and a strided segment load does the transpose.",
+    "zh": "RVV 目标程序是新写的代码：每一轮处理一列，vsetvl 决定能放下多少行，一条 strided segment load 完成转置。"
    },
    {
     "id": "Vek09Walk-4",
@@ -266,9 +236,9 @@
    },
    {
     "id": "Vek09Walk-5",
-    "seconds": 13.6,
-    "en": "Its precondition names the conditions: blocks at least one by one, C-022, and the input window C-033, since x86 may read to the end of a 16-byte vector while RVV reads only a prefix.",
-    "zh": "它的前置条件写出了带编号的条件：块至少为一乘一，即 C-022；以及输入窗口 C-033，因为 x86 一侧可能读到 16 字节向量的末尾，而 RVV 只读其中的前缀。"
+    "seconds": 14.0,
+    "en": "The precondition names its conditions: blocks of at least one by one, C-022; no address wrap, C-024; and the input window, C-033, because x86 may read a full 16-byte vector where RVV reads a prefix.",
+    "zh": "前置条件写出了带编号的条件：块至少为一乘一（C-022）；地址不回绕（C-024）；以及输入窗口（C-033），因为 x86 可能读满一个 16 字节向量，而 RVV 只读其前缀。"
    },
    {
     "id": "Vek09Walk-6",
@@ -280,79 +250,73 @@
   "Vek10Results": [
    {
     "id": "Vek10Results-1",
-    "seconds": 9.3,
-    "en": "The supervisor re-ran check.py for this package from an empty directory. The record reports RESULT PASS: twelve of twelve gates, in 5,990 seconds.",
-    "zh": "监督者在一个空目录中为这个包重跑了 check.py。记录显示 RESULT PASS：十二道 gate 全部通过，用时 5,990 秒。"
+    "seconds": 6.3,
+    "en": "check.py re-ran this package from an empty directory: all twelve gates pass, in 5,990 seconds.",
+    "zh": "check.py 在一个空目录中重跑了这个包：十二道 gate 全部通过，用时 5,990 秒。"
    },
    {
     "id": "Vek10Results-2",
-    "seconds": 10.9,
-    "en": "QCP produced 435 verification conditions for the x86 kernel and 22 for the RVV kernel at each vector length, and all of them are closed in Coq.",
-    "zh": "QCP 为 x86 kernel 生成了 435 个 verification condition，为 RVV kernel 在每个向量长度下各生成 22 个，全部在 Coq 中证完。"
+    "seconds": 8.2,
+    "en": "QCP produced 435 verification conditions for the x86 kernel and 22 per vector length for RVV, all closed in Coq.",
+    "zh": "QCP 为 x86 kernel 生成了 435 个 verification condition，为 RVV 在每个向量长度下各生成 22 个，全部在 Coq 中证完。"
    },
    {
     "id": "Vek10Results-3",
-    "seconds": 12.8,
-    "en": "The assumptions stay on screen. The result holds at three fixed vector lengths, 128, 256 and 512 bits, not at any length, and under conditions C-022, C-024, C-031 and the window C-033.",
-    "zh": "假设要始终留在屏幕上。结果只在三个固定向量长度 128、256 和 512 位下成立，并非任意长度，且依赖条件 C-022、C-024、C-031 和输入窗口 C-033。"
+    "seconds": 7.4,
+    "en": "The result holds at vector lengths 128, 256 and 512 bits, under conditions C-022, C-024, C-031 and C-033.",
+    "zh": "结果在向量长度 128、256 和 512 位下成立，前提是条件 C-022、C-024、C-031 和 C-033。"
    },
    {
     "id": "Vek10Results-4",
-    "seconds": 10.5,
-    "en": "Globally, this is partial correctness, intrinsic semantics rest on reviewed contracts and tests rather than a formal ISA proof, and six constant tables are assumed aligned.",
-    "zh": "从全局看，这是部分正确性；intrinsic 的语义依赖经审查的契约和测试，而不是相对 ISA 的形式化证明；另外假设六个常量表是对齐的。"
+    "seconds": 9.7,
+    "en": "It is a partial-correctness result. The intrinsic definitions rest on reviewed contracts and differential tests, and six constant tables are modelled as 16-byte aligned.",
+    "zh": "这是一个部分正确性结果。intrinsic 定义以经审查的契约和差分测试为依据；六个常量表按 16 字节对齐建模。"
    },
    {
     "id": "Vek10Results-5",
-    "seconds": 7.8,
-    "en": "Of 25 edge cases outside the domain, 14 behave differently, such as block width zero: exactly what C-022 excludes.",
-    "zh": "在定义域之外的 25 个边界用例中，有 14 个行为不同，例如块宽为 0：这正是 C-022 排除的输入。"
+    "seconds": 7.4,
+    "en": "Outside the domain, 14 of 25 edge cases behave differently, such as block width zero, which C-022 excludes.",
+    "zh": "在定义域之外的 25 个边界用例中，有 14 个行为不同，例如块宽为 0，这正是 C-022 排除的输入。"
    }
   ],
   "Vek11Status": [
    {
     "id": "Vek11Status-1",
-    "seconds": 15.5,
-    "en": "As of November 23, 2026: E1 asks whether LLM-optimised RVV kernels verify against their NEON originals without rewriting. It is in progress: 17 approval records so far, most keeping the main result that A is not equivalent to B-opt.",
-    "zh": "截至 2026 年 11 月 23 日：E1 研究 LLM 优化后的 RVV kernel 能否不经改写、相对 NEON 原版得到验证。它仍在进行中：目前有 17 份审批记录，多数保留了“A 与 Bopt 不等价”的主结果。"
+    "seconds": 10.5,
+    "en": "E1 checks LLM-optimised RVV kernels against their 35 NEON originals and is in progress: of 17 approved pairs, 13 are not equivalent and 4 are equivalent.",
+    "zh": "E1 检查 LLM 优化后的 RVV kernel 与其 35 个 NEON 原版是否等价，仍在进行中：已批准的 17 对中，13 对不等价，4 对等价。"
    },
    {
     "id": "Vek11Status-2",
-    "seconds": 11.7,
-    "en": "E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations, with a Hexagon port of x64-transposec still in progress.",
-    "zh": "E2 把 RVV 和 Hexagon 缺少的 x86 操作翻译过去，并证明每次翻译：已批准 24 个迁移，x64-transposec 的 Hexagon 移植仍在进行中。"
+    "seconds": 10.1,
+    "en": "E2 translates x86 operations missing from RVV and Hexagon libraries, each with a proof: 24 migrations are approved, and one Hexagon port is in progress.",
+    "zh": "E2 把 RVV 和 Hexagon 库中缺少的 x86 操作翻译过去，并逐个证明：已批准 24 个迁移，另有一个 Hexagon 移植仍在进行中。"
    },
    {
     "id": "Vek11Status-3",
-    "seconds": 12.0,
-    "en": "E3 cross-checks independent XNNPACK implementations of the same operator: 14 pairs are approved, one pair was proved not equivalent, and three planned pairs have not started.",
-    "zh": "E3 交叉检查同一算子在 XNNPACK 中的不同独立实现：14 对已批准，一对被证明不等价，另有三对计划中的配对尚未开始。"
+    "seconds": 9.3,
+    "en": "E3 cross-checks independent XNNPACK implementations of one operator: 14 pairs are approved and one is proved not equivalent; three pairs have not started.",
+    "zh": "E3 交叉检查同一算子在 XNNPACK 中的不同独立实现：14 对已批准，一对被证明不等价；另有三对尚未开始。"
    },
    {
     "id": "Vek11Status-4",
-    "seconds": 8.6,
-    "en": "E4, one application-level program, with softmax as the candidate, has not started. So none of this is a program-level result yet.",
-    "zh": "E4 针对一个应用级程序，候选是 softmax，目前尚未开始。所以以上都还不是程序级的结果。"
+    "seconds": 5.1,
+    "en": "E4, an application-level program with softmax as the candidate, has not started.",
+    "zh": "E4 针对一个应用级程序，候选是 softmax，目前尚未开始。"
    }
   ],
   "Vek12Close": [
    {
     "id": "Vek12Close-1",
-    "seconds": 14.3,
-    "en": "Vekto does not claim termination or a link from C to machine code. Hexagon is modelled as 64-bit though it is 32-bit, in-place calls are not covered, and no bug found has been reported upstream yet.",
-    "zh": "Vekto 不声称终止性，也不声称 C 与机器码之间的对应。Hexagon 是 32 位平台，却按 64 位建模；原地调用没有覆盖；发现的 bug 目前都还没有向上游报告。"
+    "seconds": 11.7,
+    "en": "Vekto turns SIMD kernel equivalence into C program verification: each intrinsic has a reviewed C definition, and QCP and Coq prove equal outputs for every input the spec allows.",
+    "zh": "Vekto 把 SIMD kernel 的等价性变成 C 程序验证：每个 intrinsic 都有经审查的 C 定义，QCP 和 Coq 证明在 spec 允许的每个输入上输出相同。"
    },
    {
     "id": "Vek12Close-2",
-    "seconds": 14.0,
-    "en": "Across the series, the counterexample took four forms: a program state in ExVerus, a learned explanation in TopoVerus, an audit of a spec in Vero, and an input on which two kernels disagree in Vekto.",
-    "zh": "回顾整个系列，counterexample 有四种形态：ExVerus 中的程序状态，TopoVerus 中学到的解释，Vero 中对 spec 的审计，以及 Vekto 中让两个 kernel 产生分歧的输入。"
-   },
-   {
-    "id": "Vek12Close-3",
-    "seconds": 6.7,
-    "en": "And one trust thread held throughout: every proof re-checked, no spec silently weakened, every assumption stated.",
-    "zh": "贯穿始终的是同一条信任主线：每个证明都被重新检查，没有任何 spec 被悄悄削弱，每个假设都明确写出。"
+    "seconds": 12.4,
+    "en": "When a proof fails, the result is a concrete input, like the NaN in f32-vmax. It leads to a precondition, a repair, or a recorded divergence, never to a weaker spec.",
+    "zh": "证明失败时，得到的是一个具体输入，比如 f32-vmax 中的 NaN。它会引出一个前置条件、一次修复或一条登记在案的分歧，而不是一个被削弱的 spec。"
    }
   ]
  }

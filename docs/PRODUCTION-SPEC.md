@@ -27,16 +27,15 @@ episodes/<ep>/
    Chinese voice track. Keep technical terms in English inside the Chinese text (Verus, loop invariant, counterexample,
    SIMD, QCP, Coq, verification condition).
 5. **Length.** Each episode is 6 to 9 minutes of narration and has 8 to 12 scenes.
-6. **Shape of an episode.**
-   1. Series map with the current episode lit, plus a one-sentence recap of the previous episode. Episode 1 introduces
-      the whole series.
-   2. Hook: a concrete failure or question shown in code, not a definition.
-   3. Background: only the concepts the episode needs.
+6. **Shape of a video** (each video is self-contained; see docs/SERIES.md):
+   1. Title card (title, subtitle, authors, venue).
+   2. Hook: a concrete failure or question shown in code.
+   3. Background: only the concepts this video needs.
    4. Motivated example, step by step, in real code.
-   5. The method as an architecture diagram. The motivated example then flows through the diagram.
-   6. Results with citations.
-   7. Limitations: what the work does not claim.
-   8. Bridge to the next episode, then the series map again.
+   5. The method as an architecture diagram; the example then flows through it.
+   6. Key results, with citations.
+   7. Takeaway.
+   No series map, recaps, bridges or references to the other videos.
 7. **Code on screen.**
    - Show real code, verbatim from the paper or repository.
    - Trimming for the screen is allowed: drop unrelated lines and use `...`. Never change a line's meaning.
@@ -46,10 +45,12 @@ episodes/<ep>/
 8. **Numbers.** Every number on screen carries a `cite(...)` footnote, for example "ExVerus, Table 2" or
    "repo: build/.../APPROVAL-x24-rvv.json". No rounding that changes meaning. Do not compare numbers measured under
    different settings without saying so.
-9. **Honesty.**
-   - State the paper's claims at the strength the paper states them.
-   - Vekto is ongoing work. Mark results as established, in progress, or assumption, and show its modelling
-     assumptions (for example LP64 for HVX, fixed VLEN) on screen when the claim depends on them.
+9. **Paper first, stated plainly.**
+   - Follow the arXiv paper (figures, examples, numbers) at the strength it states them, with ordinary citation
+     footnotes.
+   - No defensive labels ("our reading", "illustrative", "not shown in the paper") and no hedging in the narration.
+   - Vekto (no paper): follow the repository's approved results and show its modelling assumptions where a claim
+     depends on them.
 10. **Style.**
     - Use only `common/style.py` colours and `common/components.py` helpers. Add a helper to components.py only if two
       episodes need it.

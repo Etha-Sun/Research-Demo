@@ -1,0 +1,20 @@
+# SOURCE: TopoVerus paper Figure 4 "Counterexample." box and the sentence below it, PDF p.9 (also App. B Case Study B, p.17).
+#   The figure presents this as the generated counterexample for Case B.
+# Verbatim text; only line breaks differ (rewrapped to fit the panel). "max pro"/"min price" in the PDF text layer are
+#   max_pro / min_price in the rendered figure.
+# ---- counterexample ----
+[State] price = [5,3,7]. Before the first loop iteration,
+i = 0, max_pro = 0, and min_price = i32::MAX.
+All input bounds hold.
+[Execution Trace] Verus checks the loop invariants at entry.
+The buggy invariant requires every pair in the whole array
+to have profit at most max_pro. Instantiate it with
+j = 0, k = 2. Then price[2] - price[0] = 7 - 5 = 2.
+[Violation] The invariant demands 2 <= max_pro = 0, which
+is false. The counterexample identifies the quantifier range
+as the root cause: before processing any day, the proof can
+only make claims about the empty prefix 0..i, not about the
+full input sequence.
+# ---- repair target ----
+The last invariant talks about all future days.
+It should only summarize the processed prefix: 0 <= j < k < i.

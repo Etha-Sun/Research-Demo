@@ -1,32 +1,26 @@
 {
  "episode": "topoverus",
  "scenes": {
-  "Topo01Map": [
+  "Topo01Title": [
    {
-    "id": "Topo01Map-1",
-    "seconds": 6.7,
-    "en": "Last time, ExVerus showed that a concrete counterexample is better feedback than a verifier's one-line error.",
-    "zh": "上一集，ExVerus 告诉我们：一个具体的 counterexample，比 verifier 的一行报错更有用。"
-   },
-   {
-    "id": "Topo01Map-2",
-    "seconds": 12.0,
-    "en": "This is episode two: TopoVerus, by Sun, Yang and Pei, at NeurIPS 2026. Its question is whether a model can learn to produce that counterexample itself, in a single pass.",
-    "zh": "这是第二集：TopoVerus，作者 Sun、Yang 和 Pei，发表于 NeurIPS 2026。它要回答的问题是：模型能否学会自己写出这个 counterexample，而且一次生成就完成。"
+    "id": "Topo01Title-1",
+    "seconds": 13.6,
+    "en": "TopoVerus: curriculum proof repair with learned counterexamples, by Sun, Yang and Pei, at NeurIPS 2026. Can a model learn to explain a failed proof with a concrete counterexample, then repair it, in one pass?",
+    "zh": "TopoVerus：用学习得到的 counterexample 做课程式证明修复，作者 Sun、Yang 和 Pei，发表于 NeurIPS 2026。模型能否学会用一个具体的 counterexample 解释失败的证明，然后修好它，而且一次生成就完成？"
    }
   ],
   "Topo02Hook": [
    {
     "id": "Topo02Hook-1",
-    "seconds": 13.2,
-    "en": "Here is a Verus proof for LeetCode 121, best time to buy and sell a stock. The postcondition says the result beats every pair of a buy day and a later sell day.",
-    "zh": "这是 LeetCode 121“买卖股票的最佳时机”的一个 Verus 证明。后置条件说：对任意一个买入日和之后的卖出日，结果都不小于它们的差价。"
+    "seconds": 14.3,
+    "en": "Here is the paper's case study: a Verus proof for LeetCode 121, best time to buy and sell a stock. The postcondition says the result bounds the profit of every buy day and later sell day.",
+    "zh": "这是论文中的 case study：LeetCode 121“买卖股票的最佳时机”的一个 Verus 证明。后置条件说：对任意一个买入日和之后的卖出日，结果都不小于它们的利润。"
    },
    {
     "id": "Topo02Hook-2",
-    "seconds": 11.7,
-    "en": "The loop tracks the cheapest price so far and the best profit so far. Its last invariant claims that no pair of days in the whole array beats max_pro.",
-    "zh": "循环维护到目前为止的最低价和最大利润。最后一条 loop invariant 声称：整个数组里任何一对日子的差价都不超过 max_pro。"
+    "seconds": 10.9,
+    "en": "The loop tracks the cheapest price and the best profit so far. Its last invariant claims that no pair of days in the whole array beats max_pro.",
+    "zh": "循环维护到目前为止的最低价和最大利润。最后一条 loop invariant 声称：整个数组里任何一对日子的利润都不超过 max_pro。"
    },
    {
     "id": "Topo02Hook-3",
@@ -36,9 +30,9 @@
    },
    {
     "id": "Topo02Hook-4",
-    "seconds": 11.7,
-    "en": "A repair model that sees only this line has to guess. To fix the proof reliably, it should first explain the failure: which state breaks the invariant, and why.",
-    "zh": "只看到这一行的修复模型只能去猜。要可靠地修好证明，它应该先解释失败：哪个程序状态破坏了 invariant，以及为什么。"
+    "seconds": 9.7,
+    "en": "A repair model that sees only this line has to guess. It should first explain the failure: which state breaks the invariant, and why.",
+    "zh": "只看到这一行的修复模型只能去猜。它应该先解释失败：哪个程序状态破坏了 invariant，以及为什么。"
    }
   ],
   "Topo03Background": [
@@ -56,23 +50,17 @@
    },
    {
     "id": "Topo03Background-3",
-    "seconds": 12.0,
-    "en": "ExVerus searched for such counterexamples and validated them at every repair, which costs inference time. TopoVerus moves that work into training, so the model writes the counterexample in one pass.",
-    "zh": "ExVerus 在每次修复时都要搜索并验证 counterexample，这会消耗推理开销。TopoVerus 把这部分工作挪到训练阶段，让模型一次就写出 counterexample。"
-   },
-   {
-    "id": "Topo03Background-4",
-    "seconds": 10.1,
-    "en": "No solver checks the model's counterexample. In the paper's words, it is useful when conditioning on it helps the model produce a safe, verifier-passing proof.",
-    "zh": "模型写出的 counterexample 不经过任何 solver 检查。用论文的话说：如果以它为条件能帮助模型写出安全且通过 verifier 的证明，它就是有用的。"
+    "seconds": 15.5,
+    "en": "Generating useful counterexamples at inference time usually needs costly iterative refinement. TopoVerus learns to write one in a single pass. Its key insight: a counterexample is useful when conditioning on it helps the model produce a safe, verifier-passing proof.",
+    "zh": "在推理时生成有用的 counterexample，通常需要代价高昂的迭代改进。TopoVerus 学会一次就写出 counterexample。它的核心想法是：如果以一个 counterexample 为条件能帮助模型写出安全且通过 verifier 的证明，它就是有用的。"
    }
   ],
   "Topo04Format": [
    {
     "id": "Topo04Format-1",
-    "seconds": 6.7,
-    "en": "Every TopoVerus response has the same shape. The paper's prompt asks for three sections, in order.",
-    "zh": "TopoVerus 的每个回答都有相同的结构。论文的 prompt 要求按顺序给出三个部分。"
+    "seconds": 6.3,
+    "en": "Every TopoVerus response has the same shape. The prompt asks for three sections, in order.",
+    "zh": "TopoVerus 的每个回答都有相同的结构。prompt 要求按顺序给出三个部分。"
    },
    {
     "id": "Topo04Format-2",
@@ -82,17 +70,17 @@
    },
    {
     "id": "Topo04Format-3",
-    "seconds": 10.5,
-    "en": "Here is that format filled in by TopoVerus for our max-profit proof, as recorded in the released case study. We will read it piece by piece.",
-    "zh": "这是 TopoVerus 针对我们的最大利润证明填写的结果，来自公开的 case study 记录。我们逐段来看。"
+    "seconds": 6.3,
+    "en": "For the max-profit proof, TopoVerus generates this counterexample. We will read it piece by piece.",
+    "zh": "针对这个最大利润证明，TopoVerus 生成了这个 counterexample。我们逐段来看。"
    }
   ],
   "Topo05Counterexample": [
    {
     "id": "Topo05Counterexample-1",
     "seconds": 8.6,
-    "en": "The state: prices is five, three, seven. Before the loop, i is zero and max_pro is zero. All input bounds hold.",
-    "zh": "状态：prices 是 5、3、7。循环开始前，i 为 0，max_pro 为 0。所有输入范围条件都满足。"
+    "en": "The state: price is five, three, seven. Before the loop, i is zero and max_pro is zero. All input bounds hold.",
+    "zh": "状态：price 是 5、3、7。循环开始前，i 为 0，max_pro 为 0。所有输入范围条件都满足。"
    },
    {
     "id": "Topo05Counterexample-2",
@@ -102,41 +90,29 @@
    },
    {
     "id": "Topo05Counterexample-3",
-    "seconds": 11.3,
-    "en": "The violation: the invariant demands that two is at most zero, which is false. Its range covers the whole array, but before the loop nothing has been processed.",
-    "zh": "违反：invariant 要求 2 小于等于 0，这是假的。它的范围覆盖了整个数组，但循环开始前还没有处理任何元素。"
+    "seconds": 11.7,
+    "en": "The violation: the invariant demands that two is at most zero, which is false. Before any day is processed, the proof can only make claims about the empty prefix.",
+    "zh": "违反：invariant 要求 2 小于等于 0，这是假的。在处理任何一天之前，证明只能对空前缀做出断言。"
    },
    {
     "id": "Topo05Counterexample-4",
-    "seconds": 7.0,
-    "en": "Three small numbers turn a one-line error into a precise cause: the quantifier range is too wide.",
-    "zh": "三个小数字，就把一行报错变成了一个精确的原因：量词的范围太宽了。"
+    "seconds": 5.9,
+    "en": "Three small numbers turn a one-line error into a precise cause: the quantifier range.",
+    "zh": "三个小数字，就把一行报错变成了一个精确的原因：量词的范围。"
    }
   ],
   "Topo06Repair": [
    {
     "id": "Topo06Repair-1",
     "seconds": 11.3,
-    "en": "The rationale follows from the counterexample: restrict the range to the processed prefix, k less than i. At i equal to zero, the claim is then vacuously true.",
-    "zh": "修复理由直接来自 counterexample：把范围限制在已处理的前缀上，也就是 k 小于 i。当 i 等于 0 时，这个断言就空真成立。"
+    "en": "The counterexample pinpoints a local correction. The last invariant talks about all future days; it should only summarize the processed prefix, j less than k less than i.",
+    "zh": "counterexample 指出了一个局部修正。最后一条 invariant 谈论的是所有未来的日子；它应该只概括已处理的前缀，也就是 j 小于 k 小于 i。"
    },
    {
     "id": "Topo06Repair-2",
-    "seconds": 3.2,
-    "en": "The repaired program changes exactly that range.",
-    "zh": "修复后的程序正好改了这个范围。"
-   },
-   {
-    "id": "Topo06Repair-3",
-    "seconds": 7.0,
-    "en": "The recorded output also deletes one other invariant: i equals zero implies min_price is the largest i32.",
-    "zh": "记录下来的输出还删掉了另一条 invariant：i 等于 0 时 min_price 等于 i32 的最大值。"
-   },
-   {
-    "id": "Topo06Repair-4",
-    "seconds": 13.6,
-    "en": "The paper reports this counterexample and this repair target. It does not report a Verus run of this exact program, and we could not run one, so we make no claim that it verifies.",
-    "zh": "论文报告了这个 counterexample 和这个修复目标。论文没有报告对这个程序本身的 Verus 运行结果，我们也没能运行，所以我们不声称它能通过验证。"
+    "seconds": 7.4,
+    "en": "A coarse invariant failure has become a localized repair target: replace the full-array range with the processed prefix.",
+    "zh": "一个笼统的 invariant 失败，变成了一个定位明确的修复目标：把整个数组的范围换成已处理的前缀。"
    }
   ],
   "Topo07Pipeline": [
@@ -148,9 +124,9 @@
    },
    {
     "id": "Topo07Pipeline-2",
-    "seconds": 15.1,
-    "en": "Stage one is counterexample-guided fine-tuning. A teacher model, Sonnet 4.6, sees the failed proof, the error, and the verified reference proof, and writes the diagnosis that leads to that known answer. That gives 461 trajectories from 249 programs.",
-    "zh": "第一阶段是 counterexample 引导的监督微调。教师模型 Sonnet 4.6 能看到失败的证明、报错和已验证的参考证明，并写出通向这个已知答案的诊断过程。这样得到来自 249 个程序的 461 条轨迹。"
+    "seconds": 11.3,
+    "en": "Stage one is fine-tuning. A teacher, Sonnet 4.6, sees the failed proof, the error and the verified reference proof, and writes the diagnosis: 461 trajectories from 249 programs.",
+    "zh": "第一阶段是监督微调。教师模型 Sonnet 4.6 能看到失败的证明、报错和已验证的参考证明，并写出诊断过程：来自 249 个程序的 461 条轨迹。"
    },
    {
     "id": "Topo07Pipeline-3",
@@ -161,8 +137,8 @@
    {
     "id": "Topo07Pipeline-4",
     "seconds": 7.4,
-    "en": "Before any reward, a safety gate checks that only proof annotations changed. An unsafe response gets zero reward.",
-    "zh": "在给奖励之前，安全门会检查是否只改动了证明标注。不安全的回答奖励为 0。"
+    "en": "A safety gate, the Lynette checker, confirms that only proof annotations changed. An unsafe response gets zero reward.",
+    "zh": "安全门，也就是 Lynette 检查器，确认只有证明标注被改动。不安全的回答奖励为 0。"
    },
    {
     "id": "Topo07Pipeline-5",
@@ -174,27 +150,27 @@
   "Topo08Order": [
    {
     "id": "Topo08Order-1",
-    "seconds": 6.7,
-    "en": "Why order? Take binary-search insertion, an illustrative example from the paper. Its proof needs five invariants.",
-    "zh": "为什么顺序重要？看论文里的一个示意例子：二分查找插入位置。它的证明需要五条 invariant。"
+    "seconds": 5.9,
+    "en": "Why order? The paper's motivating example is binary-search insertion. Its proof needs five invariants.",
+    "zh": "为什么顺序重要？论文的动机例子是二分查找插入位置。它的证明需要五条 invariant。"
    },
    {
     "id": "Topo08Order-2",
     "seconds": 12.0,
-    "en": "I1 bounds the array length. I2 and I3 keep low and high in range. I4 and I5 are the partition facts, and they are useful only once the bounds hold.",
+    "en": "I1 bounds the array length. I2 and I3 keep low and high in range. I4 and I5 are the partition facts, and they become useful only once the bounds hold.",
     "zh": "I1 约束数组长度。I2 和 I3 让 low 和 high 保持在范围内。I4 和 I5 是划分性质，只有在边界条件成立之后它们才有用。"
    },
    {
     "id": "Topo08Order-3",
-    "seconds": 12.0,
-    "en": "If an attempt skips I1 to I3, its counterexample is under-constrained. In the paper's illustration, it checks an index that contradicts its own state, and invents a value for mid.",
-    "zh": "如果一次尝试跳过了 I1 到 I3，它的 counterexample 就缺乏约束。在论文的示意中，它检查的下标和自己给出的状态相矛盾，还编造了 mid 的值。"
+    "seconds": 12.4,
+    "en": "Suppose an attempt omits I1 to I3 and has a wrong I5. Its counterexample is under-constrained: it checks an index that contradicts its own state, and invents a value for mid.",
+    "zh": "假设一次尝试漏掉了 I1 到 I3，而且 I5 写错了。它的 counterexample 缺乏约束：检查的下标和自己给出的状态相矛盾，还编造了 mid 的值。"
    },
    {
     "id": "Topo08Order-4",
-    "seconds": 14.0,
-    "en": "With the bounds in place, the counterexample is exact: nums is one, three, five, the target is five, and high is two. I5 then needs nums at two to exceed five, but it equals five.",
-    "zh": "有了边界条件，counterexample 就很精确：nums 是 1、3、5，target 是 5，high 是 2。这时 I5 要求 nums[2] 大于 5，但它等于 5。"
+    "seconds": 14.3,
+    "en": "With I1 to I4 in place, the counterexample is exact: nums is one, three, five, the target is five, and high is two. I5 then needs nums at two to exceed five, but it equals five.",
+    "zh": "有了 I1 到 I4，counterexample 就很精确：nums 是 1、3、5，target 是 5，high 是 2。这时 I5 要求 nums[2] 大于 5，但它等于 5。"
    },
    {
     "id": "Topo08Order-5",
@@ -206,15 +182,15 @@
   "Topo09GraphReward": [
    {
     "id": "Topo09GraphReward-1",
-    "seconds": 13.2,
-    "en": "TopoVerus turns this into a reward. Offline, it builds a dependency graph over the invariants of the verified reference proof. An edge means one invariant must hold before the other can be proven.",
-    "zh": "TopoVerus 把这一点变成奖励。它离线地在已验证参考证明的 invariant 之间构建依赖图。一条边表示：前一条 invariant 必须先成立，后一条才能被证明。"
+    "seconds": 12.4,
+    "en": "TopoVerus turns this into a reward. Offline, it builds a dependency graph over the reference proof's invariants: an edge means one must be established before the other can be inductively verified.",
+    "zh": "TopoVerus 把这一点变成奖励。它离线地在参考证明的 invariant 之间构建依赖图：一条边表示前一条必须先成立，后一条才能被归纳地验证。"
    },
    {
     "id": "Topo09GraphReward-2",
-    "seconds": 8.6,
-    "en": "Here is our reading of the paper's figure: I1 points to I2 and I3, and both point to I4 and I5.",
-    "zh": "这是我们对论文图示的理解：I1 指向 I2 和 I3，二者又都指向 I4 和 I5。"
+    "seconds": 14.7,
+    "en": "For binary search, I1 comes before the bounds I2 and I3, and the bounds come before I4 and I5. The first attempt was missing I1 to I3. The second had them, so only the wrong I5 remained.",
+    "zh": "在二分查找中，I1 在边界 I2 和 I3 之前，边界又在 I4 和 I5 之前。第一次尝试缺了 I1 到 I3；第二次已经有了它们，只剩下写错的 I5。"
    },
    {
     "id": "Topo09GraphReward-3",
@@ -224,9 +200,9 @@
    },
    {
     "id": "Topo09GraphReward-4",
-    "seconds": 10.5,
-    "en": "In our own calculation with this edge set, writing I1 to I5 in order scores one. Partition facts first scores one third. Fully reversed scores zero.",
-    "zh": "按这个边集，我们自己算了一下：按 I1 到 I5 的顺序写，得分为 1；先写划分性质，得分为三分之一；完全倒序，得分为 0。"
+    "seconds": 9.3,
+    "en": "So the reward favours repairs that establish prerequisite facts first. Counterexamples for the dependent invariants are then checked in a better-constrained proof state.",
+    "zh": "所以，这个奖励鼓励先建立前提事实的修复。这样，针对依赖它们的 invariant 的 counterexample，就是在约束更充分的证明状态下检查的。"
    },
    {
     "id": "Topo09GraphReward-5",
@@ -238,27 +214,27 @@
   "Topo10Safety": [
    {
     "id": "Topo10Safety-1",
-    "seconds": 8.2,
-    "en": "Why the safety gate? Because \"Verus says verified\" can be gamed. Here is a test case from the released code.",
-    "zh": "为什么需要安全门？因为“Verus 说通过了”是可以被钻空子的。这是公开代码里的一个测试用例。"
+    "seconds": 9.7,
+    "en": "Why the safety gate? Because passing Verus can be gamed. This function requires x greater than one and promises a result greater than one.",
+    "zh": "为什么需要安全门？因为通过 Verus 是可以被钻空子的。这个函数要求 x 大于 1，并承诺结果大于 1。"
    },
    {
     "id": "Topo10Safety-2",
-    "seconds": 15.5,
-    "en": "The function requires x greater than one and promises a result greater than one. It copies x into y, assumes y is greater than one, then subtracts one. For x equal to two it returns one, so verification fails.",
-    "zh": "这个函数要求 x 大于 1，并承诺结果大于 1。它把 x 复制给 y，假设 y 大于 1，然后减 1。当 x 等于 2 时返回 1，所以验证失败。"
+    "seconds": 10.1,
+    "en": "It copies x into y, assumes y is greater than one, then subtracts one. For x equal to two it returns one, so verification fails.",
+    "zh": "它把 x 复制给 y，假设 y 大于 1，然后减 1。当 x 等于 2 时返回 1，所以验证失败。"
    },
    {
     "id": "Topo10Safety-3",
-    "seconds": 8.6,
-    "en": "Now move the existing assume after the subtraction. No new assumption is added, yet the test expects Verus to report verified.",
-    "zh": "现在把已有的 assume 挪到减法之后。没有新增任何假设，但测试预期 Verus 会报告 verified。"
+    "seconds": 7.4,
+    "en": "Now move the existing assume after the subtraction. No new assumption is added, and Verus accepts the program.",
+    "zh": "现在把已有的 assume 挪到减法之后。没有新增任何假设，Verus 就接受了这个程序。"
    },
    {
     "id": "Topo10Safety-4",
-    "seconds": 10.1,
-    "en": "The gate compares the two programs and says unsafe, because an existing assumption moved to a new place. In training, this response gets zero reward.",
-    "zh": "安全门比较两个程序，判定为 unsafe，因为一条已有的假设被挪到了新的位置。在训练中，这个回答的奖励为 0。"
+    "seconds": 6.7,
+    "en": "The gate compares the two programs and reports unsafe. In training, this response gets zero reward.",
+    "zh": "安全门比较两个程序，判定为 unsafe。在训练中，这个回答的奖励为 0。"
    }
   ],
   "Topo11Results": [
@@ -270,9 +246,9 @@
    },
    {
     "id": "Topo11Results-2",
-    "seconds": 12.4,
-    "en": "That is 5.7 and 6.3 points above Sonnet 4.5, the strongest prompted baseline. Note the settings differ: the baselines repair iteratively with verifier feedback, TopoVerus uses three chains of ten iterations.",
-    "zh": "这比最强的 prompt 基线 Sonnet 4.5 分别高出 5.7 和 6.3 个百分点。注意设置不同：基线用 verifier 反馈迭代修复，TopoVerus 使用 3 条链、每条 10 次迭代。"
+    "seconds": 10.5,
+    "en": "That is 5.7 and 6.3 points above Sonnet 4.5, the strongest baseline. The baselines repair iteratively with verifier feedback; TopoVerus uses three chains of ten iterations.",
+    "zh": "这比最强的基线 Sonnet 4.5 分别高出 5.7 和 6.3 个百分点。基线用 verifier 反馈迭代修复；TopoVerus 使用 3 条链、每条 10 次迭代。"
    },
    {
     "id": "Topo11Results-3",
@@ -290,27 +266,15 @@
   "Topo12Close": [
    {
     "id": "Topo12Close-1",
-    "seconds": 7.0,
-    "en": "What TopoVerus does not claim. The curriculum targets loop invariants only, not assertions or other proof structure.",
-    "zh": "TopoVerus 没有声称什么？它的课程只针对 loop invariant，不涉及 assertion 或其他证明结构。"
+    "seconds": 13.6,
+    "en": "Two limitations. The curriculum targets loop invariants, not assertions. And the counterexamples are not formally checked, so a trace can be imprecise. On systems code, VeruSAGE, Sonnet 4.5 stays ahead: 75.5 versus 30.2 percent.",
+    "zh": "有两点局限。课程只针对 loop invariant，不涉及 assertion。counterexample 也没有经过形式化检查，所以执行轨迹可能不精确。在系统代码 VeruSAGE 上，Sonnet 4.5 仍然领先：75.5% 对 30.2%。"
    },
    {
     "id": "Topo12Close-2",
-    "seconds": 7.0,
-    "en": "The counterexamples are not formally checked. The paper notes that the model may hallucinate imprecise execution traces.",
-    "zh": "counterexample 没有经过形式化检查。论文指出，模型可能会幻觉出不精确的执行轨迹。"
-   },
-   {
-    "id": "Topo12Close-3",
-    "seconds": 7.8,
-    "en": "And on systems code, the VeruSAGE suite, Sonnet 4.5 stays far ahead: 75.5 versus 30.2 percent Safe-Pass at 1.",
-    "zh": "在系统代码 VeruSAGE 上，Sonnet 4.5 仍然遥遥领先：Safe-Pass@1 为 75.5% 对 30.2%。"
-   },
-   {
-    "id": "Topo12Close-4",
-    "seconds": 10.1,
-    "en": "TopoVerus repairs proofs one function at a time. Real verified software is a repository of modules that depend on each other. Can agents build that?",
-    "zh": "TopoVerus 一次修复一个函数的证明。而真正的已验证软件，是由相互依赖的模块组成的代码仓库。智能体能构建出这样的软件吗？"
+    "seconds": 13.6,
+    "en": "The takeaway: teach the model to name a concrete failing state before it repairs, and reward it for establishing prerequisite invariants first. Diagnosis then becomes a skill the model carries in a single pass.",
+    "zh": "结论：让模型在修复之前先说出一个具体的失败状态，并奖励它先建立前提 invariant。这样，诊断就成为模型一次生成就能完成的能力。"
    }
   ]
  }

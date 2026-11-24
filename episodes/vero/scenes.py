@@ -1,8 +1,8 @@
-"""Episode 3: Vero -- verified software at repository scale (Lean 4).
+"""Vero: Can AI Agents Build Formally Verified Software Repositories? (Lean 4, NeurIPS 2026)
 
 Scenes (order = narration.json):
-  Vero01Open, Vero02Hook, Vero03Instance, Vero04Scale, Vero05Architecture, Vero06Grader,
-  Vero07Base64, Vero08Audit, Vero09Trust, Vero10Results, Vero11Limits, Vero12Bridge
+  Vero01Hook, Vero02Instance, Vero03Scale, Vero04Architecture, Vero05Grader,
+  Vero06Base64, Vero07Audit, Vero08Trust, Vero09Results, Vero10Takeaway
 
 All code on screen is loaded from episodes/vero/examples/ (header comment = exact source).
 Sources for every number: episodes/vero/SOURCES.md.
@@ -19,7 +19,7 @@ from manim import (
 
 from common import style as S
 from common.components import (
-    NarratedScene, T, cite, card, title_card, series_map, pipeline, animate_pipeline, pulse_path,
+    NarratedScene, T, cite, card, title_card, pipeline, animate_pipeline, pulse_path,
     code_panel, highlight_lines, state_table, bar_chart, badge, bullet_list,
 )
 
@@ -27,7 +27,7 @@ EP = "vero"
 ACC = S.ACCENT[EP]
 EX = Path(__file__).resolve().parent / "examples"
 
-PAPER = "Vero paper (arXiv 2608.13522)"
+PAPER = "Vero (arXiv 2608.13522)"
 REPO = "repo sunblaze-ucb/vero@0a7325d"
 
 
@@ -40,11 +40,6 @@ def load(name: str) -> str:
     return "\n".join(lines[i:]).strip("\n")
 
 
-def label_tag(text: str, color: str = S.WARN) -> "VGroup":
-    """Small coloured tag such as 'illustrative (paper p.20)'. Local helper (badge with smaller text)."""
-    return badge(text, color)
-
-
 def CurvedArrowLink(a, b):
     """Thin arc above a row of boxes from a to b (dependency hint). Local helper."""
     from manim import ArcBetweenPoints
@@ -53,40 +48,27 @@ def CurvedArrowLink(a, b):
 
 
 # ====================================================================== 1
-class Vero01Open(NarratedScene):
+class Vero01Hook(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        m = series_map(current=EP).scale(0.9).shift(UP * 0.6)
-        recap = T("So far: repair one proof at a time", size=S.SMALL_SIZE + 2, color=S.MUTED)
-        recap.next_to(m, DOWN, buff=0.6)
-        with self.beat("vero01open-1"):
-            self.play(FadeIn(m[0], lag_ratio=0.2), FadeIn(m[1]), run_time=1.5)
-            self.play(FadeIn(m[2]), FadeIn(recap, shift=UP * 0.1), run_time=0.8)
-            self.play(m[0][2][0].animate.set_stroke(width=6), run_time=0.5)
-        tc = title_card(EP, 3, extra="Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song · NeurIPS 2026")
-        with self.beat("vero01open-2"):
-            self.play(FadeOut(m), FadeOut(recap), run_time=0.6)
+        tc = title_card(EP, extra="Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song · NeurIPS 2026")
+        tc.shift(UP * 0.5)
+        with self.beat("vero01hook-1"):
             self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.0)
             q = T("Can AI agents build formally verified repositories?", size=S.SMALL_SIZE + 2, color=ACC)
             q.next_to(tc, DOWN, buff=0.5)
             self.play(FadeIn(q), run_time=0.6)
-
-
-# ====================================================================== 2
-class Vero02Hook(NarratedScene):
-    EPISODE = EP
-
-    def construct(self):
         head = T("One spec from the benchmark: dijkstar", size=S.HEADING_SIZE - 6, weight="BOLD")
         head.to_edge(UP, buff=0.5)
         p = code_panel(load("hook_dijkstar_spec.lean"), "lean", title="Dijkstar/Spec/ShortestPath.lean")
         p.move_to(UP * 0.4)
         src = cite(f"{REPO}, benchmarks/dijkstar/Dijkstar/Spec/ShortestPath.lean:200-203")
-        with self.beat("vero02hook-1"):
-            self.play(FadeIn(head), run_time=0.6)
+        with self.beat("vero01hook-2"):
+            self.play(FadeOut(tc), FadeOut(q), run_time=0.5)
+            self.play(FadeIn(head), run_time=0.5)
             self.play(FadeIn(p, shift=UP * 0.2), FadeIn(src), run_time=1.0)
-        with self.beat("vero02hook-2"):
+        with self.beat("vero01hook-3"):
             h1 = highlight_lines(p, 3, color=S.INFO)
             self.play(Create(h1), run_time=0.6)
             self.wait(2.2)
@@ -95,34 +77,32 @@ class Vero02Hook(NarratedScene):
             gloss = T("returned cost  ≤  cost of every walk s → t", size=S.SMALL_SIZE + 2, color=ACC)
             gloss.next_to(p, DOWN, buff=0.4)
             self.play(FadeIn(gloss), run_time=0.5)
-        with self.beat("vero02hook-3"):
+        with self.beat("vero01hook-4"):
             self.play(FadeOut(gloss), FadeOut(h2), FadeOut(head),
                       p.animate.scale(0.85).to_edge(UP, buff=0.4), run_time=0.8)
-            # many specs across modules: a schematic row of module boxes (folder names as in the repo layout)
+            # many specs across modules: a row of module boxes (folder names as in the repository layout)
             mods = VGroup()
             for n in ["Impl/", "Spec/", "Proof/", "Harness", "helpers", "Test"]:
                 box = card(1.7, 0.75, edge=S.PANEL_EDGE)
                 mods.add(VGroup(box, T(n, size=S.SMALL_SIZE, color=S.MUTED, mono=True).move_to(box)))
             mods.arrange(RIGHT, buff=0.3).move_to(DOWN * 0.25)
             links = VGroup(*[CurvedArrowLink(mods[a], mods[b]) for a, b in [(2, 1), (1, 0), (2, 4)]])
-            sch = T("schematic", size=S.CITE_SIZE, color=S.MUTED).next_to(mods, DOWN, buff=0.15).align_to(mods, RIGHT)
             self.play(LaggedStart(*[FadeIn(g) for g in mods], lag_ratio=0.15), run_time=1.0)
-            self.play(Create(links), FadeIn(sch), run_time=0.8)
+            self.play(Create(links), run_time=0.8)
             self.play(mods[0][0].animate.set_stroke(color=ACC, width=4), mods[2][0].animate.set_stroke(color=ACC, width=4),
                       run_time=0.6)
-        with self.beat("vero02hook-4"):
-            q = T("Can an agent implement and prove\nthis across many modules?", size=S.HEADING_SIZE - 6, color=ACC,
-                  weight="BOLD", line_spacing=0.9)
-            q.to_edge(DOWN, buff=0.9)
-            self.play(Write(q), run_time=1.4)
+            q2 = T("Can an agent implement and prove\nthis across many modules?", size=S.HEADING_SIZE - 6, color=ACC,
+                   weight="BOLD", line_spacing=0.9)
+            q2.to_edge(DOWN, buff=0.9)
+            self.play(Write(q2), run_time=1.4)
 
 
-# ====================================================================== 3
-class Vero03Instance(NarratedScene):
+# ====================================================================== 2
+class Vero02Instance(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        head = T("A Vero instance (paper Fig. 2)", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)
+        head = T("A Vero instance", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)
         p1 = code_panel(load("fig2_interface.lean"), "lean", title="interface (frozen)", max_height=5.8, max_width=8.3)
         p1.to_edge(LEFT, buff=0.4).shift(DOWN * 0.35)
         src = cite(f"{PAPER}, Fig. 2, p.5")
@@ -133,14 +113,14 @@ class Vero03Instance(NarratedScene):
             n.next_to(p1, RIGHT, buff=0.3).match_y(anchor)
             return n
 
-        with self.beat("vero03instance-1"):
+        with self.beat("vero02instance-1"):
             self.play(FadeIn(head), FadeIn(src), run_time=0.6)
             self.play(FadeIn(p1, shift=UP * 0.2), run_time=0.9)
             h = highlight_lines(p1, 1, 3, color=S.MUTED)
             n1 = note("API signatures: frozen", S.MUTED, h)
             self.play(Create(h), FadeIn(n1), run_time=0.7)
             notes.add(h, n1)
-        with self.beat("vero03instance-2"):
+        with self.beat("vero02instance-2"):
             h2 = highlight_lines(p1, 5, 8, color=S.INFO)
             n2 = note("RepoImpl: one field per API", S.INFO, h2)
             self.play(Create(h2), FadeIn(n2), run_time=0.7)
@@ -151,7 +131,7 @@ class Vero03Instance(NarratedScene):
             notes.add(h2, n2, h3, n3)
         p2 = code_panel(load("fig2_spec.lean"), "lean", title="spec + proof obligation")
         p2.move_to(DOWN * 0.2)
-        with self.beat("vero03instance-3"):
+        with self.beat("vero02instance-3"):
             self.play(FadeOut(notes), FadeOut(p1), run_time=0.6)
             self.play(FadeIn(p2, shift=UP * 0.2), run_time=0.8)
             hs = highlight_lines(p2, 1, 4, color=S.INFO)
@@ -173,19 +153,19 @@ class Vero03Instance(NarratedScene):
             g[1].move_to(g[0])
         modes = VGroup(po, cp).arrange(RIGHT, buff=0.6).move_to(DOWN * 0.3)
         msrc = cite(f"{PAPER}, §3.2, p.5")
-        with self.beat("vero03instance-4"):
+        with self.beat("vero02instance-4"):
             self.play(FadeOut(p2), FadeOut(hp), FadeOut(tag), FadeOut(src), run_time=0.6)
             self.play(head.animate.become(T("Two task modes", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)),
                       FadeIn(po, shift=UP * 0.2), FadeIn(msrc), run_time=0.9)
-        with self.beat("vero03instance-5"):
+        with self.beat("vero02instance-5"):
             self.play(FadeIn(cp, shift=UP * 0.2), run_time=0.8)
             warn = T("a code change can break proofs in other modules", size=S.SMALL_SIZE + 2, color=S.WARN)
             warn.next_to(modes, DOWN, buff=0.45)
             self.play(FadeIn(warn), run_time=0.6)
 
 
-# ====================================================================== 4
-class Vero04Scale(NarratedScene):
+# ====================================================================== 3
+class Vero03Scale(NarratedScene):
     EPISODE = EP
 
     def construct(self):
@@ -206,19 +186,19 @@ class Vero04Scale(NarratedScene):
         split = VGroup(bar, l13, l30)
         top = VGroup(s1, split).arrange(RIGHT, buff=1.0).move_to(UP * 1.2)
         c1 = cite(f"{PAPER}, §3.4, p.6; Table 1, p.7; contamination, p.7")
-        with self.beat("vero04scale-1"):
+        with self.beat("vero03scale-1"):
             self.play(FadeIn(head), run_time=0.5)
             self.play(FadeIn(s1, shift=UP * 0.2), FadeIn(c1), run_time=0.8)
             self.play(GrowFromEdge(b13, LEFT), GrowFromEdge(b30, LEFT), FadeIn(l13), FadeIn(l30), run_time=1.0)
         s2 = stat("743", "scored APIs")
         s3 = stat("2,705", "scored specifications")
         row = VGroup(s2, s3).arrange(RIGHT, buff=2.0).move_to(DOWN * 1.2)
-        with self.beat("vero04scale-2"):
+        with self.beat("vero03scale-2"):
             self.play(LaggedStart(FadeIn(s2, shift=UP * 0.2), FadeIn(s3, shift=UP * 0.2), lag_ratio=0.4), run_time=1.2)
-        with self.beat("vero04scale-3"):
+        with self.beat("vero03scale-3"):
             gt = badge("no public Lean 4 ground truth", S.OK).next_to(row, DOWN, buff=0.5)
             self.play(FadeIn(gt), run_time=0.6)
-        with self.beat("vero04scale-4"):
+        with self.beat("vero03scale-4"):
             self.play(FadeOut(VGroup(top, row, gt)), run_time=0.6)
             rule = T("Solved = every spec proved", size=S.HEADING_SIZE, weight="BOLD", color=ACC).move_to(UP * 0.6)
             sub = T("one open spec leaves room for a bug it would have caught", size=S.SMALL_SIZE + 2, color=S.MUTED)
@@ -227,7 +207,7 @@ class Vero04Scale(NarratedScene):
             self.play(FadeIn(sub), run_time=0.6)
 
 
-# ====================================================================== 5
+# ====================================================================== 4
 def vero_fig1(scale: float = 1.0):
     """Paper Fig. 1 as nodes/edges (audit->curation return edge drawn separately)."""
     nodes = [
@@ -258,11 +238,11 @@ def vero_fig1(scale: float = 1.0):
     return g, back
 
 
-class Vero05Architecture(NarratedScene):
+class Vero04Architecture(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        head = T("Vero end to end (paper Fig. 1)", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)
+        head = T("Vero end to end", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)
         g, back = vero_fig1()
         g.shift(UP * 0.35)
         back.shift(UP * 0.35)
@@ -271,20 +251,20 @@ class Vero05Architecture(NarratedScene):
                    color=S.MUTED, line_spacing=0.9)
         stages.next_to(g.by_id["cur"], UP, buff=0.35)
         stages.shift(RIGHT * max(0.0, -6.8 - stages.get_left()[0]))
-        with self.beat("vero05architecture-1"):
+        with self.beat("vero04architecture-1"):
             self.play(FadeIn(head), FadeIn(src), run_time=0.5)
             self.play(FadeIn(g.by_id["repos"], shift=UP * 0.1), run_time=0.5)
             self.play(GrowArrow(g.edge_by_id[("repos", "cur")]), FadeIn(g.by_id["cur"], shift=UP * 0.1), run_time=0.7)
             self.play(FadeIn(stages), run_time=0.6)
-        with self.beat("vero05architecture-2"):
+        with self.beat("vero04architecture-2"):
             self.play(GrowArrow(g.edge_by_id[("cur", "bench")]), FadeIn(g.by_id["bench"], shift=UP * 0.1), run_time=0.7)
             self.play(GrowArrow(g.edge_by_id[("bench", "po")]), GrowArrow(g.edge_by_id[("bench", "cp")]),
                       FadeIn(g.by_id["po"]), FadeIn(g.by_id["cp"]), run_time=0.8)
-        with self.beat("vero05architecture-3"):
+        with self.beat("vero04architecture-3"):
             self.play(GrowArrow(g.edge_by_id[("po", "grader")]), GrowArrow(g.edge_by_id[("cp", "grader")]),
                       FadeIn(g.by_id["grader"]), run_time=0.8)
             self.play(Indicate(g.by_id["grader"], color=S.OK, scale_factor=1.06), run_time=0.8)
-        with self.beat("vero05architecture-4"):
+        with self.beat("vero04architecture-4"):
             self.play(GrowArrow(g.edge_by_id[("po", "audit")]), GrowArrow(g.edge_by_id[("cp", "audit")]),
                       FadeIn(g.by_id["audit"]), run_time=0.8)
             self.play(Create(back[0]), run_time=0.8)
@@ -292,8 +272,8 @@ class Vero05Architecture(NarratedScene):
             pulse_path(self, g, ["cp", "audit", "cur"], color=S.WARN, run_time=0.35)
 
 
-# ====================================================================== 6
-class Vero06Grader(NarratedScene):
+# ====================================================================== 5
+class Vero05Grader(NarratedScene):
     EPISODE = EP
 
     def construct(self):
@@ -311,54 +291,55 @@ class Vero06Grader(NarratedScene):
         right_x = -0.6
         DY = -0.4  # vertical centre of the detail area
         src = cite(f"{PAPER}, App. D, p.19-20")
-        with self.beat("vero06grader-1"):
+        with self.beat("vero05grader-1"):
             self.play(FadeIn(head), FadeIn(src), run_time=0.5)
             self.play(LaggedStart(*[FadeIn(l, shift=RIGHT * 0.2) for l in layers], lag_ratio=0.25), run_time=1.2)
             naive = T("“does it compile?” is not enough", size=S.SMALL_SIZE + 2, color=S.WARN).move_to([0, DY, 0])
             self.play(FadeIn(naive), run_time=0.5)
         # layer 1
-        slot = code_panel(load("grader_slot.lean"), "lean", title="Proof slot (BankLedger exemplar)", font_size=18,
+        slot = code_panel(load("grader_slot.lean"), "lean", title="Proof slot (BankLedger)", font_size=18,
                           max_width=13.0)
         slot.move_to([0, DY + 0.5, 0])
         cap1 = T("only marker interiors are copied\ninto a fresh copy of the benchmark", size=S.SMALL_SIZE, color=S.MUTED,
                  line_spacing=0.9)
         cap1.next_to(slot, DOWN, buff=0.35)
-        c1 = cite(f"{REPO}, reference/BankLedger/.../Proof_modecodeproof/Account.lean:33-36; paper App. D, p.19")
-        with self.beat("vero06grader-2"):
+        c1 = cite(f"{PAPER}, App. D, Layer 1, p.19; {REPO}, reference/BankLedger/.../Proof_modecodeproof/Account.lean:33-36")
+        with self.beat("vero05grader-2"):
             self.play(FadeOut(naive), layers[0][0].animate.set_stroke(width=6), run_time=0.5)
             self.play(FadeIn(slot), FadeOut(src), FadeIn(c1), run_time=0.8)
             h = highlight_lines(slot, 2, 4, color=S.INFO)
             self.play(Create(h), FadeIn(cap1), run_time=0.7)
         # layer 2
-        allow = code_panel(load("grader_allowlist.py"), "python", title="src/vero/evaluation/axioms.py:31",
-                           font_size=20, max_width=12.0)
+        allow = VGroup(T("#print axioms", size=S.BODY_SIZE, color=S.INK, mono=True),
+                       T("for every scored theorem; allowed:", size=S.SMALL_SIZE + 2, color=S.MUTED)
+                       ).arrange(RIGHT, buff=0.3)
         allow.move_to([0, DY + 0.9, 0])
-        c2 = cite(f"{REPO}, src/vero/evaluation/axioms.py:31; paper App. D, p.19")
-        with self.beat("vero06grader-3"):
+        c2 = cite(f"{PAPER}, App. D, Layer 2, p.19")
+        with self.beat("vero05grader-3"):
             self.play(FadeOut(VGroup(slot, h, cap1)), FadeOut(c1), layers[0][0].animate.set_stroke(width=2),
                       layers[1][0].animate.set_stroke(width=6), run_time=0.6)
             self.play(FadeIn(allow), FadeIn(c2), run_time=0.8)
             three = VGroup(*[badge(a, S.OK) for a in ("Classical.choice", "propext", "Quot.sound")]).arrange(RIGHT, buff=0.25)
             three.next_to(allow, DOWN, buff=0.4)
             self.play(LaggedStart(*[FadeIn(b) for b in three], lag_ratio=0.3), run_time=0.9)
-        with self.beat("vero06grader-4"):
+        with self.beat("vero05grader-4"):
             n = VGroup(T("368", size=S.TITLE_SIZE, weight="BOLD", color=S.BAD),
                        T("spec outcomes rejected at this layer", size=S.SMALL_SIZE + 2, color=S.MUTED)).arrange(RIGHT, buff=0.3)
             n.next_to(three, DOWN, buff=0.5)
-            self.play(FadeIn(n, shift=UP * 0.1), FadeOut(c2), FadeIn(c2b := cite(f"{REPO}, axioms.py:31; paper App. D, p.19 (368)")),
+            self.play(FadeIn(n, shift=UP * 0.1), FadeOut(c2), FadeIn(c2b := cite(f"{PAPER}, App. D, Layer 2, p.19 (368)")),
                       run_time=0.7)
         # layer 3
-        c3 = cite(f"{PAPER}, App. D, p.19-20; {REPO}, src/vero/evaluation/hygiene.py:20-27")
-        with self.beat("vero06grader-5"):
+        c3 = cite(f"{PAPER}, App. D, Layer 3, p.19-20")
+        with self.beat("vero05grader-5"):
             self.play(FadeOut(VGroup(allow, three, n)), FadeOut(c2b), layers[1][0].animate.set_stroke(width=2),
                       layers[2][0].animate.set_stroke(width=6), run_time=0.6)
-            items = bullet_list(["hollow typeclass instances", "priority shadowing", "unsafe  →  run voided",
+            items = bullet_list(["hollow typeclass instances", "priority shadowing", "decidability laundering",
                                  "@[implemented_by] in Impl/  →  run voided"], size=S.SMALL_SIZE + 2)
             items.move_to([0, DY, 0])
             self.play(FadeIn(c3), LaggedStart(*[FadeIn(i, shift=RIGHT * 0.1) for i in items], lag_ratio=0.25), run_time=1.2)
 
 
-# ====================================================================== 7
+# ====================================================================== 6
 def byte_line():
     """Number line 0x37..0x43 with the reject gap (0x39, 0x41) and the '=' byte 0x3D. Local helper."""
     lo, hi = 0x37, 0x43
@@ -390,7 +371,7 @@ def byte_line():
     return base, VGroup(gap, ends, gap_lab), VGroup(eq, eq_lab)
 
 
-class Vero07Base64(NarratedScene):
+class Vero06Base64(NarratedScene):
     EPISODE = EP
 
     def construct(self):
@@ -401,28 +382,28 @@ class Vero07Base64(NarratedScene):
                          max_width=7.5)
         col = VGroup(pad, rej).arrange(DOWN, buff=0.3, aligned_edge=LEFT).to_edge(LEFT, buff=0.3).shift(DOWN * 0.25)
         src = cite(f"{PAPER}, App. F, Audit 1, p.24 (specs as printed, pre-fix); Table 3, p.16")
-        with self.beat("vero07base64-1"):
+        with self.beat("vero06base64-1"):
             self.play(FadeIn(head), FadeIn(src), run_time=0.6)
             fn = T("charToBits : one byte → digit, padding, or reject", size=S.SMALL_SIZE + 2, color=S.MUTED)
             fn.next_to(head, DOWN, buff=0.35)
             self.play(FadeIn(fn), run_time=0.6)
-        with self.beat("vero07base64-2"):
+        with self.beat("vero06base64-2"):
             self.play(FadeOut(fn), FadeIn(pad, shift=UP * 0.1), run_time=0.7)
             hp = highlight_lines(pad, 2, color=S.INFO)
             self.play(Create(hp), run_time=0.5)
-        with self.beat("vero07base64-3"):
+        with self.beat("vero06base64-3"):
             self.play(FadeIn(rej, shift=UP * 0.1), run_time=0.7)
             hr = highlight_lines(rej, 4, color=S.BAD)
             self.play(Create(hr), run_time=0.5)
         base, gap, eq = byte_line()
         nl = VGroup(base, gap, eq)
         nl.move_to([4.15, 1.3, 0])
-        with self.beat("vero07base64-4"):
+        with self.beat("vero06base64-4"):
             self.play(Create(base[0]), FadeIn(base[1]), FadeIn(base[2]), FadeIn(base[3]), run_time=0.9)
             self.play(FadeIn(gap[0]), Create(gap[1]), FadeIn(gap[2]), run_time=0.8)
             self.play(FadeIn(eq[0], scale=1.6), FadeIn(eq[1]), run_time=0.6)
             self.play(Indicate(eq[0], color=S.BAD, scale_factor=1.8), run_time=0.8)
-        with self.beat("vero07base64-5"):
+        with self.beat("vero06base64-5"):
             tab = state_table([("input c", "0x3D  ('=')"),
                                ("spec 1 demands", "some none"),
                                ("spec 2 demands", "none")], title="Conflict at one byte")
@@ -434,39 +415,43 @@ class Vero07Base64(NarratedScene):
             self.play(FadeIn(verdict), run_time=0.5)
 
 
-# ====================================================================== 8
-class Vero08Audit(NarratedScene):
+# ====================================================================== 7
+class Vero07Audit(NarratedScene):
     EPISODE = EP
 
     def construct(self):
         head = T("The agent audits the specs", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.45)
-        form = code_panel(load("joint_unsat_claim_form_repo.lean"), "lean",
-                          title="joint_unsat claim form (Harness.lean, generic)", font_size=18, max_width=12.0)
-        form.move_to(UP * 1.4)
-        who = T("GPT-5.5 (xhigh): spec 1 and spec 2 are jointly unsatisfiable", size=S.SMALL_SIZE + 2, color=ACC)
+        # audit claim: Eq. (3) of §3.5 with S' = {spec 1, spec 2}
+        stmt = VGroup(T("¬ ∃ impl : RepoImpl,", size=S.SMALL_SIZE + 4, mono=True),
+                      T("spec_char_to_bits_padding impl ∧", size=S.SMALL_SIZE + 4, mono=True),
+                      T("spec_char_to_bits_reject impl", size=S.SMALL_SIZE + 4, mono=True)
+                      ).arrange(DOWN, buff=0.15, aligned_edge=LEFT)
+        stmt[1:].shift(RIGHT * 0.5)
+        box = card(stmt.width + 0.8, stmt.height + 0.6, edge=ACC)
+        tag = T("joint_unsat", size=S.SMALL_SIZE, color=ACC, mono=True).next_to(box, UP, buff=0.1).align_to(box, LEFT)
+        form = VGroup(box, stmt.move_to(box), tag).move_to(UP * 1.4)
+        who = T("proved by GPT-5.5 (xhigh), machine-checked", size=S.SMALL_SIZE + 2,
+                color=ACC)
         who.next_to(form, DOWN, buff=0.4)
-        c1 = cite(f"{PAPER}, App. F, Audit 1, p.24; {REPO}, benchmarks/dijkstar/.../Harness.lean:34-35")
-        with self.beat("vero08audit-1"):
+        c1 = cite(f"{PAPER}, §3.5, Eq. (3), p.7; App. F, Audit 1, p.24")
+        with self.beat("vero07audit-1"):
             self.play(FadeIn(head), FadeIn(c1), run_time=0.6)
             self.play(FadeIn(form, shift=UP * 0.1), run_time=0.8)
             self.play(FadeIn(who), run_time=0.6)
-        with self.beat("vero08audit-2"):
+        with self.beat("vero07audit-2"):
             q = T("“collapses to a one-line  0x3D < 0x41 ∧ 0x3D > 0x39  contradiction”", size=S.SMALL_SIZE + 2,
                   color=S.INK)
             q.next_to(who, DOWN, buff=0.45)
-            note = T("(paper's description; the proof script itself is not published)", size=S.CITE_SIZE + 2, color=S.MUTED)
-            note.next_to(q, DOWN, buff=0.2)
             self.play(FadeIn(q), run_time=0.8)
-            self.play(FadeIn(note), run_time=0.5)
         rej = code_panel(load("base64_reject_spec_paper.lean"), "lean", title="spec 2 (pre-fix)", font_size=18,
                          max_width=9.5)
         rej.move_to(UP * 1.45)
-        fix = code_panel(load("base64_fix_paper.lean"), "lean", title="paper's fix (p.24)", font_size=16,
+        fix = code_panel(load("base64_fix_paper.lean"), "lean", title="fix (App. F)", font_size=16,
                          line_numbers=False, max_width=8.0)
         fix.next_to(rej, DOWN, buff=0.45)
-        c2 = cite(f"{PAPER}, App. F, Audit 1, p.24 (fix as printed in the paper; the released repo splits the range instead)")
-        with self.beat("vero08audit-3"):
-            self.play(FadeOut(VGroup(form, who, q, note)), FadeOut(c1), FadeIn(c2), run_time=0.6)
+        c2 = cite(f"{PAPER}, App. F, Audit 1, p.24")
+        with self.beat("vero07audit-3"):
+            self.play(FadeOut(VGroup(form, who, q)), FadeOut(c1), FadeIn(c2), run_time=0.6)
             self.play(FadeIn(rej), run_time=0.6)
             h = highlight_lines(rej, 4, color=S.BAD)
             self.play(Create(h), run_time=0.4)
@@ -488,10 +473,10 @@ class Vero08Audit(NarratedScene):
                         ).arrange(DOWN, buff=0.15)
         totals.move_to(UP * 1.7)
         c3 = cite(f"{PAPER}, App. F, p.24; Table 6, p.24")
-        with self.beat("vero08audit-4"):
+        with self.beat("vero07audit-4"):
             self.play(FadeOut(VGroup(rej, h, fix, ok, quote)), FadeOut(c2), FadeIn(c3), run_time=0.6)
             self.play(FadeIn(totals, shift=UP * 0.1), run_time=0.8)
-        with self.beat("vero08audit-5"):
+        with self.beat("vero07audit-5"):
             ttl = T("Audit findings by category (Table 6)", size=S.SMALL_SIZE + 2, color=S.MUTED)
             ttl.next_to(chart, UP, buff=0.35)
             self.play(FadeIn(ttl), LaggedStart(*[FadeIn(r, shift=RIGHT * 0.1) for r in chart], lag_ratio=0.2), run_time=1.2)
@@ -499,27 +484,26 @@ class Vero08Audit(NarratedScene):
             self.play(FadeIn(tag), Indicate(chart[3], color=ACC, scale_factor=1.05), run_time=0.8)
 
 
-# ====================================================================== 9
-class Vero09Trust(NarratedScene):
+# ====================================================================== 8
+class Vero08Trust(NarratedScene):
     EPISODE = EP
 
     def construct(self):
         head = T("A proof can be true and still not mean what you think", size=S.HEADING_SIZE - 10, weight="BOLD",
                  color=ACC).to_edge(UP, buff=0.45)
-        with self.beat("vero09trust-1"):
+        with self.beat("vero08trust-1"):
             self.play(Write(head), run_time=1.2)
         orc = code_panel(load("trust_dijkstar_oracle_paper.lean"), "lean", title="dijkstar spec-oracle trick",
                          font_size=18, max_width=12.6)
         orc.move_to(UP * 1.25)
-        ill = label_tag("illustrative (paper p.20)", S.WARN).next_to(orc, UP, buff=0.12).align_to(orc, RIGHT)
-        c1 = cite(f"{PAPER}, App. D, p.20 (illustrative snippet; isMinWalkCost is not in the released repo)")
-        with self.beat("vero09trust-2"):
-            self.play(FadeIn(orc), FadeIn(ill), FadeIn(c1), run_time=0.8)
+        c1 = cite(f"{PAPER}, App. D, p.20")
+        with self.beat("vero08trust-2"):
+            self.play(FadeIn(orc), FadeIn(c1), run_time=0.8)
             h = highlight_lines(orc, 1, 2, color=S.INFO)
             n = T("proof target = the spec's own answer  →  optimality holds by definition", size=S.SMALL_SIZE + 2,
                   color=S.INFO).next_to(orc, DOWN, buff=0.3)
             self.play(Create(h), FadeIn(n), run_time=0.7)
-        with self.beat("vero09trust-3"):
+        with self.beat("vero08trust-3"):
             h2 = highlight_lines(orc, 3, color=S.BAD)
             n2 = T("runtime code = a real Bellman-Ford (different function)", size=S.SMALL_SIZE + 2, color=S.BAD)
             n2.next_to(n, DOWN, buff=0.2)
@@ -532,8 +516,8 @@ class Vero09Trust(NarratedScene):
                         font_size=20, max_width=10.0)
         nd.move_to(UP * 1.1)
         c2 = cite(f"{PAPER}, App. D, Layer 2, p.19")
-        with self.beat("vero09trust-4"):
-            self.play(FadeOut(VGroup(orc, ill, h2, n, n2, st)), FadeOut(c1), FadeIn(c2), run_time=0.6)
+        with self.beat("vero08trust-4"):
+            self.play(FadeOut(VGroup(orc, h2, n, n2, st)), FadeOut(c1), FadeIn(c2), run_time=0.6)
             self.play(FadeIn(nd), run_time=0.6)
             hn = highlight_lines(nd, 3, color=S.BAD)
             ax = VGroup(T("depends on", size=S.SMALL_SIZE + 2, color=S.MUTED),
@@ -543,16 +527,10 @@ class Vero09Trust(NarratedScene):
             self.play(Create(hn), FadeIn(ax), run_time=0.8)
             cnt = T("28 of that run's 53 specs fail this way", size=S.SMALL_SIZE + 2, color=S.INK).next_to(ax, DOWN, buff=0.35)
             self.play(FadeIn(cnt), run_time=0.5)
-        with self.beat("vero09trust-5"):
-            self.play(FadeOut(VGroup(nd, hn, ax, cnt)), FadeOut(c2), run_time=0.6)
-            line = VGroup(T("What a proof means is decided by", size=S.BODY_SIZE, color=S.MUTED),
-                          T("the checker  +  the specs", size=S.HEADING_SIZE, weight="BOLD", color=ACC),
-                          T("not by “it compiles”", size=S.BODY_SIZE, color=S.MUTED)).arrange(DOWN, buff=0.3)
-            self.play(FadeIn(line, shift=UP * 0.1), run_time=0.9)
 
 
-# ====================================================================== 10
-class Vero10Results(NarratedScene):
+# ====================================================================== 9
+class Vero09Results(NarratedScene):
     EPISODE = EP
 
     def construct(self):
@@ -560,17 +538,17 @@ class Vero10Results(NarratedScene):
         setup = T("4 agent setups  ×  2 modes  ×  43 repos  ·  90 min per run", size=S.SMALL_SIZE + 2, color=S.MUTED)
         setup.next_to(head, DOWN, buff=0.3)
         c0 = cite(f"{PAPER}, §4.1, p.7; Fig. 3 caption, p.8")
-        with self.beat("vero10results-1"):
+        with self.beat("vero09results-1"):
             self.play(FadeIn(head), FadeIn(setup), FadeIn(c0), run_time=0.8)
         items = [("GPT-5.5 (xhigh)", 27), ("Claude Opus 4.8 (xhigh)", 8), ("GPT-5.5 (mid)", 2), ("Claude Sonnet 5 (xhigh)", 2)]
         chart = bar_chart(items, unit=" / 43", max_value=43, highlight="GPT-5.5 (xhigh)", accent=ACC, width=6.0)
         chart.move_to(DOWN * 0.1)
         ttl = T("Full solves, code-and-proof mode", size=S.SMALL_SIZE + 2, color=S.INK).next_to(chart, UP, buff=0.35)
         c1 = cite(f"{PAPER}, p.8; Fig. 3(a)")
-        with self.beat("vero10results-2"):
+        with self.beat("vero09results-2"):
             self.play(FadeOut(c0), FadeIn(c1), FadeIn(ttl), run_time=0.5)
             self.play(LaggedStart(*[FadeIn(r, shift=RIGHT * 0.15) for r in chart], lag_ratio=0.3), run_time=1.6)
-        with self.beat("vero10results-3"):
+        with self.beat("vero09results-3"):
             self.play(VGroup(ttl, chart).animate.scale(0.7).to_edge(LEFT, buff=0.5).shift(UP * 0.5), run_time=0.7)
             big = VGroup(T("87.3%", size=S.TITLE_SIZE + 8, weight="BOLD", color=ACC),
                          T("of specs passed by GPT-5.5 (xhigh)\nin code-and-proof mode", size=S.SMALL_SIZE + 2, color=S.MUTED,
@@ -579,7 +557,7 @@ class Vero10Results(NarratedScene):
                          ).arrange(DOWN, buff=0.2)
             big.move_to([3.6, 0.6, 0])
             self.play(FadeIn(big, shift=UP * 0.1), run_time=0.8)
-        with self.beat("vero10results-4"):
+        with self.beat("vero09results-4"):
             a = VGroup(T("73.6%", size=S.HEADING_SIZE, weight="BOLD", color=S.INFO),
                        T("median share of proof lines in\nhelper lemmas (code-and-proof\nfull solves)", size=S.SMALL_SIZE,
                          color=S.MUTED, line_spacing=0.9)).arrange(RIGHT, buff=0.3)
@@ -592,53 +570,40 @@ class Vero10Results(NarratedScene):
             self.play(FadeIn(b), run_time=0.6)
 
 
-# ====================================================================== 11
-class Vero11Limits(NarratedScene):
+# ====================================================================== 10
+class Vero10Takeaway(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        head = T("What Vero does not claim", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.5)
-        rows = [
-            ("Lean 4 only; no concurrent or temporal protocols", "p.11"),
-            ("Audit proves specs satisfiable, not semantically right or complete", "p.11"),
-            ("Full solve ignores what specs omit, e.g. running time", "p.31"),
-        ]
+        head = T("Scope", size=S.HEADING_SIZE - 6, weight="BOLD").to_edge(UP, buff=0.5)
+        rows = ["Lean 4 only",
+                "Audit certifies satisfiability, not semantic correctness or completeness",
+                "sortedcontainers: a linear scan with O(n) lookup instead of O(log n) passes every spec"]
         cards = VGroup()
-        for text, _ in rows:
-            c = card(11.6, 1.05, edge=S.WARN)
-            t = T(text, size=S.SMALL_SIZE + 4).move_to(c)
-            cards.add(VGroup(c, t))
-        cards.arrange(DOWN, buff=0.35).move_to(DOWN * 0.1)
+        for text in rows:
+            c = card(11.6, 0.95, edge=S.WARN)
+            t = T(text, size=S.SMALL_SIZE + 4)
+            if t.width > c.width - 0.5:
+                t.scale_to_fit_width(c.width - 0.5)
+            cards.add(VGroup(c, t.move_to(c)))
+        cards.arrange(DOWN, buff=0.3).move_to(DOWN * 0.1)
         src = cite(f"{PAPER}, Limitations, p.11; App. H.4, p.31")
-        with self.beat("vero11limits-1"):
+        with self.beat("vero10takeaway-1"):
             self.play(FadeIn(head), FadeIn(src), run_time=0.5)
-            self.play(FadeIn(cards[0], shift=UP * 0.1), run_time=0.7)
-        with self.beat("vero11limits-2"):
-            self.play(FadeIn(cards[1], shift=UP * 0.1), run_time=0.7)
-        with self.beat("vero11limits-3"):
-            self.play(FadeIn(cards[2], shift=UP * 0.1), run_time=0.7)
-            ex = T("sortedcontainers: linear scan, O(n) lookup instead of O(log n), passes every spec",
-                   size=S.SMALL_SIZE, color=S.MUTED).next_to(cards, DOWN, buff=0.35)
-            self.play(FadeIn(ex), run_time=0.6)
-
-
-# ====================================================================== 12
-class Vero12Bridge(NarratedScene):
-    EPISODE = EP
-
-    def construct(self):
-        l1 = T("The checker and the specification", size=S.HEADING_SIZE - 4, color=S.INK)
-        l2 = T("decide what a proof means.", size=S.HEADING_SIZE - 4, color=ACC, weight="BOLD")
-        nxt = T("Next: optimised SIMD kernels. Do two programs compute the same thing?", size=S.SMALL_SIZE + 2,
-                color=S.ACCENT["vekto"])
-        g = VGroup(l1, l2, nxt).arrange(DOWN, buff=0.35)
-        nxt.shift(DOWN * 0.3)
-        with self.beat("vero12bridge-1"):
-            self.play(FadeIn(l1), run_time=0.7)
-            self.play(FadeIn(l2), run_time=0.7)
-            self.wait(3.5)
-            self.play(FadeIn(nxt, shift=UP * 0.1), run_time=0.7)
-        m = series_map(current="vekto").scale(0.9)
-        with self.beat("vero12bridge-2"):
-            self.play(FadeOut(g), run_time=0.4)
-            self.play(FadeIn(m), run_time=0.8)
+            self.play(LaggedStart(*[FadeIn(c, shift=UP * 0.1) for c in cards], lag_ratio=0.6), run_time=2.4)
+        l1 = T("Code, specs and proofs must stay coherent across modules", size=S.BODY_SIZE, color=S.INK)
+        l2 = VGroup(T("27 / 43", size=S.TITLE_SIZE, weight="BOLD", color=ACC),
+                    T("repositories fully solved by the strongest agent", size=S.SMALL_SIZE + 2, color=S.MUTED)
+                    ).arrange(RIGHT, buff=0.35)
+        g1 = VGroup(l1, l2).arrange(DOWN, buff=0.45).move_to(UP * 1.2)
+        c2 = cite(f"{PAPER}, §1, p.2; p.8")
+        with self.beat("vero10takeaway-2"):
+            self.play(FadeOut(VGroup(head, cards)), FadeOut(src), run_time=0.6)
+            self.play(FadeIn(l1, shift=UP * 0.1), run_time=0.8)
+            self.play(FadeIn(l2, shift=UP * 0.1), FadeIn(c2), run_time=0.8)
+        line = VGroup(T("What a proof means is decided by", size=S.BODY_SIZE, color=S.MUTED),
+                      T("the checker  +  the specs", size=S.HEADING_SIZE, weight="BOLD", color=ACC),
+                      T("not by “it compiles”", size=S.BODY_SIZE, color=S.MUTED)).arrange(DOWN, buff=0.25)
+        line.next_to(g1, DOWN, buff=0.7)
+        with self.beat("vero10takeaway-3"):
+            self.play(FadeIn(line, shift=UP * 0.1), run_time=0.9)

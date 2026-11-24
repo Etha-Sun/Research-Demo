@@ -1,7 +1,7 @@
-"""Episode 2: TopoVerus (Sun, Yang, Pei. NeurIPS 2026).
+"""TopoVerus (Sun, Yang, Pei. NeurIPS 2026).
 
 Scenes are rendered one by one, e.g.
-    PYTHONPATH=. manim -ql episodes/topoverus/scenes.py Topo01Map
+    PYTHONPATH=. manim -ql episodes/topoverus/scenes.py Topo01Title
 On-screen code comes from episodes/topoverus/examples/ (each file's header gives the exact source and trims).
 """
 from __future__ import annotations
@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 from manim import (
     DOWN, LEFT, RIGHT, UP, ORIGIN, UL, UR, DL, DR,
-    Arrow, Circle, Create, FadeIn, FadeOut, GrowArrow, Indicate, LaggedStart, Line,
+    Arrow, Circle, Create, DashedVMobject, RoundedRectangle, FadeIn, FadeOut, GrowArrow, Indicate, LaggedStart, Line,
     ReplacementTransform, SurroundingRectangle, Transform, VGroup, Write,
 )
 
@@ -23,7 +23,7 @@ from manim.utils.exceptions import EndSceneEarlyException
 from common import style as S
 from common.components import (
     NarratedScene, T, badge, bar_chart, bullet_list, card, cite, code_panel, highlight_lines,
-    pipeline, series_map, state_table, title_card,
+    pipeline, state_table, title_card,
 )
 
 EP = "topoverus"
@@ -97,38 +97,29 @@ class TopoScene(NarratedScene):
             raise EndSceneEarlyException()
 
 
-LOOP = screen1("caseB-loop-SCREEN.rs")
-FIXED_RANGE = screen1("caseB-repaired-line-SCREEN.rs")
-LOOP_FIXED = "\n".join(LOOP.splitlines()[:13] + FIXED_RANGE.splitlines() + LOOP.splitlines()[15:])
-# screen line numbers in caseB-loop-SCREEN.rs (1-based)
+LOOP = screen1("caseB-fig4-code-SCREEN.rs")
+FIXED_RANGE = screen1("caseB-fig4-repair-target-SCREEN.rs")
+# screen line numbers in caseB-fig4-code-SCREEN.rs (1-based)
 L_ENSURES = (4, 5)
-L_INIT = (8, 9)
-L_LOOP = (10, 19)
-L_DELETED = 12
-L_BUG = (14, 15)
+L_INIT = (7, 8)
+L_LOOP = (9, 18)
+L_BUG = (12, 14)
+L_RANGE = 13
+LOOP_FIXED = "\n".join(LOOP.splitlines()[:L_RANGE - 1] + FIXED_RANGE.splitlines() + LOOP.splitlines()[L_RANGE:])
 
 
-
-def loop_panel(font_size=17, title="LeetCode 121 · buggy proof (Case B)"):
+def loop_panel(font_size=17, title="LeetCode 121 · max_profit"):
     return code_panel(LOOP, "rust", title=title, line_numbers=False, font_size=font_size)
 
 
-# ------------------------------------------------------------------ 1. series map + recap
-class Topo01Map(TopoScene):
+# ------------------------------------------------------------------ 1. title card and question
+class Topo01Title(TopoScene):
     def construct(self):
-        m = series_map(EP).shift(DOWN * 0.3)
-        recap = T("Last time: a concrete counterexample beats a one-line verifier error",
-                  size=S.SMALL_SIZE + 4, color=S.INK)
-        recap.next_to(m, UP, buff=0.7)
-        with self.beat("Topo01Map-1"):
-            self.play(FadeIn(m, shift=UP * 0.2), run_time=1.2)
-            self.play(FadeIn(recap, shift=DOWN * 0.1), run_time=0.8)
-        with self.beat("Topo01Map-2"):
-            self.play(FadeOut(m), FadeOut(recap), run_time=0.6)
-            tc = title_card(EP, 2, extra="Yuechun Sun, Jun Yang, Kexin Pei · NeurIPS 2026")
-            q = T("Can a model learn to produce the counterexample itself?", size=S.BODY_SIZE, color=ACC)
-            VGroup(tc, q.next_to(tc, DOWN, buff=0.6)).move_to(ORIGIN)
-            self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.0)
+        tc = title_card(EP, extra="Yuechun Sun, Jun Yang, Kexin Pei · NeurIPS 2026")
+        q = T("Can a model learn to write the counterexample itself?", size=S.BODY_SIZE, color=ACC)
+        VGroup(tc, q.next_to(tc, DOWN, buff=0.6)).move_to(ORIGIN)
+        with self.beat("Topo01Title-1"):
+            self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.2)
             self.play(FadeIn(q), run_time=0.8)
 
 
@@ -136,9 +127,9 @@ class Topo01Map(TopoScene):
 class Topo02Hook(TopoScene):
     def construct(self):
         panel = loop_panel(font_size=15).to_corner(UL, buff=0.3)
-        err = term_box(screen1("caseB-verifier-error.txt"), "Verus output", size=14)
+        err = term_box(screen1("caseB-fig4-verus-error.txt"), "Verus error", size=14)
         err.to_edge(RIGHT, buff=0.2).align_to(panel, UP).shift(DOWN * 0.6)
-        c = cite("Case B: repo docs/case-studies/b-prefix-invariant (buggy.rs, verifier-error.txt); TopoVerus Fig. 4 p.9")
+        c = cite("TopoVerus Fig. 4, p.9 (Case Study B, App. B p.17)")
 
         with self.beat("Topo02Hook-1"):
             self.play(FadeIn(panel), FadeIn(c), run_time=1.0)
@@ -194,33 +185,19 @@ class Topo03Background(TopoScene):
             self.play(FadeIn(cx), FadeIn(c1), run_time=0.5)
             self.play(LaggedStart(*[FadeIn(k, shift=UP * 0.15) for k in cards], lag_ratio=0.4), run_time=1.8)
 
-        ex = S.ACCENT["exverus"]
-        left = VGroup(T("ExVerus", size=S.BODY_SIZE, weight="BOLD", color=ex),
-                      T("search + validate", size=S.SMALL_SIZE + 2, color=S.INK),
-                      T("at every repair", size=S.SMALL_SIZE + 2, color=S.MUTED)).arrange(DOWN, buff=0.15)
-        right = VGroup(T("TopoVerus", size=S.BODY_SIZE, weight="BOLD", color=ACC),
-                       T("learned in training", size=S.SMALL_SIZE + 2, color=S.INK),
-                       T("one pass at repair time", size=S.SMALL_SIZE + 2, color=S.MUTED)).arrange(DOWN, buff=0.15)
-        lc, rc = card(4.6, 2.0, edge=ex), card(4.6, 2.0, edge=ACC)
-        L, R = VGroup(lc, left.move_to(lc)), VGroup(rc, right.move_to(rc))
-        VGroup(L, R).arrange(RIGHT, buff=1.4).shift(UP * 0.6)
-        arr = Arrow(L.get_right(), R.get_left(), buff=0.1, color=S.MUTED, stroke_width=3)
-        c2 = cite("TopoVerus §1 ¶4–5, p.2")
-        with self.beat("Topo03Background-3"):
-            self.play(FadeOut(g), FadeOut(cards), FadeOut(cx), FadeOut(c1), run_time=0.6)
-            self.play(FadeIn(L), FadeIn(c2), run_time=0.7)
-            self.play(GrowArrow(arr), FadeIn(R, shift=LEFT * 0.2), run_time=0.9)
-
+        one = VGroup(T("TopoVerus", size=S.BODY_SIZE, weight="BOLD", color=ACC),
+                     T("counterexample, rationale and repair in one pass", size=S.BODY_SIZE - 4, color=S.INK)
+                     ).arrange(DOWN, buff=0.2).shift(UP * 1.2)
         quote = VGroup(T("“a counterexample is useful when conditioning on it", size=S.BODY_SIZE - 2),
                        T("helps the model produce a safe, verifier-passing proof”", size=S.BODY_SIZE - 2)
                        ).arrange(DOWN, buff=0.15)
         qc = card(quote.width + 0.8, quote.height + 0.6, edge=ACC)
-        Q = VGroup(qc, quote.move_to(qc)).shift(DOWN * 2.1)
+        Q = VGroup(qc, quote.move_to(qc)).shift(DOWN * 1.0)
         c3 = cite("TopoVerus, Abstract p.1")
-        sub = note("the model's counterexample is not checked by a solver", color=S.WARN, size=S.SMALL_SIZE + 2).next_to(Q, UP, buff=0.2)
-        with self.beat("Topo03Background-4"):
-            self.play(FadeOut(c2), FadeIn(sub), run_time=0.5)
-            self.play(FadeIn(Q, shift=UP * 0.15), FadeIn(c3), run_time=1.0)
+        with self.beat("Topo03Background-3"):
+            self.play(FadeOut(g), FadeOut(cards), FadeOut(cx), FadeOut(c1), run_time=0.6)
+            self.play(FadeIn(one, shift=UP * 0.1), FadeIn(c3), run_time=0.9)
+            self.play(FadeIn(Q, shift=UP * 0.15), run_time=1.0)
 
 
 # ------------------------------------------------------------------ 4. the one-trajectory output format
@@ -228,7 +205,7 @@ class Topo04Format(TopoScene):
     def construct(self):
         h = heading("One response, three sections")
         fmt = code_panel(screen1("appD-output-format.txt"), "text",
-                         title="TopoVerus prompt, App. D.1 (verbatim)", line_numbers=False, font_size=20)
+                         title="TopoVerus prompt, App. D.1", line_numbers=False, font_size=20)
         fmt.move_to(UP * 0.4)
         c1 = cite("TopoVerus App. D.1, p.21; App. D p.20")
         with self.beat("Topo04Format-1"):
@@ -242,32 +219,21 @@ class Topo04Format(TopoScene):
                          stroke_width=8)
                 boxes.append(b)
                 self.play(Create(b), row.animate.set_color(col), run_time=0.6)
-            think = note("(a free <think> block may come first)", size=S.SMALL_SIZE).next_to(fmt, DOWN, buff=0.35)
+            think = note("(preceded by a <think> block)", size=S.SMALL_SIZE).next_to(fmt, DOWN, buff=0.35)
             self.play(FadeIn(think), run_time=0.5)
 
-        secs = screen("caseB-trajectory-filled-SCREEN.txt")
-        p1 = code_panel(secs["panel 1: counterexample"], "text", line_numbers=False, font_size=14, max_width=7.2,
-                        title="1 · counterexample")
-        p2 = code_panel(secs["panel 2: reasoning"], "text", line_numbers=False, font_size=14, max_width=5.8,
-                        title="2 · rationale")
-        p3 = code_panel(secs["panel 3: rust"], "text", line_numbers=False, font_size=14, max_width=5.8,
-                        title="3 · repaired proof")
-        p1[0].set_stroke(S.BAD)
-        p2[0].set_stroke(S.INFO)
-        p3[0].set_stroke(ACC)
-        right = VGroup(p2, p3).arrange(DOWN, buff=0.6, aligned_edge=LEFT)
-        VGroup(p1, right).arrange(RIGHT, buff=0.5, aligned_edge=UP).move_to(DOWN * 0.25)
-        a1 = Arrow([p1.get_right()[0], p2.get_center()[1], 0], p2.get_left(), buff=0.05, color=S.MUTED,
-                   stroke_width=3)
-        a2 = Arrow(p2.get_bottom(), p3.get_top(), buff=0.08, color=S.MUTED, stroke_width=3)
-        sub = note("recorded TopoVerus output for Case B (released case study)", size=S.SMALL_SIZE)
-        sub.to_edge(UP, buff=0.4)
-        c2 = cite("repo: docs/case-studies/b-prefix-invariant/model-output.txt (trimmed; see SOURCES.md)")
+        secs = screen("caseB-fig4-counterexample-SCREEN.txt")
+        cx = code_panel(secs["counterexample"], "text", line_numbers=False, font_size=16, max_width=12.0,
+                        title="TopoVerus counterexample · max_profit")
+        cx[0].set_stroke(S.BAD)
+        tgt = VGroup(*[T(l, size=S.SMALL_SIZE, color=ACC) for l in secs["repair target"].splitlines()]
+                     ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        VGroup(cx, tgt).arrange(DOWN, buff=0.3, aligned_edge=LEFT).move_to(DOWN * 0.1)
+        c2 = cite("TopoVerus Fig. 4, p.9 (Case Study B, App. B p.17)")
         with self.beat("Topo04Format-3"):
             self.play(*[FadeOut(m) for m in (h, fmt, c1, think, *boxes)], run_time=0.6)
-            self.play(FadeIn(sub), FadeIn(p1, shift=RIGHT * 0.2), FadeIn(c2), run_time=0.9)
-            self.play(GrowArrow(a1), FadeIn(p2, shift=RIGHT * 0.2), run_time=0.7)
-            self.play(GrowArrow(a2), FadeIn(p3, shift=DOWN * 0.2), run_time=0.7)
+            self.play(FadeIn(cx, shift=UP * 0.2), FadeIn(c2), run_time=1.0)
+            self.play(FadeIn(tgt), run_time=0.7)
 
 
 # ------------------------------------------------------------------ 5. the counterexample, next to the code
@@ -275,11 +241,11 @@ class Topo05Counterexample(TopoScene):
     def construct(self):
         panel = loop_panel(font_size=15).to_corner(UL, buff=0.3)
         colx = (panel.get_right()[0] + 7.0) / 2
-        st = state_table([("prices", "[5, 3, 7]"), ("i", "0"), ("max_pro", "0"), ("min_price", "i32::MAX")],
+        st = state_table([("price", "[5, 3, 7]"), ("i", "0"), ("max_pro", "0"), ("min_price", "i32::MAX")],
                          title="[State] before the loop", size=S.SMALL_SIZE)
         st[0].set_stroke(S.BAD)
         st.move_to([colx, 0, 0]).to_edge(UP, buff=0.3)
-        c = cite("Counterexample: repo docs/case-studies/b-prefix-invariant/model-output.txt:2-17; TopoVerus Fig. 4 p.9")
+        c = cite("TopoVerus Fig. 4, p.9 (Case Study B, App. B p.17)")
         with self.beat("Topo05Counterexample-1"):
             self.play(FadeIn(panel), FadeIn(c), run_time=0.8)
             init = highlight_lines(panel, *L_INIT, color=S.INFO)
@@ -297,7 +263,7 @@ class Topo05Counterexample(TopoScene):
         kl = T("k", size=S.SMALL_SIZE, color=S.BAD, mono=True).next_to(cells[2], DOWN, buff=0.1)
         arr = VGroup(cells, idx, jl, kl)
         arr.next_to(st, DOWN, buff=0.3).set_x(colx)
-        trace = VGroup(T("prices[2] - prices[0]", size=S.SMALL_SIZE, mono=True),
+        trace = VGroup(T("price[2] - price[0]", size=S.SMALL_SIZE, mono=True),
                        T("= 7 - 5 = 2", size=S.SMALL_SIZE, mono=True)).arrange(DOWN, buff=0.1)
         trace.next_to(arr, DOWN, buff=0.25).set_x(colx)
         with self.beat("Topo05Counterexample-2"):
@@ -309,68 +275,53 @@ class Topo05Counterexample(TopoScene):
 
         viol = T("2 <= max_pro = 0 : false", size=S.SMALL_SIZE + 2, color=S.BAD, mono=True)
         viol.next_to(trace, DOWN, buff=0.3).set_x(colx)
-        why = VGroup(note("range = the whole array,", size=S.SMALL_SIZE - 2),
-                     note("but nothing is processed yet", size=S.SMALL_SIZE - 2)).arrange(DOWN, buff=0.08)
+        why = VGroup(note("before any day is processed:", size=S.SMALL_SIZE - 2),
+                     note("only the empty prefix 0..i", size=S.SMALL_SIZE - 2)).arrange(DOWN, buff=0.08)
         why.next_to(viol, DOWN, buff=0.2).set_x(colx)
         with self.beat("Topo05Counterexample-3"):
             bad = highlight_lines(panel, *L_BUG, color=S.BAD)
             self.play(FadeIn(viol, shift=UP * 0.1), ReplacementTransform(bug, bad), run_time=0.8)
             self.play(FadeIn(why), run_time=0.6)
         with self.beat("Topo05Counterexample-4"):
-            cause = VGroup(T("cause: quantifier range", size=S.SMALL_SIZE + 2, color=ACC, weight="BOLD"),
-                           T("is too wide", size=S.SMALL_SIZE + 2, color=ACC, weight="BOLD")).arrange(DOWN, buff=0.08)
+            cause = VGroup(T("root cause:", size=S.SMALL_SIZE + 2, color=ACC, weight="BOLD"),
+                           T("the quantifier range", size=S.SMALL_SIZE + 2, color=ACC, weight="BOLD")
+                           ).arrange(DOWN, buff=0.08)
             cause.move_to(why)
             self.play(ReplacementTransform(why, cause), Indicate(bad, color=S.BAD), run_time=1.0)
 
 
-# ------------------------------------------------------------------ 6. rationale and repaired line; honest status
+# ------------------------------------------------------------------ 6. repair target
 class Topo06Repair(TopoScene):
     def construct(self):
-        panel = loop_panel(font_size=15, title="max_profit · recorded repair (Case B)").to_corner(UL, buff=0.3)
+        panel = loop_panel(font_size=15).to_corner(UL, buff=0.3)
         colx = (panel.get_right()[0] + 7.0) / 2
         bad = highlight_lines(panel, *L_BUG, color=S.BAD)
-        rat = VGroup(T("rationale (recorded, item 2)", size=S.SMALL_SIZE - 2, color=S.INFO),
-                     T("Change the invariant to", size=S.SMALL_SIZE - 2, mono=True),
-                     T("forall|j: int, k: int|", size=S.SMALL_SIZE - 2, mono=True, color=ACC),
-                     T("0 <= j < k < i ==> ...", size=S.SMALL_SIZE - 2, mono=True, color=ACC),
-                     T("... At i=0, this is", size=S.SMALL_SIZE - 2, mono=True),
-                     T("vacuously true ...", size=S.SMALL_SIZE - 2, mono=True)
-                     ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
-        rc = card(rat.width + 0.5, rat.height + 0.45, edge=S.INFO)
+        lines = screen("caseB-fig4-counterexample-SCREEN.txt")["repair target"]
+        words = " ".join(lines.split())
+        wrapped = ["The last invariant talks about", "all future days. It should only",
+                   "summarize the processed prefix:", "0 <= j < k < i."]
+        assert " ".join(wrapped) == words, words
+        rat = VGroup(T("repair target", size=S.SMALL_SIZE - 2, color=ACC),
+                     *[T(l, size=S.SMALL_SIZE - 2, mono=(i == 3), color=ACC if i == 3 else S.INK)
+                       for i, l in enumerate(wrapped)]).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        rc = card(rat.width + 0.5, rat.height + 0.45, edge=ACC)
         R = VGroup(rc, rat.move_to(rc))
-        R.move_to([colx, 0, 0]).to_edge(UP, buff=0.3)
-        c = cite("repo: docs/case-studies/b-prefix-invariant/model-output.txt:23, 29, 73; TopoVerus Fig. 4 p.9")
+        R.move_to([colx, 0, 0]).to_edge(UP, buff=0.6)
+        c = cite("TopoVerus Fig. 4 p.9; §4.6 p.8; App. B p.17")
         with self.beat("Topo06Repair-1"):
             self.play(FadeIn(panel), FadeIn(bad), FadeIn(c), run_time=0.8)
             self.play(FadeIn(R, shift=LEFT * 0.2), run_time=1.0)
 
         twin = aligned_twin(panel, LOOP_FIXED, "rust", title="x", line_numbers=False, font_size=15)
-        new_line = twin.lines[L_BUG[0] - 1]
+        new_line = twin.lines[L_RANGE - 1]
+        sub = VGroup(T("full array", size=S.SMALL_SIZE + 2, color=S.BAD),
+                     T("→ processed prefix", size=S.SMALL_SIZE + 2, color=ACC)).arrange(DOWN, buff=0.12)
+        sub.next_to(R, DOWN, buff=0.6).set_x(colx)
         with self.beat("Topo06Repair-2"):
-            self.play(Transform(panel.lines[L_BUG[0] - 1], new_line), run_time=1.2)
+            self.play(Transform(panel.lines[L_RANGE - 1], new_line), run_time=1.2)
             fixed = SurroundingRectangle(VGroup(*panel.lines[L_BUG[0] - 1:L_BUG[1]]), color=ACC, buff=0.06,
                                          stroke_width=3, corner_radius=0.05)
-            self.play(ReplacementTransform(bad, fixed), run_time=0.6)
-
-        dl = panel.lines[L_DELETED - 1]
-        st = strike(dl)
-        dnote = VGroup(note("also deleted in", color=S.BAD, size=S.SMALL_SIZE),
-                       note("the recorded output", color=S.BAD, size=S.SMALL_SIZE)).arrange(DOWN, buff=0.06)
-        dnote.next_to(R, DOWN, buff=0.5).set_x(colx)
-        darr = Arrow(dnote.get_left(), dl.get_right() + RIGHT * 0.1, buff=0.1, color=S.BAD, stroke_width=3,
-                     max_tip_length_to_length_ratio=0.12)
-        with self.beat("Topo06Repair-3"):
-            self.play(Create(st), dl.animate.set_opacity(0.35), run_time=0.8)
-            self.play(FadeIn(dnote), GrowArrow(darr), run_time=0.7)
-
-        status = VGroup(badge("Verus on this repaired program: not reported", S.WARN),
-                        note("The paper reports the counterexample and the repair target. We could not run Verus.",
-                             size=S.SMALL_SIZE - 2)
-                        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
-        status.next_to(panel, DOWN, buff=0.25).align_to(panel, LEFT)
-        with self.beat("Topo06Repair-4"):
-            self.play(FadeIn(status[0], shift=UP * 0.1), run_time=0.7)
-            self.play(FadeIn(status[1]), run_time=0.7)
+            self.play(ReplacementTransform(bad, fixed), FadeIn(sub), run_time=0.8)
 
 
 # ------------------------------------------------------------------ 7. training pipeline
@@ -383,8 +334,8 @@ class Topo07Pipeline(TopoScene):
               "w": 3.6, "h": 1.05, "color": S.BAD},
              {"id": "grpo", "label": "GRPO", "sub": "8 responses per prompt", "pos": [3.0, 2.4], "w": 3.2,
               "h": 1.05, "color": S.INFO},
-             {"id": "gate", "label": "Safety gate", "sub": "only proof annotations changed?", "pos": [3.0, 0.55],
-              "w": 3.6, "h": 1.05, "color": S.WARN},
+             {"id": "gate", "label": "Safety gate", "sub": "Lynette: only proof code changed?", "pos": [3.0, 0.55],
+              "w": 3.9, "h": 1.05, "color": S.WARN},
              {"id": "verus", "label": "Verus", "sub": "R_pass", "pos": [3.0, -1.3], "w": 3.2, "h": 1.05,
               "color": S.INFO},
              {"id": "graph", "label": "Topological Graph Reward", "sub": "R_dep: which invariants, in what order",
@@ -395,7 +346,7 @@ class Topo07Pipeline(TopoScene):
              {"from": "gate", "to": "verus"}, {"from": "verus", "to": "reward"}, {"from": "graph", "to": "reward"},
              {"from": "grpo", "to": "graph"}])
         B, E = g.by_id, g.edge_by_id
-        c = cite("TopoVerus §3.2 p.5; §4.1 p.6–7 (461 trajectories, 249 programs, 8 rollouts); Eq. 2 p.5")
+        c = cite("TopoVerus §3.2 and Eq. 2 p.5; §4.1 p.6–7")
         with self.beat("Topo07Pipeline-1"):
             self.play(FadeIn(B["base"], shift=UP * 0.1), FadeIn(c), run_time=0.8)
         data = note("teacher: Sonnet 4.6 · 461 trajectories from 249 programs", size=S.SMALL_SIZE)
@@ -426,13 +377,13 @@ class Topo07Pipeline(TopoScene):
 # ------------------------------------------------------------------ 8. why order matters (binary search, Fig. 1-2)
 class Topo08Order(TopoScene):
     def construct(self):
-        tag = badge("illustrative example from the paper", S.INFO).to_edge(UP, buff=0.35)
+        h = heading("Binary-search insertion: five invariants")
         inv = code_panel(screen1("binary-search-invariants-SCREEN.rs"), "rust",
-                         title="binary-search insertion: loop invariants", line_numbers=False, font_size=20)
-        inv.next_to(tag, DOWN, buff=0.3)
-        c = cite("TopoVerus Fig. 1 p.3, Fig. 2 and text p.4 (illustrative)")
+                         title="search_insert · loop invariants", line_numbers=False, font_size=20)
+        inv.next_to(h, DOWN, buff=0.35)
+        c = cite("TopoVerus Fig. 1 p.3; Fig. 2 and §2.1 p.4")
         with self.beat("Topo08Order-1"):
-            self.play(FadeIn(tag), FadeIn(c), run_time=0.6)
+            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
             self.play(FadeIn(inv), run_time=0.9)
         with self.beat("Topo08Order-2"):
             b = highlight_lines(inv, 1, color=S.INFO)
@@ -443,7 +394,7 @@ class Topo08Order(TopoScene):
             self.play(ReplacementTransform(b2, b3), run_time=0.7)
 
         first3 = VGroup(*inv.lines[0:3])
-        miss = note("missing", color=S.BAD, size=S.SMALL_SIZE + 2).next_to(first3, RIGHT, buff=0.6)
+        miss = note("missing", color=S.MUTED, size=S.SMALL_SIZE + 2).next_to(first3, RIGHT, buff=0.6)
         under = VGroup(T("Under-constrained counterexample (Fig. 2, top)", size=S.SMALL_SIZE + 2, color=S.BAD,
                          weight="BOLD"),
                        note("state high = 2, yet it checks i = 1", size=S.SMALL_SIZE + 2, color=S.INK),
@@ -452,136 +403,143 @@ class Topo08Order(TopoScene):
         uc = card(under.width + 0.6, under.height + 0.5, edge=S.BAD)
         U = VGroup(uc, under.move_to(uc)).next_to(inv, DOWN, buff=0.45)
         with self.beat("Topo08Order-3"):
-            self.play(first3.animate.set_opacity(0.2), FadeIn(miss), FadeOut(b3), run_time=0.8)
+            b5w = highlight_lines(inv, 5, color=S.BAD)
+            self.play(first3.animate.set_opacity(0.2), FadeIn(miss), ReplacementTransform(b3, b5w), run_time=0.8)
             self.play(FadeIn(U, shift=UP * 0.15), run_time=0.8)
 
         st = state_table([("nums", "[1, 3, 5]"), ("target", "5"), ("high", "2"), ("low after 1 step", "2")],
-                         title="Constrained (Fig. 2, bottom)")
+                         title="Constrained (Fig. 2, bottom)", size=S.SMALL_SIZE)
         st[0].set_stroke(S.BAD)
         check = VGroup(T("I5 at i = 2:", size=S.SMALL_SIZE + 2, color=S.MUTED),
                        T("nums[2] > 5 ?", size=S.SMALL_SIZE + 4, mono=True),
                        T("nums[2] = 5   false", size=S.SMALL_SIZE + 4, mono=True, color=S.BAD)
                        ).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
-        low = VGroup(st, check).arrange(RIGHT, buff=0.9).next_to(inv, DOWN, buff=0.4)
+        low = VGroup(st, check).arrange(RIGHT, buff=0.9).next_to(inv, DOWN, buff=0.3)
         with self.beat("Topo08Order-4"):
             self.play(FadeOut(U), FadeOut(miss), first3.animate.set_opacity(1), run_time=0.6)
-            b5 = highlight_lines(inv, 5, color=S.BAD)
-            self.play(FadeIn(st, shift=UP * 0.1), Create(b5), run_time=0.9)
+            self.play(FadeIn(st, shift=UP * 0.1), run_time=0.9)
             self.play(FadeIn(check[0:2]), run_time=0.6)
             self.play(FadeIn(check[2]), run_time=0.5)
 
         fixed = aligned_twin(inv, screen1("binary-search-invariants-SCREEN.rs").rsplit("\n", 1)[0] + "\n"
                              + screen1("binary-search-I5-fixed-SCREEN.rs"), "rust",
-                             title="binary-search insertion: loop invariants", line_numbers=False, font_size=20)
+                             title="search_insert · loop invariants", line_numbers=False, font_size=20)
         rep = T("high <= i  →  high < i", size=S.SMALL_SIZE + 4, mono=True, color=ACC)
         rep.next_to(check, DOWN, buff=0.4).align_to(check, LEFT)
         with self.beat("Topo08Order-5"):
             self.play(Transform(inv.lines[4], fixed.lines[4]), run_time=1.0)
-            self.play(b5.animate.set_color(ACC), FadeIn(rep), run_time=0.6)
+            self.play(b5w.animate.set_color(ACC), FadeIn(rep), run_time=0.6)
 
 
-# ------------------------------------------------------------------ 9. topological graph reward
+# ------------------------------------------------------------------ 9. topological graph reward (graph as in Fig. 2)
+def inv_node(label: str, color=ACC):
+    t = T(label, size=S.BODY_SIZE - 4, weight="BOLD", mono=True)
+    r = RoundedRectangle(width=0.95, height=0.6, corner_radius=0.1, stroke_color=color, stroke_width=3,
+                         fill_color=S.PANEL, fill_opacity=1)
+    return VGroup(r, t.move_to(r))
+
+
 class Topo09GraphReward(TopoScene):
     def construct(self):
         h = heading("Topological Graph Reward  R_dep", color=ACC)
-        pos = {"I1": [0, 1.5], "I2": [-1.3, 0.1], "I3": [1.3, 0.1], "I4": [-1.3, -1.4], "I5": [1.3, -1.4]}
-        nodes = {}
-        for k, p in pos.items():
-            circ = Circle(radius=0.42, stroke_color=ACC, stroke_width=3, fill_color=S.PANEL, fill_opacity=1)
-            nodes[k] = VGroup(circ, T(k, size=S.BODY_SIZE - 2, weight="BOLD", mono=True)).move_to([p[0], p[1], 0])
-        edges = [("I1", "I2"), ("I1", "I3"), ("I2", "I4"), ("I3", "I4"), ("I2", "I5"), ("I3", "I5")]
-        arrows = {}
-        for a, b in edges:
-            pa, pb = nodes[a].get_center(), nodes[b].get_center()
-            d = (pb - pa) / np.linalg.norm(pb - pa)
-            ln = np.linalg.norm(pb - pa) - 0.84
-            arrows[(a, b)] = Arrow(pa + d * 0.42, pb - d * 0.42, buff=0.02, color=S.MUTED, stroke_width=3,
-                                   max_tip_length_to_length_ratio=0.2 / ln)
-        graph = VGroup(*arrows.values(), *nodes.values())
-        graph.move_to(LEFT * 4.1 + DOWN * 0.2)
-        reading = VGroup(note("edges: our reading of Fig. 2", color=S.WARN),
-                         note("(illustrative example from the paper)", size=S.SMALL_SIZE - 2)
-                         ).arrange(DOWN, buff=0.08).next_to(graph, DOWN, buff=0.35)
-        expl = VGroup(note("edge a → b:", size=S.SMALL_SIZE, color=S.INK),
-                      note("a must hold before b can be proven", size=S.SMALL_SIZE)).arrange(DOWN, buff=0.06)
-        expl.next_to(graph, UP, buff=0.25)
-        c = cite("TopoVerus Defs. 1–3 p.5–6; Eq. 6 p.6; graph not given at evaluation, §4.1 p.6")
+        n = {k: inv_node(k) for k in ("I1", "I2", "I3", "I4", "I5'")}
+        n["I1"].move_to([-5.4, 1.5, 0])
+        n["I2"].move_to([-3.75, 1.5, 0])
+        n["I3"].move_to([-2.65, 1.5, 0])
+        grp = DashedVMobject(SurroundingRectangle(VGroup(n["I2"], n["I3"]), buff=0.2, corner_radius=0.1,
+                                                  color=S.INK, stroke_width=2), num_dashes=40)
+        n["I4"].move_to([-0.4, 2.15, 0])
+        n["I5'"].move_to([-0.4, 0.85, 0])
+        ar = lambda a, b: Arrow(a, b, buff=0.05, color=S.INK, stroke_width=3, max_tip_length_to_length_ratio=0.25)
+        a1 = ar(n["I1"].get_right(), grp.get_left())
+        a4 = ar(grp.get_right(), n["I4"].get_left())
+        a5 = ar(grp.get_right(), n["I5'"].get_left())
+        graph = VGroup(a1, a4, a5, grp, *n.values())
+        expl = note("edge a → b: a must be established before b can be inductively verified", size=S.SMALL_SIZE)
+        expl.next_to(graph, DOWN, buff=0.3).align_to(n["I1"], LEFT)
+        c = cite("TopoVerus §3.1 and Defs. 1–3 p.5–6; Fig. 2 p.4; Eq. 6 p.6; §2.1 p.4; §4.1 p.6")
         with self.beat("Topo09GraphReward-1"):
             self.play(FadeIn(h), FadeIn(c), run_time=0.6)
-            self.play(LaggedStart(*[FadeIn(n) for n in nodes.values()], lag_ratio=0.2), run_time=1.2)
-            self.play(GrowArrow(arrows[("I1", "I2")]), FadeIn(expl), run_time=0.8)
+            self.play(LaggedStart(*[FadeIn(m) for m in n.values()], lag_ratio=0.15), Create(grp), run_time=1.2)
+            self.play(GrowArrow(a1), GrowArrow(a4), GrowArrow(a5), FadeIn(expl), run_time=1.0)
+
+        def leg(col, txt):
+            return VGroup(Circle(radius=0.09, color=col, fill_color=col, fill_opacity=1),
+                          T(txt, size=S.SMALL_SIZE - 2, color=S.INK)).arrange(RIGHT, buff=0.12)
+        legend = VGroup(leg(S.OK, "correct"), leg(S.BAD, "wrong"), leg(S.MUTED, "missing")).arrange(RIGHT, buff=0.4)
+        legend.next_to(graph, RIGHT, buff=0.8).shift(UP * 0.7)
+        top = VGroup(T("Fig. 2, top", size=S.SMALL_SIZE, color=S.MUTED),
+                     T("I1–I3 missing, I5 wrong", size=S.SMALL_SIZE + 2)).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        bot = VGroup(T("Fig. 2, bottom", size=S.SMALL_SIZE, color=S.MUTED),
+                     T("I1–I4 in place, I5 wrong", size=S.SMALL_SIZE + 2)).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        top.next_to(legend, DOWN, buff=0.35).align_to(legend, LEFT)
+        bot.move_to(top, aligned_edge=UL)
+
+        def paint(state):
+            return [n[k][0].animate.set_stroke(col, opacity=1).set_fill(S.PANEL, opacity=1) for k, col in state.items()]
         with self.beat("Topo09GraphReward-2"):
-            self.play(LaggedStart(*[GrowArrow(arrows[e]) for e in edges[1:]], lag_ratio=0.25), run_time=1.6)
-            self.play(FadeIn(reading), run_time=0.5)
+            self.play(FadeOut(expl), FadeIn(legend), FadeIn(top),
+                      *paint({"I1": S.MUTED, "I2": S.MUTED, "I3": S.MUTED, "I4": S.OK, "I5'": S.BAD}), run_time=1.0)
+            self.play(*[n[k][1].animate.set_opacity(0.45) for k in ("I1", "I2", "I3")], run_time=0.5)
+            self.play(ReplacementTransform(top, bot), *[n[k][1].animate.set_opacity(1) for k in ("I1", "I2", "I3")],
+                      *paint({"I1": S.OK, "I2": S.OK, "I3": S.OK}), run_time=1.0)
 
         f = VGroup(T("R_dep = α × β", size=S.BODY_SIZE + 2, mono=True, weight="BOLD"),
                    VGroup(T("α", size=S.BODY_SIZE, color=ACC, mono=True),
                           note("coverage: reference invariants written / all", color=S.INK)).arrange(RIGHT, buff=0.25),
                    VGroup(T("β", size=S.BODY_SIZE, color=ACC, mono=True),
-                          note("edge satisfaction: edges in order / edges", color=S.INK)).arrange(RIGHT, buff=0.25)
+                          note("edge satisfaction: edges written in dependency order / edges", color=S.INK)
+                          ).arrange(RIGHT, buff=0.25)
                    ).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
-        f.move_to(RIGHT * 2.9 + UP * 1.9)
+        f.next_to(graph, DOWN, buff=0.55).align_to(n["I1"], LEFT)
         with self.beat("Topo09GraphReward-3"):
             self.play(FadeIn(f[0]), run_time=0.7)
             self.play(FadeIn(f[1], shift=UP * 0.1), run_time=0.6)
             self.play(FadeIn(f[2], shift=UP * 0.1), run_time=0.6)
 
-        rows = [("I1 I2 I3 I4 I5", "6/6", "1.0"), ("I4 I5 I1 I2 I3", "2/6", "0.33"), ("I5 I4 I3 I2 I1", "0/6", "0")]
-        tbl = VGroup(VGroup(note("model writes", size=S.SMALL_SIZE), note("β", size=S.SMALL_SIZE),
-                            note("R_dep", size=S.SMALL_SIZE)))
-        for o, b, r in rows:
-            tbl.add(VGroup(T(o, size=S.SMALL_SIZE + 2, mono=True), T(b, size=S.SMALL_SIZE + 2, mono=True),
-                           T(r, size=S.SMALL_SIZE + 2, mono=True, color=ACC)))
-        for row in tbl:
-            row[1].shift(RIGHT * 0)
-        # column layout
-        xs = [0, 3.0, 4.3]
-        for i, row in enumerate(tbl):
-            for j, cell in enumerate(row):
-                cell.move_to([xs[j], -i * 0.55, 0], aligned_edge=LEFT)
-        tbl.next_to(f, DOWN, buff=0.45).align_to(f, LEFT)
-        own = note("our computation (illustrative edge set, all α = 1)", color=S.WARN, size=S.SMALL_SIZE - 2)
-        own.next_to(tbl, DOWN, buff=0.2).align_to(tbl, LEFT)
+        q = VGroup(T("prerequisite facts first", size=S.BODY_SIZE - 2, color=ACC, weight="BOLD"),
+                   T("→ counterexamples for dependent invariants", size=S.SMALL_SIZE + 2),
+                   T("in a better-constrained proof state", size=S.SMALL_SIZE + 2)
+                   ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        q.next_to(f, DOWN, buff=0.35).align_to(f, LEFT)
         with self.beat("Topo09GraphReward-4"):
-            self.play(FadeIn(tbl[0]), FadeIn(own), run_time=0.6)
-            for row in tbl[1:]:
-                self.play(FadeIn(row, shift=UP * 0.1), run_time=0.6)
-        tr = badge("training-time signal only", S.WARN)
-        tr.next_to(own, DOWN, buff=0.3).align_to(tbl, LEFT)
-        tr2 = note("evaluation: no reference proof, no graph", size=S.SMALL_SIZE).next_to(tr, DOWN, buff=0.15)
-        tr2.align_to(tr, LEFT)
+            self.play(FadeIn(q, shift=UP * 0.1), run_time=0.9)
+        tr = badge("training signal only", ACC)
+        tr2 = note("at test time: no reference proof, no graph", size=S.SMALL_SIZE)
+        T2 = VGroup(tr, tr2).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
+        T2.next_to(top, DOWN, buff=0.5).align_to(legend, LEFT)
         with self.beat("Topo09GraphReward-5"):
-            self.play(FadeIn(tr), FadeIn(tr2), run_time=0.8)
+            self.play(FadeIn(T2), run_time=0.8)
 
 
 # ------------------------------------------------------------------ 10. safety gate
 class Topo10Safety(TopoScene):
     def construct(self):
         secs = screen("safety-gate-S3-SCREEN.rs")
-        tag = badge("test case from the released code", S.INFO).to_edge(UP, buff=0.35)
+        h = heading("Why a safety gate?")
         orig = code_panel(secs["screen text below: original"], "rust", title="original", line_numbers=False,
                           font_size=19)
-        orig.next_to(tag, DOWN, buff=0.35)
-        c = cite("repo: tests/test_trust.py:138-149 · outcomes are the test's assertions; we did not run it")
+        orig.next_to(h, DOWN, buff=0.35)
+        c = cite("TopoVerus code: tests/test_trust.py:138-149; safety gate (Lynette): §3.2 p.5")
         with self.beat("Topo10Safety-1"):
-            self.play(FadeIn(tag), FadeIn(c), run_time=0.6)
+            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
             self.play(FadeIn(orig), run_time=0.9)
+            b = highlight_lines(orig, 1, color=S.INFO)
+            self.play(Create(b), run_time=0.6)
         fail = badge("Verus: verification failed", S.BAD)
         x2 = note("x = 2 → y = 1, but ensures r > 1", size=S.SMALL_SIZE)
         row1 = VGroup(fail, x2).arrange(RIGHT, buff=0.4).next_to(orig, DOWN, buff=0.25)
         with self.beat("Topo10Safety-2"):
-            b = highlight_lines(orig, 1, color=S.INFO)
-            self.play(Create(b), run_time=0.6)
             b2 = highlight_lines(orig, 2, color=S.WARN)
             self.play(ReplacementTransform(b, b2), run_time=0.6)
             self.play(FadeIn(x2), run_time=0.5)
             self.play(FadeIn(fail), run_time=0.5)
 
-        cand = code_panel(secs["screen text below: original"], "rust", title="\"repair\": move the existing assume",
+        cand = code_panel(secs["screen text below: original"], "rust", title="move the existing assume",
                           line_numbers=False, font_size=19)
         cand.next_to(row1, DOWN, buff=0.4)
         cand_fixed = aligned_twin(cand, secs["screen text below: candidate"], "rust",
-                                  title="\"repair\": move the existing assume", line_numbers=False, font_size=19)
+                                  title="move the existing assume", line_numbers=False, font_size=19)
         ver = badge("Verus: verified", S.OK)
         ver.next_to(cand, DOWN, buff=0.25).align_to(row1, LEFT)
         with self.beat("Topo10Safety-3"):
@@ -657,12 +615,12 @@ class Topo11Results(TopoScene):
             self.play(FadeIn(cov), run_time=0.6)
 
 
-# ------------------------------------------------------------------ 12. limitations, bridge, series map
+# ------------------------------------------------------------------ 12. limitations and takeaway
 class Topo12Close(TopoScene):
     def construct(self):
-        h = heading("What TopoVerus does not claim")
-        items = ["Curriculum targets loop invariants only",
-                 "Counterexamples are not formally checked",
+        h = heading("Limitations")
+        items = ["Curriculum targets loop invariants, not assertions",
+                 "Counterexamples are not formally checked; traces can be imprecise",
                  "Systems code (VeruSAGE), Safe-Pass@1: Sonnet-4.5 75.5% vs TopoVerus 30.2%"]
         bl = bullet_list(items, size=S.BODY_SIZE - 2).move_to(UP * 0.2)
         if bl.width > 12.6:
@@ -670,16 +628,16 @@ class Topo12Close(TopoScene):
         c1 = cite("TopoVerus §6 Limitations p.10; Table 1 p.7")
         with self.beat("Topo12Close-1"):
             self.play(FadeIn(h), FadeIn(c1), run_time=0.6)
-            self.play(FadeIn(bl[0], shift=RIGHT * 0.1), run_time=0.7)
-        with self.beat("Topo12Close-2"):
-            self.play(FadeIn(bl[1], shift=RIGHT * 0.1), run_time=0.7)
-        with self.beat("Topo12Close-3"):
-            self.play(FadeIn(bl[2], shift=RIGHT * 0.1), run_time=0.7)
+            for it in bl:
+                self.play(FadeIn(it, shift=RIGHT * 0.1), run_time=0.7)
 
-        m = series_map("vero").shift(DOWN * 0.3)
-        q = T("Next: can agents build verified repositories?", size=S.BODY_SIZE - 2, color=S.ACCENT["vero"])
-        q.next_to(m, UP, buff=0.7)
-        with self.beat("Topo12Close-4"):
+        t = T("TopoVerus", size=S.TITLE_SIZE, weight="BOLD", color=ACC)
+        lines = VGroup(T("Name a concrete failing state before repairing.", size=S.BODY_SIZE),
+                       T("Reward establishing prerequisite invariants first.", size=S.BODY_SIZE),
+                       T("Diagnosis becomes a skill used in a single pass.", size=S.BODY_SIZE, color=ACC)
+                       ).arrange(DOWN, buff=0.35)
+        tk = VGroup(t, lines).arrange(DOWN, buff=0.7).move_to(ORIGIN)
+        with self.beat("Topo12Close-2"):
             self.play(FadeOut(h), FadeOut(bl), FadeOut(c1), run_time=0.6)
-            self.play(FadeIn(m, shift=UP * 0.2), run_time=1.2)
-            self.play(FadeIn(q), run_time=0.8)
+            self.play(FadeIn(t), run_time=0.6)
+            self.play(LaggedStart(*[FadeIn(l, shift=UP * 0.1) for l in lines], lag_ratio=0.5), run_time=2.0)

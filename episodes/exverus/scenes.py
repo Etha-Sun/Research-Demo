@@ -1,4 +1,4 @@
-"""Episode 1 -- ExVerus: Verus proof repair via counterexample reasoning.
+"""ExVerus: Verus proof repair via counterexample reasoning (Yang et al., ICML 2026).
 
 Scenes are listed in narration.json order. Every number on screen carries a cite(...) footnote.
 On-screen code is loaded from episodes/exverus/examples/ (the part below the "on screen below" marker).
@@ -16,7 +16,7 @@ from manim import (
 from common import style as S
 from common.components import (
     NarratedScene, T, badge, bullet_list, card, cite, code_panel, highlight_lines,
-    pipeline, pulse_path, series_map, state_table, title_card,
+    pipeline, pulse_path, state_table, title_card,
 )
 
 EP = "exverus"
@@ -90,52 +90,15 @@ def range_row(label, lo, hi, color, width=7.0, max_value=100.0, size=S.SMALL_SIZ
 
 
 # =====================================================================================================
-class ExV01SeriesIntro(NarratedScene):
+class ExV01Title(NarratedScene):
     EPISODE = EP
 
     def construct(self):
         with self.beat("exv01-1"):
-            m = series_map(None)
-            self.play(FadeIn(m[0], lag_ratio=0.2), run_time=2.0)
-            self.play(LaggedStart(*[GrowArrow(a) for a in m[1]], lag_ratio=0.3), run_time=1.2)
-            levels = ["one loop invariant", "a model that\nlearns to repair", "whole repositories",
-                      "optimised SIMD\nkernels"]
-            tops = VGroup()
-            for tile, lv in zip(m[0], levels):
-                t = T(lv, size=S.SMALL_SIZE - 2, color=S.MUTED).next_to(tile, UP, buff=0.25)
-                tops.add(t)
-                self.play(Indicate(tile, scale_factor=1.06, color=S.INK), FadeIn(t), run_time=0.9)
-            m.add(tops)
-        with self.beat("exv01-2"):
-            self.play(FadeIn(m[2], shift=UP * 0.1), run_time=1.0)
-            ev = VGroup(badge("counterexamples = evidence", S.BAD), badge("verifier re-check = trust", S.OK))
-            ev.arrange(RIGHT, buff=0.6).next_to(m[2], DOWN, buff=0.5)
-            self.play(LaggedStart(*[FadeIn(b, shift=UP * 0.1) for b in ev], lag_ratio=0.5), run_time=1.6)
-        with self.beat("exv01-3"):
-            self.play(FadeOut(VGroup(m, ev)), run_time=0.6)
-            name = T("Yuechun Sun", size=S.HEADING_SIZE + 4, weight="BOLD")
-            rows = VGroup(
-                T("Senior undergraduate, School of the Gifted Young, USTC", size=S.BODY_SIZE - 2),
-                T("Data Science and Big Data Technology", size=S.BODY_SIZE - 4, color=S.MUTED),
-                T("Advisors: Prof. Kexin Pei (UChicago), Prof. Alvin Cheung (UC Berkeley)", size=S.BODY_SIZE - 4),
-                T("Interests: language models and formal verification", size=S.BODY_SIZE - 4, color=ACC),
-            ).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
-            inner = VGroup(name, rows).arrange(DOWN, buff=0.45, aligned_edge=LEFT)
-            fr = card(inner.width + 1.0, inner.height + 0.9)
-            fr.move_to(inner)
-            author = VGroup(fr, inner)
-            c = cite("Author homepage (fetched 2026-11-23)")
-            self.play(FadeIn(fr), Write(name), run_time=1.0)
-            self.play(LaggedStart(*[FadeIn(r, shift=RIGHT * 0.2) for r in rows], lag_ratio=0.35), FadeIn(c),
-                      run_time=2.0)
-        with self.beat("exv01-4"):
-            self.play(FadeOut(VGroup(author, c)), run_time=0.6)
-            m1 = series_map(EP).scale(0.62).to_edge(UP, buff=0.35)
-            tc = title_card(EP, 1, extra="Yang, Sun, Wu, Caridad, Yuan, Yao, Lu, Pei  ·  ICML 2026")
-            tc.next_to(m1, DOWN, buff=0.9)
-            self.play(FadeIn(m1), run_time=0.8)
-            self.play(Indicate(m1[0][0], color=ACC, scale_factor=1.08), run_time=0.8)
-            self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.2)
+            tc = title_card(EP, extra="Yang, Sun, Wu, Caridad, Yuan, Yao, Lu, Pei  ·  ICML 2026")
+            tc.move_to(ORIGIN)
+            self.play(FadeIn(tc[0][0], shift=UP * 0.2), run_time=1.0)
+            self.play(FadeIn(tc[0][1:]), Create(tc[1]), run_time=1.2)
 
 
 # =====================================================================================================
@@ -447,33 +410,29 @@ class ExV07Repair(NarratedScene):
 
     def construct(self):
         with self.beat("exv07-1"):
-            h = heading("Mutate: five candidate proofs (replace mutator)")
+            h = heading("Mutate: candidate proofs (replacing mutator)")
             pat = badge("shared by all CEXs:  i = 0  and  sum[0] > 0", S.BAD).next_to(h, DOWN, buff=0.4)
-            cands = VGroup()
-            for k in range(1, 6):
-                shown = k == 1
-                lab = VGroup(T(f"mutant_{k}", size=S.SMALL_SIZE + 2, mono=True, weight="BOLD",
-                               color=S.INK if shown else S.MUTED),
-                             T("i > 0 ==> sum[0] <= i as i32" if shown else "not shown in the paper",
-                               size=S.SMALL_SIZE - 2, mono=shown, color=ACC if shown else S.MUTED)
-                             ).arrange(DOWN, buff=0.12)
-                bx = card(max(2.3, lab.width + 0.3), 1.1, edge=ACC if shown else S.PANEL_EDGE)
-                lab.move_to(bx)
-                cands.add(VGroup(bx, lab))
-            cands.arrange(RIGHT, buff=0.22).next_to(pat, DOWN, buff=0.6)
-            if cands.width > 13.4:
-                cands.scale_to_fit_width(13.4)
+            lab = VGroup(T("mutant_1", size=S.BODY_SIZE - 2, mono=True, weight="BOLD"),
+                         T("i > 0 ==> sum[0] <= i as i32", size=S.BODY_SIZE - 2, mono=True, color=ACC)
+                         ).arrange(DOWN, buff=0.2)
+            bx = card(lab.width + 0.8, lab.height + 0.6, edge=ACC)
+            lab.move_to(bx)
+            cands = VGroup(VGroup(bx, lab)).next_to(pat, DOWN, buff=0.6)
+            dflt = T("5 candidates by default", size=S.SMALL_SIZE + 2, color=S.MUTED)
+            dflt.next_to(h, DOWN, buff=0.12)
+            pat.next_to(dflt, DOWN, buff=0.35)
+            cands.next_to(pat, DOWN, buff=0.5)
             c = cite("ExVerus (Yang et al., ICML 2026), §4.1 (p.6: 5 mutants); Fig. 3 and App. A.1 (p.13)")
-            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
-            self.play(LaggedStart(*[FadeIn(x, shift=UP * 0.15) for x in cands], lag_ratio=0.2), run_time=1.6)
+            self.play(FadeIn(h), FadeIn(dflt), FadeIn(c), run_time=0.8)
             self.play(FadeIn(pat), run_time=0.7)
+            self.play(FadeIn(cands, shift=UP * 0.15), run_time=1.0)
         with self.beat("exv07-2"):
             rk = T("rank = # validated counterexamples blocked", size=S.BODY_SIZE, color=S.INFO)
             rk.next_to(cands, DOWN, buff=0.6)
             blk = T("blocked: CEX no longer triggers the failure", size=S.SMALL_SIZE + 2, color=S.MUTED)
             blk.next_to(rk, DOWN, buff=0.25)
-            top = badge("mutant_1 blocks all CEXs  (paper, p.13)", ACC).next_to(blk, DOWN, buff=0.4)
-            pdr = T("idea from PDR / IC3", size=S.SMALL_SIZE, color=S.MUTED).next_to(top, DOWN, buff=0.3)
+            top = badge("mutant_1 blocks all CEXs", ACC).next_to(blk, DOWN, buff=0.4)
+            pdr = T("inspired by PDR", size=S.SMALL_SIZE, color=S.MUTED).next_to(top, DOWN, buff=0.3)
             c2 = cite("ExVerus (Yang et al., ICML 2026), p.6 'Mutant ranking'; App. A.1 (p.13)")
             self.play(FadeIn(rk), FadeTransform(c, c2), run_time=0.8)
             self.play(FadeIn(blk), run_time=0.6)
@@ -509,21 +468,17 @@ class ExV07Repair(NarratedScene):
             self.play(FadeIn(okb), run_time=0.6)
             self.cx = cx
         with self.beat("exv07-5"):
-            rep = VGroup(T("paper reports:", size=S.SMALL_SIZE + 2, color=S.MUTED),
-                         T("mutant_1 blocks all CEXs", size=S.SMALL_SIZE + 2, color=S.OK, weight="BOLD"),
-                         T("and passes Verus", size=S.SMALL_SIZE + 2, color=S.OK, weight="BOLD"),
-                         T("reference proof:", size=S.SMALL_SIZE + 2, color=S.MUTED),
-                         T("same guard  i > 0 ==>", size=S.SMALL_SIZE + 2, color=S.INK, mono=True),
+            rep = VGroup(T("mutant_1 blocks all CEXs", size=S.SMALL_SIZE + 2, color=S.OK, weight="BOLD"),
+                         T("passes Verus", size=S.SMALL_SIZE + 2, color=S.OK, weight="BOLD"),
+                         T("task solved", size=S.SMALL_SIZE + 2, color=S.OK, weight="BOLD"),
                          ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
-            rep[3].shift(DOWN * 0.2)
-            rep[4].shift(DOWN * 0.2)
             repc = VGroup(card(rep.width + 0.5, rep.height + 0.5, edge=S.OK), rep)
             rep.move_to(repc[0])
             avail = 6.85 - self.cx.get_left()[0]
             if repc.width > avail:
                 repc.scale_to_fit_width(avail)
             repc.next_to(self.cx, DOWN, buff=0.35).align_to(self.cx, LEFT)
-            c3 = cite("ExVerus (Yang et al., ICML 2026), App. A.1 (p.13); repo cleaned-verusbench/Diffy/verified/brs1.rs:35")
+            c3 = cite("ExVerus (Yang et al., ICML 2026), Fig. 3, App. A.1 (p.13)")
             self.play(FadeIn(repc, shift=UP * 0.1), FadeTransform(c2, c3), run_time=1.0)
 
 
@@ -618,8 +573,8 @@ class ExV08Architecture(NarratedScene):
         with self.beat("exv08-6"):
             step("tri", "verdict: wrong_fact", S.WARN)
             step("mut", "mutant_1: i > 0 ==> sum[0] <= i as i32", ACC)
-            step("ver", "blocks all CEXs (paper, p.13)", S.OK)
-            step("done", "paper reports: passes Verus", S.OK)
+            step("ver", "mutant_1 blocks all CEXs", S.OK)
+            step("done", "passes Verus", S.OK)
         with self.beat("exv08-7"):
             llm = VGroup(*[g.by_id[i] for i in ("gen", "tri", "mut")])
             ver = VGroup(*[g.by_id[i] for i in ("val", "ver")])
@@ -753,44 +708,31 @@ class ExV11Limits(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        h = heading("What the paper does not claim")
+        h = heading("Limitations")
         items = [
-            ("Validation covers only loop-invariant errors", "§3.1 (p.5), §5 (p.8)"),
+            ("Validation covers loop-invariant errors only", "§3.1 (p.5), §5 (p.8)"),
             ("Other errors: counterexamples are unvalidated hints", "§5 (p.8)"),
-            ("CEX generation can fail or be wrong; only Verus is trusted", "p.2, p.5"),
-            ("Passing Verus ≠ the spec matches the user's intent", "Impact Statement (p.9)"),
             ("Weaker on tasks needing asserts / proof blocks (GPT-4o)", "Table 5 (p.23)"),
-            ("Verus version change lowered the AutoVerus baseline", "App. H.4 (p.22)"),
+            ("Passing Verus ≠ the spec matches the user's intent", "Impact Statement (p.9)"),
         ]
         rows = VGroup()
         for text, loc in items:
             rows.add(VGroup(T("•  " + text, size=S.BODY_SIZE - 4), T(loc, size=S.CITE_SIZE + 2, color=S.MUTED)
                             ).arrange(DOWN, aligned_edge=LEFT, buff=0.08))
-        pairs = []
-        for k in range(0, 6, 2):
-            pr = VGroup(rows[k], rows[k + 1]).arrange(DOWN, aligned_edge=LEFT, buff=0.6)
-            pr.move_to(DOWN * 0.2)
-            pairs.append(pr)
+        rows.arrange(DOWN, aligned_edge=LEFT, buff=0.55).move_to(DOWN * 0.2)
         c = cite("ExVerus (Yang, Sun, Wu, Caridad, Yuan, Yao, Lu, Pei), ICML 2026")
 
-        def show(n):
-            if n == 0:
-                self.play(FadeIn(h), FadeIn(c), run_time=0.6)
-            else:
-                self.play(FadeOut(pairs[n - 1], shift=UP * 0.2), run_time=0.5)
-            self.play(FadeIn(pairs[n][0], shift=RIGHT * 0.2), run_time=0.7)
-            self.play(FadeIn(pairs[n][1], shift=RIGHT * 0.2), run_time=0.7)
-
         with self.beat("exv11-1"):
-            show(0)
+            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
+            self.play(FadeIn(rows[0], shift=RIGHT * 0.2), run_time=0.7)
+            self.play(FadeIn(rows[1], shift=RIGHT * 0.2), run_time=0.7)
         with self.beat("exv11-2"):
-            show(1)
-        with self.beat("exv11-3"):
-            show(2)
+            self.play(FadeIn(rows[2], shift=RIGHT * 0.2), run_time=0.7)
+            self.play(FadeIn(rows[3], shift=RIGHT * 0.2), run_time=0.7)
 
 
 # =====================================================================================================
-class ExV12Bridge(NarratedScene):
+class ExV12Takeaway(NarratedScene):
     EPISODE = EP
 
     def construct(self):
@@ -799,20 +741,19 @@ class ExV12Bridge(NarratedScene):
             b = T("counterexamples", size=S.BODY_SIZE, color=S.BAD)
             d = T("repair ranked by CEXs blocked", size=S.BODY_SIZE, color=ACC)
             e = T("Verus re-check", size=S.BODY_SIZE, color=S.OK)
-            row = VGroup(a, b, d, e).arrange(RIGHT, buff=0.8).scale_to_fit_width(12.8)
+            row = VGroup(a, b, d, e).arrange(RIGHT, buff=0.8).scale_to_fit_width(12.8).move_to(UP * 1.2)
             ars = VGroup(*[Arrow(row[i].get_right(), row[i + 1].get_left(), buff=0.12, color=S.MUTED)
                            for i in range(3)])
             self.play(FadeIn(a), run_time=0.5)
             for i in range(3):
                 self.play(GrowArrow(ars[i]), FadeIn(row[i + 1]), run_time=0.6)
         with self.beat("exv12-2"):
-            self.play(FadeOut(VGroup(row, ars)), run_time=0.6)
-            q = VGroup(T("ExVerus searches for a counterexample at every repair.", size=S.BODY_SIZE, color=S.MUTED),
-                       T("What if the model could learn to produce it itself?", size=S.BODY_SIZE + 2, color=S.INK)
-                       ).arrange(DOWN, buff=0.3).to_edge(UP, buff=0.9)
-            nxt = T("Next: TopoVerus", size=S.SMALL_SIZE + 2, color=S.ACCENT["topoverus"])
-            m = series_map("topoverus").move_to(DOWN * 0.6)
-            self.play(FadeIn(q), run_time=0.8)
-            self.play(FadeIn(m), run_time=1.0)
-            nxt.next_to(m, DOWN, buff=0.5)
-            self.play(Indicate(m[0][1], color=S.ACCENT["topoverus"], scale_factor=1.08), FadeIn(nxt), run_time=1.0)
+            take = VGroup(
+                T("concrete program states, not one-line errors", size=S.BODY_SIZE, color=S.INK),
+                T("open-ended proof search  →  targeted search", size=S.BODY_SIZE, color=ACC),
+                T("Verus has the final word", size=S.BODY_SIZE, color=S.OK, weight="BOLD"),
+            ).arrange(DOWN, buff=0.4).next_to(row, DOWN, buff=1.0)
+            c = cite("ExVerus (Yang et al., ICML 2026), App. A.2 (p.14), §7 Conclusion (p.9)")
+            self.play(FadeIn(take[0], shift=UP * 0.1), FadeIn(c), run_time=0.8)
+            self.play(FadeIn(take[1], shift=UP * 0.1), run_time=0.8)
+            self.play(FadeIn(take[2], shift=UP * 0.1), run_time=0.8)

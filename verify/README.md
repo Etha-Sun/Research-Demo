@@ -9,11 +9,11 @@ The server was not used to run Verus. Before publishing, check that the code sho
    ./verify/run.sh /path/to/verus
    ```
 
-| Episode | File | Expected (what the video says) |
+| Video | File | What the video says |
 |---|---|---|
-| 1 | `episodes/exverus/examples/*brs1*buggy*` | fails: `invariant not satisfied before loop` |
-| 1 | `episodes/exverus/examples/*brs1*fixed*` | verifies (paper, Fig. 3) |
-| 2 | `episodes/topoverus/examples/caseB*buggy*` | fails: `invariant not satisfied before loop` |
-| 2 | `episodes/topoverus/examples/caseB*repaired*` | **unknown**: the narration only says "the paper reports". If it verifies, the narration can say so. |
+| ExVerus | `episodes/exverus/examples/*brs1*` (buggy / fixed) | buggy: `invariant not satisfied before loop`; fixed passes Verus (Fig. 3) |
+| TopoVerus | `episodes/topoverus/examples/caseB-fig4-code-SCREEN.rs` | `invariant not satisfied before loop` (Fig. 4) |
+
+Files marked `-SCREEN` are trimmed for the screen; their headers point at the full source to check instead.
 
 If the results differ from this table, change the narration rather than the code.

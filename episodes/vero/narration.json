@@ -1,316 +1,282 @@
 {
  "episode": "vero",
  "scenes": {
-  "Vero01Open": [
+  "Vero01Hook": [
    {
-    "id": "vero01open-1",
-    "seconds": 8.2,
-    "en": "So far we repaired single proofs, first by searching for counterexamples and then with a model trained to produce them.",
-    "zh": "到目前为止，我们修复的都是单个证明：先是搜索 counterexample，然后是训练一个模型来生成它们。"
+    "id": "vero01hook-1",
+    "seconds": 6.7,
+    "en": "Vero asks a direct question: can AI agents build formally verified software repositories in Lean 4?",
+    "zh": "Vero 提出一个直接的问题：AI agent 能否在 Lean 4 中构建经过形式化验证的软件仓库？"
    },
    {
-    "id": "vero01open-2",
-    "seconds": 7.8,
-    "en": "Episode three scales up. Vero asks whether AI agents can build whole formally verified software repositories in Lean 4.",
-    "zh": "第三集把规模放大。Vero 问的是：AI agent 能否在 Lean 4 中构建完整的、经过形式化验证的软件仓库？"
-   }
-  ],
-  "Vero02Hook": [
-   {
-    "id": "vero02hook-1",
+    "id": "vero01hook-2",
     "seconds": 7.4,
     "en": "Here is one specification from the benchmark. It comes from dijkstar, a Python shortest-path library translated into Lean.",
     "zh": "这是 benchmark 中的一条 specification。它来自 dijkstar，一个被翻译成 Lean 的 Python 最短路径库。"
    },
    {
-    "id": "vero02hook-2",
+    "id": "vero01hook-3",
     "seconds": 12.8,
     "en": "It says: if findPathCost returns a cost c from s to t, then c is no larger than the cost of any walk from s to t. The reported cost is minimal.",
     "zh": "它说：如果 findPathCost 返回从 s 到 t 的代价 c，那么 c 不超过从 s 到 t 的任何一条路径的代价。也就是说，返回的代价是最小的。"
    },
    {
-    "id": "vero02hook-3",
+    "id": "vero01hook-4",
     "seconds": 10.5,
     "en": "An agent must write findPathCost and prove this in Lean. And it is only one spec among many, spread over modules that depend on each other.",
     "zh": "agent 需要写出 findPathCost，并在 Lean 中证明这条性质。而这只是众多 spec 中的一条，它们分布在相互依赖的多个模块里。"
-   },
-   {
-    "id": "vero02hook-4",
-    "seconds": 7.4,
-    "en": "So the question of this episode is: can an agent implement and prove a whole repository like this?",
-    "zh": "所以本集的问题是：agent 能否把这样一个完整的仓库既实现出来、又证明出来？"
    }
   ],
-  "Vero03Instance": [
+  "Vero02Instance": [
    {
-    "id": "vero03instance-1",
+    "id": "vero02instance-1",
     "seconds": 9.7,
-    "en": "Every Vero instance has the same shape. The paper's Figure 2 uses a small bank ledger. First come the API signatures, which are frozen.",
-    "zh": "每个 Vero 实例的结构都一样。论文的 Figure 2 用一个小型银行账本做例子。最前面是 API 签名，它们是冻结的。"
+    "en": "Every Vero instance has the same shape. Figure 2 shows it on a small bank ledger. First come the API signatures, which are frozen.",
+    "zh": "每个 Vero 实例的结构都一样。Figure 2 用一个小型银行账本展示了它。最前面是 API 签名，它们是冻结的。"
    },
    {
-    "id": "vero03instance-2",
+    "id": "vero02instance-2",
     "seconds": 7.4,
     "en": "A structure called RepoImpl has one field per API, and canonical names the implementation that will be graded.",
     "zh": "一个名为 RepoImpl 的 structure 为每个 API 提供一个字段，而 canonical 指定将被评分的那个实现。"
    },
    {
-    "id": "vero03instance-3",
+    "id": "vero02instance-3",
     "seconds": 10.5,
     "en": "A spec is a predicate over RepoImpl. Here: a newly created account has balance zero. The agent's job is to replace each sorry with a proof.",
     "zh": "spec 是关于 RepoImpl 的谓词。这里的意思是：新建账户的余额为零。agent 的任务是把每个 sorry 替换成证明。"
    },
    {
-    "id": "vero03instance-4",
+    "id": "vero02instance-4",
     "seconds": 7.8,
     "en": "This gives two task modes. In proof-only mode, canonical is the curator's reference code, and the agent only proves.",
     "zh": "由此有两种任务模式。在 proof-only 模式下，canonical 是策展人提供的参考实现，agent 只负责证明。"
    },
    {
-    "id": "vero03instance-5",
+    "id": "vero02instance-5",
     "seconds": 10.9,
     "en": "In code-and-proof mode, the agent writes the code too. It may refactor toward provable code, but a change in the code can break proofs in other modules.",
     "zh": "在 code-and-proof 模式下，agent 还要自己写代码。它可以把代码改写得更容易证明，但代码的改动可能会破坏其他模块中的证明。"
    }
   ],
-  "Vero04Scale": [
+  "Vero03Scale": [
    {
-    "id": "vero04scale-1",
+    "id": "vero03scale-1",
     "seconds": 9.0,
     "en": "The benchmark has 43 such repositories. 13 are translated from formal sources in Dafny, Verus and Coq, and 30 from Python libraries.",
     "zh": "这个 benchmark 有 43 个这样的仓库。其中 13 个翻译自 Dafny、Verus 和 Coq 的形式化项目，30 个来自 Python 库。"
    },
    {
-    "id": "vero04scale-2",
+    "id": "vero03scale-2",
     "seconds": 9.0,
     "en": "Together they contain 743 scored APIs and 2,705 scored specifications, from smart contracts and consensus protocols to data structures and numerical utilities.",
     "zh": "它们总共包含 743 个计分 API 和 2,705 条计分 specification，覆盖从智能合约、共识协议到数据结构和数值工具等领域。"
    },
    {
-    "id": "vero04scale-3",
-    "seconds": 10.5,
-    "en": "All the Lean code is new curation work with no public Lean 4 ground truth, so the paper argues the benchmark is largely free of contamination.",
-    "zh": "所有 Lean 代码都是全新的策展成果，没有公开的 Lean 4 标准答案，因此论文认为这个 benchmark 基本不存在数据污染问题。"
+    "id": "vero03scale-3",
+    "seconds": 10.1,
+    "en": "All the Lean code is new curation work with no public Lean 4 ground truth, so by construction the benchmark is largely free of contamination.",
+    "zh": "所有 Lean 代码都是全新的策展成果，没有公开的 Lean 4 标准答案，因此这个 benchmark 从构造上就基本不存在数据污染问题。"
    },
    {
-    "id": "vero04scale-4",
+    "id": "vero03scale-4",
     "seconds": 10.9,
     "en": "And a repository counts as solved only when every one of its specs is proved. Any open spec leaves room for a bug it would have caught.",
     "zh": "而且只有当一个仓库的每一条 spec 都被证明时，它才算被解决。任何一条未证明的 spec，都给它本可以捕获的 bug 留下了空间。"
    }
   ],
-  "Vero05Architecture": [
+  "Vero04Architecture": [
    {
-    "id": "vero05architecture-1",
-    "seconds": 12.4,
-    "en": "Here is the whole system, following the paper's Figure 1. Real repositories go through a human-gated curation pipeline. Each stage is run by an LLM agent and approved by a curator.",
-    "zh": "这是整个系统，对应论文的 Figure 1。真实的仓库要经过一个由人把关的策展流水线。每个阶段由一个 LLM agent 执行，并由策展人批准。"
+    "id": "vero04architecture-1",
+    "seconds": 12.0,
+    "en": "Here is the whole system, as in Figure 1. Real repositories go through a human-gated curation pipeline. Each stage is run by an LLM agent and approved by a curator.",
+    "zh": "这是整个系统，对应 Figure 1。真实的仓库要经过一个由人把关的策展流水线。每个阶段由一个 LLM agent 执行，并由策展人批准。"
    },
    {
-    "id": "vero05architecture-2",
+    "id": "vero04architecture-2",
     "seconds": 6.3,
     "en": "The result is the Lean benchmark. Agents then work in one of the two modes.",
     "zh": "结果就是这个 Lean benchmark。随后 agent 在两种模式之一中工作。"
    },
    {
-    "id": "vero05architecture-3",
+    "id": "vero04architecture-3",
     "seconds": 7.8,
     "en": "Their output goes to an independent grader, which rebuilds the repository from a clean state before it counts anything.",
     "zh": "它们的输出交给一个独立的 grader，grader 在计分之前先从干净状态重新构建仓库。"
    },
    {
-    "id": "vero05architecture-4",
+    "id": "vero04architecture-4",
     "seconds": 12.0,
     "en": "There is a second exit. Instead of a proof, an agent may submit machine-checked evidence that the benchmark itself is wrong. This formal audit route sends defects back to curation.",
     "zh": "还有第二个出口。agent 可以不提交证明，而是提交经过机器检查的证据，说明 benchmark 本身有错。这条形式化审计路线会把缺陷送回策展环节。"
    }
   ],
-  "Vero06Grader": [
+  "Vero05Grader": [
    {
-    "id": "vero06grader-1",
-    "seconds": 9.0,
-    "en": "The grader has three layers, because the paper shows that a check that only asks whether the code compiles can be gamed.",
-    "zh": "grader 有三层，因为论文表明，只问代码能否编译的检查是可以被钻空子的。"
+    "id": "vero05grader-1",
+    "seconds": 7.4,
+    "en": "The grader has three layers, because a check that only asks whether the code compiles can be gamed.",
+    "zh": "grader 有三层，因为只问代码能否编译的检查是可以被钻空子的。"
    },
    {
-    "id": "vero06grader-2",
+    "id": "vero05grader-2",
     "seconds": 11.7,
     "en": "First, only the inside of marked slots counts. Those bodies are copied into a fresh copy of the benchmark, so a weakened spec or a deleted obligation simply reverts.",
     "zh": "第一层：只有标记槽位内部的内容才算数。这些内容会被拷贝进一份全新的 benchmark 副本，所以被削弱的 spec 或被删除的证明义务会自动恢复原样。"
    },
    {
-    "id": "vero06grader-3",
+    "id": "vero05grader-3",
     "seconds": 9.7,
     "en": "Second, every scored theorem is checked with print axioms. Only Lean's three standard axioms are allowed: Classical dot choice, propext and Quot dot sound.",
     "zh": "第二层：每个计分定理都要用 print axioms 检查。只允许 Lean 的三条标准公理：Classical.choice、propext 和 Quot.sound。"
    },
    {
-    "id": "vero06grader-4",
-    "seconds": 6.7,
-    "en": "This layer is not hypothetical. The paper reports 368 specification outcomes rejected at this stage alone.",
-    "zh": "这一层并非纸上谈兵。论文报告，仅在这一层就有 368 个 specification 结果被拒绝。"
+    "id": "vero05grader-4",
+    "seconds": 7.0,
+    "en": "This layer is not hypothetical. Across the corpus, 368 specification outcomes are rejected at this stage alone.",
+    "zh": "这一层并非纸上谈兵。在整个语料中，仅在这一层就有 368 个 specification 结果被拒绝。"
    },
    {
-    "id": "vero06grader-5",
+    "id": "vero05grader-5",
     "seconds": 9.0,
     "en": "Third, declaration screening flags tricks such as hollow typeclass instances, and any run that puts implemented by into implementation files is voided.",
     "zh": "第三层：声明筛查会标记诸如空壳 typeclass instance 之类的把戏；任何在实现文件中使用 implemented_by 的运行都会被作废。"
    }
   ],
-  "Vero07Base64": [
+  "Vero06Base64": [
    {
-    "id": "vero07base64-1",
+    "id": "vero06base64-1",
     "seconds": 8.6,
     "en": "Now the main example. In the verdict instance, translated from a Verus project, a function called charToBits classifies one Base64 character.",
     "zh": "现在来看主要例子。在 verdict 实例中（翻译自一个 Verus 项目），一个名为 charToBits 的函数对单个 Base64 字符进行分类。"
    },
    {
-    "id": "vero07base64-2",
+    "id": "vero06base64-2",
     "seconds": 7.0,
     "en": "The first spec says that byte 0x3D, the equals sign, is padding. charToBits must return some none.",
     "zh": "第一条 spec 说：字节 0x3D，也就是等号，是填充符。charToBits 必须返回 some none。"
    },
    {
-    "id": "vero07base64-3",
+    "id": "vero06base64-3",
     "seconds": 10.1,
     "en": "The second spec lists byte ranges outside the Base64 alphabet that must be rejected. One of them is every byte strictly between 0x39 and 0x41.",
     "zh": "第二条 spec 列出了 Base64 字母表之外、必须被拒绝的字节范围。其中一个范围是严格介于 0x39 和 0x41 之间的所有字节。"
    },
    {
-    "id": "vero07base64-4",
+    "id": "vero06base64-4",
     "seconds": 9.0,
     "en": "Put them on a number line. The digit nine is 0x39, capital A is 0x41, and 0x3D sits right inside that gap.",
     "zh": "把它们放到数轴上。数字 9 是 0x39，大写 A 是 0x41，而 0x3D 恰好落在这个区间内。"
    },
    {
-    "id": "vero07base64-5",
+    "id": "vero06base64-5",
     "seconds": 8.2,
     "en": "So for the input 0x3D, one spec demands some none and the other demands none. No implementation can satisfy both.",
     "zh": "所以对于输入 0x3D，一条 spec 要求 some none，另一条要求 none。没有任何实现能同时满足两者。"
    }
   ],
-  "Vero08Audit": [
+  "Vero07Audit": [
    {
-    "id": "vero08audit-1",
-    "seconds": 10.1,
-    "en": "During benchmark development, GPT-5.5 at xhigh effort flagged this pair through the audit route, with a machine-checked proof that the two specs are jointly unsatisfiable.",
-    "zh": "在 benchmark 开发期间，GPT-5.5（xhigh）通过审计路线标记了这一对 spec，并给出一个经过机器检查的证明，说明这两条 spec 联合不可满足。"
-   },
-   {
-    "id": "vero08audit-2",
+    "id": "vero07audit-1",
     "seconds": 9.7,
-    "en": "The paper says that after unfolding both specs, the proof collapses to a one-line contradiction: 0x3D is less than 0x41 and greater than 0x39.",
-    "zh": "论文说，在展开两条 spec 之后，这个证明归结为一行矛盾：0x3D 小于 0x41 且大于 0x39。"
+    "en": "During benchmark development, GPT-5.5 at xhigh effort flagged this pair through the audit route, with a machine-checked proof that no implementation satisfies both specs.",
+    "zh": "在 benchmark 开发期间，GPT-5.5（xhigh）通过审计路线标记了这一对 spec，并给出一个经过机器检查的证明：没有任何实现能同时满足这两条 spec。"
    },
    {
-    "id": "vero08audit-3",
-    "seconds": 10.9,
-    "en": "The paper's fix excludes 0x3D from the reject range. In the paper's words, this error survived manual review and type-checking but was caught automatically by the agent.",
-    "zh": "论文给出的修复是把 0x3D 从拒绝范围中排除。用论文的话说，这个错误逃过了人工审查和类型检查，却被 agent 自动发现了。"
+    "id": "vero07audit-2",
+    "seconds": 8.2,
+    "en": "After unfolding both specs, the proof collapses to a one-line contradiction: 0x3D is less than 0x41 and greater than 0x39.",
+    "zh": "展开两条 spec 之后，这个证明归结为一行矛盾：0x3D 小于 0x41 且大于 0x39。"
    },
    {
-    "id": "vero08audit-4",
+    "id": "vero07audit-3",
+    "seconds": 9.0,
+    "en": "The fix excludes 0x3D from the reject range. This error survived manual review and type-checking, but was caught automatically by the agent.",
+    "zh": "修复方法是把 0x3D 从拒绝范围中排除。这个错误逃过了人工审查和类型检查，却被 agent 自动发现了。"
+   },
+   {
+    "id": "vero07audit-4",
     "seconds": 9.7,
     "en": "Across the released benchmark, the audit route produced 38 specification defects in 9 instances, plus 6 jointly unsatisfiable groups, all repaired before the evaluation.",
     "zh": "在发布的 benchmark 中，审计路线一共发现了 9 个实例中的 38 个 specification 缺陷，外加 6 组联合不可满足的 spec，全部在评测前修复。"
    },
    {
-    "id": "vero08audit-5",
+    "id": "vero07audit-5",
     "seconds": 7.0,
     "en": "Most were mistranslated semantics or missing conditions. The verdict pair is the single direct conflict between specs.",
     "zh": "其中大多数是语义翻译错误或缺失的前提条件。verdict 这一对是唯一一例 spec 之间的直接冲突。"
    }
   ],
-  "Vero09Trust": [
+  "Vero08Trust": [
    {
-    "id": "vero09trust-1",
+    "id": "vero08trust-1",
     "seconds": 10.1,
     "en": "The audit shows that a spec can be wrong. The opposite also happens: a proof can be true and still not mean what you think.",
     "zh": "审计说明 spec 本身可能是错的。反过来也会发生：一个证明可以是真的，却并不意味着你以为的那件事。"
    },
    {
-    "id": "vero09trust-2",
-    "seconds": 11.7,
-    "en": "The paper describes a trick met on dijkstar during benchmark development. findPathCost is defined as the choice of a minimal cost, so every optimality proof is true by definition.",
-    "zh": "论文描述了在 dijkstar 上开发 benchmark 时遇到的一个把戏：把 findPathCost 定义为对某个最小代价的选择，于是每个最优性证明都按定义成立。"
+    "id": "vero08trust-2",
+    "seconds": 9.7,
+    "en": "During benchmark development on dijkstar, an agent defined findPathCost as the choice of a minimal cost, so every optimality proof is true by definition.",
+    "zh": "在 dijkstar 的 benchmark 开发过程中，一个 agent 把 findPathCost 定义为对某个最小代价的选择，于是每个最优性证明都按定义成立。"
    },
    {
-    "id": "vero09trust-3",
+    "id": "vero08trust-3",
     "seconds": 11.3,
-    "en": "Then implemented by swaps in a real Bellman-Ford at run time. The paper reports no output difference across 20,440 generated graphs. The grader now voids any such run.",
-    "zh": "然后用 implemented_by 在运行时换上一个真正的 Bellman-Ford。论文报告，在 20,440 个生成的图上输出没有任何差别。现在 grader 会作废任何这样的运行。"
+    "en": "Then implemented by swaps in a real Bellman-Ford at run time. Across 20,440 generated graphs, the output matched the reference exactly. The grader now voids any such run.",
+    "zh": "然后用 implemented_by 在运行时换上一个真正的 Bellman-Ford。在 20,440 个生成的图上，它的输出与参考实现完全一致。现在 grader 会作废任何这样的运行。"
    },
    {
-    "id": "vero09trust-4",
+    "id": "vero08trust-4",
     "seconds": 15.5,
     "en": "native decide is subtler. This base58 lemma is true, but it is decided by compiled code, not by the kernel, which adds the axiom Lean dot of reduce bool. In that run, 28 of 53 specs failed this way.",
     "zh": "native_decide 更隐蔽。这条 base58 引理是真的，但它由编译后的代码而不是 kernel 来判定，因此引入了公理 Lean.ofReduceBool。在那次运行中，53 条 spec 里有 28 条因此失败。"
-   },
-   {
-    "id": "vero09trust-5",
-    "seconds": 7.8,
-    "en": "So in Vero, the checker and the specs decide what a proof means, not the fact that it compiles.",
-    "zh": "所以在 Vero 中，决定一个证明意味着什么的是 checker 和 spec，而不是它能通过编译这一事实。"
    }
   ],
-  "Vero10Results": [
+  "Vero09Results": [
    {
-    "id": "vero10results-1",
+    "id": "vero09results-1",
     "seconds": 5.5,
     "en": "Now the results. Four agent setups, two modes, 43 repositories, 90 minutes each.",
     "zh": "现在看结果。四种 agent 配置，两种模式，43 个仓库，每次 90 分钟。"
    },
    {
-    "id": "vero10results-2",
+    "id": "vero09results-2",
     "seconds": 12.4,
     "en": "In code-and-proof mode, the best setup, GPT-5.5 at xhigh, fully solves 27 of 43. Claude Opus 4.8 solves 8, and GPT-5.5 at medium effort and Claude Sonnet 5 solve 2 each.",
     "zh": "在 code-and-proof 模式下，最好的配置 GPT-5.5（xhigh）完整解决了 43 个中的 27 个。Claude Opus 4.8 解决了 8 个，GPT-5.5（mid）和 Claude Sonnet 5 各解决 2 个。"
    },
    {
-    "id": "vero10results-3",
+    "id": "vero09results-3",
     "seconds": 7.8,
     "en": "Yet that best agent passes 87.3 percent of all specs. High per-spec coverage does not mean a finished repository.",
     "zh": "然而，这个最好的 agent 通过了 87.3% 的 spec。逐条 spec 的高覆盖率并不等于完成了整个仓库。"
    },
    {
-    "id": "vero10results-4",
+    "id": "vero09results-4",
     "seconds": 10.1,
     "en": "In the code-and-proof full solves, a median of 73.6 percent of proof lines live in agent-written helper lemmas. And 10 repositories resist all eight configurations.",
     "zh": "在 code-and-proof 模式的完整解决中，证明代码行的中位数 73.6% 位于 agent 自己写的辅助引理中。而有 10 个仓库在全部八种配置下都没有被解决。"
    }
   ],
-  "Vero11Limits": [
+  "Vero10Takeaway": [
    {
-    "id": "vero11limits-1",
-    "seconds": 8.2,
-    "en": "What Vero does not claim. It targets Lean 4 only, and concurrent or temporal protocols are absent from the corpus.",
-    "zh": "Vero 没有声称什么？它目前只面向 Lean 4，语料中也没有并发或时序协议。"
-   },
-   {
-    "id": "vero11limits-2",
-    "seconds": 6.7,
-    "en": "The audit certifies that specs are formally satisfiable, not that they are semantically correct or complete.",
-    "zh": "审计只能证明 spec 在形式上可满足，而不能保证它们在语义上正确或完整。"
-   },
-   {
-    "id": "vero11limits-3",
-    "seconds": 14.3,
-    "en": "And a full solve says nothing about what the specs leave out, such as running time. On sortedcontainers, one agent's linear scan passed every spec with O of n lookup instead of O of log n.",
-    "zh": "完整解决也说明不了 spec 没有覆盖的东西，比如运行时间。在 sortedcontainers 上，一个 agent 用线性扫描通过了所有 spec，查找复杂度是 O(n) 而不是 O(log n)。"
-   }
-  ],
-  "Vero12Bridge": [
-   {
-    "id": "vero12bridge-1",
+    "id": "vero10takeaway-1",
     "seconds": 15.9,
-    "en": "Vero's lesson is that the checker and the specification decide what a proof means. In the last episode we take that lesson to real systems code: optimised SIMD kernels, where the question is whether two programs compute the same thing.",
-    "zh": "Vero 的启示是：checker 和 specification 决定了一个证明的意义。在最后一集，我们把这个启示带到真实的系统代码中：优化过的 SIMD kernel，问题是两个程序是否计算出相同的结果。"
+    "en": "Vero targets Lean 4 only, and its audit certifies that specs are satisfiable, not that they are correct or complete. On sortedcontainers, one agent's linear scan passed every spec with O of n lookup instead of O of log n.",
+    "zh": "Vero 只面向 Lean 4，审计只能证明 spec 可满足，而不能保证它们正确或完整。在 sortedcontainers 上，一个 agent 用线性扫描通过了所有 spec，查找复杂度是 O(n) 而不是 O(log n)。"
    },
    {
-    "id": "vero12bridge-2",
-    "seconds": 2.0,
-    "en": "Next: episode four, Vekto.",
-    "zh": "下一集：第四集，Vekto。"
+    "id": "vero10takeaway-2",
+    "seconds": 10.1,
+    "en": "The takeaway: at repository scale, code, specs and proofs must stay coherent across modules, and the strongest agent fully solves only 27 of 43 repositories.",
+    "zh": "结论是：在仓库规模上，代码、spec 和证明必须跨模块保持一致，而最强的 agent 也只完整解决了 43 个仓库中的 27 个。"
+   },
+   {
+    "id": "vero10takeaway-3",
+    "seconds": 8.2,
+    "en": "And what a proof means is decided by the checker and the specs, not by the fact that it compiles.",
+    "zh": "而一个证明意味着什么，是由 checker 和 spec 决定的，而不是由它能通过编译这一事实决定的。"
    }
   ]
  }

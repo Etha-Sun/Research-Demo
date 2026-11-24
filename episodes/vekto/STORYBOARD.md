@@ -1,30 +1,30 @@
-# Episode 4 — Vekto: storyboard
+# Vekto: storyboard
 
-Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0 min (words/2.6 + 0.5 s per beat; `tools/sync_durations.py` will replace it). Scene order = narration.json. All on-screen code is in `examples/`; every number carries a cite and is listed in SOURCES.md.
+12 scenes, 49 beats, narration estimate about 7.0 min (words/2.6 + 0.5 s per beat; `tools/sync_durations.py` will replace it). Scene order = narration.json. All on-screen code is in `examples/`; every number carries a cite and is listed in SOURCES.md.
 
-## 1. Vek01Open  (~28 s)
+## 1. Vek01Open  (~23 s)
 
-**Purpose.** Open the episode: title card ("work in progress · unpublished"), series map with tile 4 lit, recap line from docs/SERIES.md, then the episode question.
+**Purpose.** Open: title card ("Vekto" + subtitle), the problem as framed in the Introduction (agents translate/optimise SIMD kernels; tests can be passed without preserving behaviour), then Vekto's question.
 
-**On screen.** Title card centred. Then the four-tile series map (Vekto lit, default caption) with the recap in two muted lines above. Then three centred lines: the question (white / accent) and the assumptions question (WARN).
+**On screen.** Title card centred (title + subtitle only). Then three centred lines (white / muted / BAD), dimmed when the accent question appears below: 'Do two kernels on different instruction sets give the same outputs for every input the spec's preconditions allow?'
 
 **Code panels.** none
 
-**Citations.** none (fixed series text)
+**Citations.** none (framing follows research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶2–3)
 
 **Narration.**
 
-- `Vek01Open-1` (7.0 s)
-  - en: Episode four: Vekto. This is unpublished work in progress, so treat what follows as a status report.
-  - zh: 第四集：Vekto。这是尚未发表、仍在进行的工作，请把接下来的内容看作一份进展报告。
-- `Vek01Open-2` (9.7 s)
-  - en: We have seen counterexamples drive proof repair, and we have seen that a proof is only as good as its spec and its checker.
-  - zh: 我们已经看到 counterexample 如何推动证明修复，也看到一个证明的可信程度取决于它的 spec 和它的 checker。
-- `Vek01Open-3` (11.7 s)
-  - en: Now the code is real optimised SIMD kernels. Ported to another instruction set, does a kernel still compute the same thing, and which assumptions does that answer rely on?
-  - zh: 这一集的代码是真实的、经过优化的 SIMD kernel。移植到另一套指令集之后，kernel 还算出同样的结果吗？这个回答又依赖哪些假设？
+- `Vek01Open-1` (2.8 s)
+  - en: Vekto: proving SIMD kernel migrations equivalent.
+  - zh: Vekto：证明 SIMD kernel 迁移前后等价。
+- `Vek01Open-2` (11.7 s)
+  - en: Agents now translate and optimise SIMD kernels written with C intrinsics, and tests decide what is accepted. But a kernel can pass its tests and still change its behaviour.
+  - zh: 如今 agent 会翻译和优化用 C intrinsic 写的 SIMD kernel，由测试决定是否接受。但一个 kernel 可以通过测试，却仍然改变了行为。
+- `Vek01Open-3` (8.2 s)
+  - en: Vekto asks whether two kernels on different instruction sets give the same outputs for every input the spec's preconditions allow.
+  - zh: Vekto 要回答的是：两套指令集上的两个 kernel，在 spec 前置条件允许的每一个输入上，输出是否都相同。
 
-## 2. Vek02Hook  (~39 s)
+## 2. Vek02Hook  (~37 s)
 
 **Purpose.** Hook: a concrete failure in real code, the E1 f32-vmax NaN counterexample.
 
@@ -36,23 +36,23 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 
 **Narration.**
 
-- `Vek02Hook-1` (9.3 s)
-  - en: Here is a kernel from XNNPACK, written for Arm NEON. It takes the element-wise maximum of two float arrays, four floats per step.
-  - zh: 这是 XNNPACK 中一个为 Arm NEON 写的 kernel。它对两个 float 数组逐元素取最大值，每一步处理四个 float。
+- `Vek02Hook-1` (7.8 s)
+  - en: Here is an XNNPACK kernel for Arm NEON: the element-wise maximum of two float arrays, four floats per step.
+  - zh: 这是 XNNPACK 中一个 Arm NEON kernel：对两个 float 数组逐元素取最大值，每一步处理四个 float。
 - `Vek02Hook-2` (8.2 s)
-  - en: An LLM-driven pipeline, SALTy-RN, ported it to RISC-V Vector, RVV, and optimised it. We call this final optimised version B-opt.
-  - zh: 一个由 LLM 驱动的流水线 SALTy-RN 把它移植到 RISC-V Vector（RVV）并做了优化。我们把这个最终优化版本叫作 Bopt。
+  - en: An LLM-driven pipeline, SALTy-RN, translated it to RISC-V Vector, RVV, and optimised it. We call this final optimised version B-opt.
+  - zh: 一个由 LLM 驱动的流水线 SALTy-RN 把它翻译到 RISC-V Vector（RVV）并做了优化。我们把这个最终优化版本叫作 Bopt。
 - `Vek02Hook-3` (6.7 s)
   - en: Give both kernels a single element: a quiet NaN with payload 0x7fc12345, and the number 1.0.
   - zh: 给两个 kernel 同一个单元素输入：一个带 payload 0x7fc12345 的 quiet NaN，和数字 1.0。
 - `Vek02Hook-4` (6.7 s)
   - en: The NEON kernel returns the NaN. The optimised RVV kernel returns 1.0. Same input, different output.
   - zh: NEON kernel 返回 NaN，优化后的 RVV kernel 返回 1.0。同一个输入，不同的输出。
-- `Vek02Hook-5` (8.2 s)
-  - en: This reproduces under QEMU at vector lengths 128, 256 and 512 bits, and swapping the inputs gives the same difference.
-  - zh: 这个结果在 QEMU 中、向量长度 128、256 和 512 位下都能复现；交换两个输入，差异依然存在。
+- `Vek02Hook-5` (7.4 s)
+  - en: This reproduces under QEMU at vector lengths 128, 256 and 512 bits, with the inputs in either order.
+  - zh: 这个结果在 QEMU 中、向量长度 128、256 和 512 位下都能复现，两个输入交换顺序也一样。
 
-## 3. Vek03Lanes  (~36 s)
+## 3. Vek03Lanes  (~34 s)
 
 **Purpose.** Background: SIMD lanes and intrinsics, NEON fixed width vs RVV VLEN/vsetvl; locate the counterexample in lane 0.
 
@@ -67,21 +67,21 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 - `Vek03Lanes-1` (7.8 s)
   - en: Two terms first. SIMD, single instruction multiple data: one instruction works on a whole vector register, split into lanes.
   - zh: 先解释两个术语。SIMD 是单指令多数据：一条指令作用于整个向量寄存器，寄存器被分成若干 lane。
-- `Vek03Lanes-2` (9.7 s)
-  - en: An intrinsic is a C function for one such instruction. vmaxq_f32 takes two registers of four floats and computes the maximum lane by lane.
-  - zh: intrinsic 是对应一条这类指令的 C 函数。vmaxq_f32 接收两个各含四个 float 的寄存器，逐 lane 取最大值。
-- `Vek03Lanes-3` (10.1 s)
-  - en: NEON registers have a fixed width. In RVV the register width, VLEN, differs between chips, and the program asks vsetvl how many elements it gets.
+- `Vek03Lanes-2` (8.6 s)
+  - en: An intrinsic is a C function for one such instruction: vmaxq_f32 takes the maximum of two four-float registers, lane by lane.
+  - zh: intrinsic 是对应一条这类指令的 C 函数：vmaxq_f32 对两个各含四个 float 的寄存器逐 lane 取最大值。
+- `Vek03Lanes-3` (9.3 s)
+  - en: NEON registers have a fixed width. RVV's register width, VLEN, varies between chips, and the program asks vsetvl how many elements it gets.
   - zh: NEON 的寄存器宽度是固定的。RVV 的寄存器宽度 VLEN 因芯片而异，程序用 vsetvl 询问这次能处理多少个元素。
 - `Vek03Lanes-4` (8.2 s)
-  - en: In our counterexample only lane zero matters: NaN against 1.0. That one lane is where the two instruction sets disagree.
-  - zh: 在我们的 counterexample 中，只有第 0 个 lane 起作用：NaN 对 1.0。两套指令集正是在这一个 lane 上产生分歧。
+  - en: In this counterexample only lane zero matters: NaN against 1.0. That one lane is where the two instruction sets disagree.
+  - zh: 在这个 counterexample 中，只有第 0 个 lane 起作用：NaN 对 1.0。两套指令集正是在这一个 lane 上产生分歧。
 
-## 4. Vek04Resolve  (~60 s)
+## 4. Vek04Resolve  (~47 s)
 
-**Purpose.** Why the kernels differ (lane models) and how Vekto handled it: L1 triage, main result kept, separate condition C-001, measured cost of the repair alternative.
+**Purpose.** Why the kernels differ (intrinsic definitions), whether the counterexample is real, main result A ≠ Bopt, separate C-001 conditional result, measured cost of the repair.
 
-**On screen.** Beat 1: two Coq panels (NEON FMAX, RVV vfmax) with NaN lines boxed and plain-language labels on the right. Beats 2–4: triage questions with answers; badge BAD 'main result: A ≠ Bopt (DIV-001)'; badge WARN 'conditional: A ≡ Bopt under C-001 (no NaN inputs)' + muted note 'counted separately · recorded as passed + rechecked · early evidence not re-runnable here'. Beat 5: the vfmax line transforms into the 5-line repaired block (lines 2–5 boxed WARN); '+18.8 % cycles' with 'geometric mean over 7 sizes, Saturn RTL · tested, not proved'.
+**On screen.** Beat 1: two Coq panels (NEON FMAX, RVV vfmax) with NaN lines boxed and plain-language labels on the right. Beats 2–4: heading 'Is the counterexample real?' with two questions and answers ('Can the input occur?' / 'Which side is the reference?'); badge BAD 'main result: A ≠ Bopt (DIV-001)'; badge WARN 'conditional: A ≡ Bopt under C-001 (no NaN inputs)' + muted note 'proved under the precondition · counted separately'. Beat 5: the vfmax line transforms into the 5-line block titled 'Bopt with NaN repair' (lines 2–5 boxed WARN); '+18.8 % cycles', 'geometric mean over 7 sizes, Saturn RTL'.
 
 **Code panels.** examples/03_fmax_lane_models.v panel 1 (lines 3–6 boxed) and panel 2 (lines 2–3 boxed); examples/04_vmax_bopt_nan_repair.c (line 1, then all 5; lines 2–5 boxed)
 
@@ -90,54 +90,51 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 **Narration.**
 
 - `Vek04Resolve-1` (10.1 s)
-  - en: Why? Vekto gives every intrinsic a lane model. Arm FMAX propagates a NaN operand. RVV vfmax implements IEEE 754 maximumNumber, which ignores a single NaN.
-  - zh: 为什么？Vekto 给每个 intrinsic 一个 lane 模型。Arm FMAX 会传播 NaN 操作数；RVV vfmax 实现 IEEE 754 的 maximumNumber，会忽略单个 NaN。
-- `Vek04Resolve-2` (13.2 s)
-  - en: Which side is wrong? Nothing on XNNPACK's call path checks for NaN, so the input can occur. And there is no reference: the maintainers say min and max NaN behaviour is not guaranteed.
-  - zh: 哪一边错了？XNNPACK 的调用路径上没有任何 NaN 检查，所以这个输入确实可能出现。而且没有参考语义：维护者表示 min/max 的 NaN 行为不作保证。
-- `Vek04Resolve-3` (9.0 s)
-  - en: Vekto keeps the main result exactly as found: the original A is not equivalent to B-opt. It is recorded as divergence DIV-001.
-  - zh: Vekto 按原样保留主结果：原始 A 与 Bopt 不等价。它被登记为分歧记录 DIV-001。
-- `Vek04Resolve-4` (12.0 s)
-  - en: Separately, under an explicit condition, C-001, no NaN inputs, the register records a conditional result as passed and rechecked, counted on its own. That early evidence cannot be re-run here.
-  - zh: 另外，在显式条件 C-001（输入不含 NaN）下，登记表记录了一个条件结果，已通过并经复检，单独计数。这批早期证据无法在当前环境重跑。
-- `Vek04Resolve-5` (13.2 s)
-  - en: The alternative, repairing B-opt to propagate NaN, adds four statements after each vfmax. On Saturn RTL that costs 18.8 percent more cycles, as a geometric mean, and the repair was tested, not proved.
-  - zh: 另一种做法是修复 Bopt 让它传播 NaN：在每个 vfmax 之后加四条语句。在 Saturn RTL 上，这使周期数增加 18.8%（几何平均）；这个修复做过测试，但没有被证明。
+  - en: Why? Vekto gives every intrinsic an explicit definition. Arm FMAX propagates a NaN operand. RVV vfmax implements IEEE 754 maximumNumber, which ignores a single NaN.
+  - zh: 为什么？Vekto 给每个 intrinsic 一个显式定义。Arm FMAX 会传播 NaN 操作数；RVV vfmax 实现 IEEE 754 的 maximumNumber，会忽略单个 NaN。
+- `Vek04Resolve-2` (12.0 s)
+  - en: Can this input occur? Yes: nothing on XNNPACK's call path checks for NaN. And XNNPACK does not guarantee how min and max treat NaN, so neither side is the reference.
+  - zh: 这个输入会出现吗？会：XNNPACK 的调用路径上没有任何 NaN 检查。而且 XNNPACK 不保证 min 和 max 如何处理 NaN，所以哪一边都不是参考。
+- `Vek04Resolve-3` (7.4 s)
+  - en: So the result stands as found: the original A is not equivalent to B-opt, recorded as divergence DIV-001.
+  - zh: 所以结果按原样成立：原始 A 与 Bopt 不等价，登记为分歧 DIV-001。
+- `Vek04Resolve-4` (7.8 s)
+  - en: Under an explicit precondition, C-001, no NaN inputs, the pair is proved equivalent. That conditional result is counted separately.
+  - zh: 在显式前置条件 C-001（输入不含 NaN）下，这一对被证明等价。这个条件结果单独计数。
+- `Vek04Resolve-5` (9.7 s)
+  - en: Repairing B-opt to propagate NaN takes four statements after each vfmax and costs 18.8 percent more cycles on Saturn RTL, as a geometric mean.
+  - zh: 修复 Bopt 让它传播 NaN，需要在每个 vfmax 之后加四条语句；在 Saturn RTL 上，周期数增加 18.8%（几何平均）。
 
-## 5. Vek05Testing  (~46 s)
+## 5. Vek05Testing  (~31 s)
 
-**Purpose.** Why testing (and a bounded checker) is not enough; Vero link; the goal statement.
+**Purpose.** Why tests and a bounded checker missed it; Vekto's goal (Introduction ¶3).
 
-**On screen.** Three numbered rows (red numerals) with source lines; under row 3 the checker-model diff panel; badges 'VERIFIED' (struck through) → 'COUNTEREXAMPLE'. Beat 5: quote of the goal (Intro V2 ¶3) and a line in Vero's accent colour.
+**On screen.** Three numbered rows (red numerals) with source lines; row 1 appears with the heading. Under row 3 the checker-model diff panel; badges 'VERIFIED' (struck through) → 'COUNTEREXAMPLE'. Beat 4: 'Vekto's goal' and the quoted goal sentence.
 
 **Code panels.** examples/05_bounded_checker_patch.diff (all 6 lines)
 
-**Citations.** XNN-005, XNN-003, final-minmax-reproduction README, Intro V2 ¶3
+**Citations.** XNN-005, XNN-003, final-minmax-reproduction README, v2-preconditions.md ¶3
 
 **Narration.**
 
-- `Vek05Testing-1` (5.9 s)
-  - en: Why didn't testing catch this? The repository records three ways that checks miss it.
-  - zh: 为什么测试没有发现？仓库记录了检查漏掉它的三种方式。
-- `Vek05Testing-2` (7.8 s)
-  - en: First, XNNPACK's random test buffers replace NaN with zero, so its NaN assertion never fires on a NaN input.
-  - zh: 第一，XNNPACK 的随机测试缓冲区会把 NaN 替换成 0，所以它的 NaN 断言从未在 NaN 输入上触发。
-- `Vek05Testing-3` (9.0 s)
-  - en: Second, QEMU leaves RVV tail lanes unchanged by default, so a tail-lane bug we found, XNN-003, stays hidden from XNNPACK's own tests.
-  - zh: 第二，QEMU 默认保持 RVV 尾部 lane 不变，于是我们发现的一个尾部 lane bug（XNN-003）在 XNNPACK 自带的测试中无法暴露。
-- `Vek05Testing-4` (10.9 s)
-  - en: Third, SALTy-RN's own bounded checker said VERIFIED for this vmax pair, because its NEON model ignored NaN. With the model fixed, the same harness found the counterexample.
-  - zh: 第三，SALTy-RN 自带的有界检查器对这一对 vmax 给出了 VERIFIED，因为它对这条 NEON 指令的模型忽略了 NaN。修正模型之后，同一个测试框架就找到了这个 counterexample。
-- `Vek05Testing-5` (12.4 s)
-  - en: This is Vero's lesson again: a verdict is only as good as the model and the spec behind it. Vekto aims for equivalence on every input that the spec's preconditions allow.
-  - zh: 这又是 Vero 的教训：结论的可信程度取决于背后的模型和 spec。Vekto 的目标是：在 spec 前置条件允许的每一个输入上都证明等价。
+- `Vek05Testing-1` (8.6 s)
+  - en: Why didn't the checks catch this? First, XNNPACK's random test buffers replace NaN with zero, so its NaN assertion never fires.
+  - zh: 为什么检查没有发现它？第一，XNNPACK 的随机测试缓冲区会把 NaN 替换成 0，所以它的 NaN 断言从未触发。
+- `Vek05Testing-2` (7.4 s)
+  - en: Second, QEMU leaves RVV tail lanes unchanged by default, which hides a tail-lane bug, XNN-003, from XNNPACK's tests.
+  - zh: 第二，QEMU 默认保持 RVV 尾部 lane 不变，这让一个尾部 lane bug（XNN-003）在 XNNPACK 的测试中无法暴露。
+- `Vek05Testing-3` (9.3 s)
+  - en: Third, SALTy-RN's bounded checker said VERIFIED for this pair, because its NEON model ignored NaN; with the model fixed, it finds the counterexample.
+  - zh: 第三，SALTy-RN 的有界检查器对这一对给出了 VERIFIED，因为它的 NEON 模型忽略了 NaN；修正模型之后，它就找到了这个 counterexample。
+- `Vek05Testing-4` (5.9 s)
+  - en: Vekto's goal is equivalence for all inputs permitted by the preconditions in the spec.
+  - zh: Vekto 的目标是：对 spec 前置条件允许的所有输入证明等价。
 
-## 6. Vek06Level  (~33 s)
+## 6. Vek06Level  (~29 s)
 
 **Purpose.** Why C-level equivalence: three levels, assembly drawbacks, C with reviewed intrinsic definitions.
 
-**On screen.** Three cards: Assembly / ISA (Sail, Islaris), Compiler IR (Alive2, Rake), C + intrinsic contracts (Vekto). Beat 2: WARN bullets under assembly. Beat 3: C card in accent, others dimmed, accent bullets under it.
+**On screen.** Three cards: 'Assembly / ISA' (Sail, Islaris), 'Compiler IR' (Alive2, Rake), 'C + semantic shims' (Vekto). Beat 2: WARN bullets under assembly. Beat 3: accent bullets under C; the others dim.
 
 **Code panels.** none
 
@@ -148,18 +145,18 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 - `Vek06Level-1` (8.2 s)
   - en: Where should such a proof live? There are three candidate levels: assembly with ISA models, a compiler IR, or C.
   - zh: 这样的证明应该放在哪一层？有三个候选层次：带 ISA 模型的汇编、编译器 IR，或者 C。
-- `Vek06Level-2` (13.2 s)
-  - en: At the assembly level we would need separate ISA models for fixed-width NEON and length-agnostic RVV, plus a correspondence between them, and those models cover exceptions and privileged execution that kernels never use.
-  - zh: 在汇编层，需要分别为固定宽度的 NEON 和与向量长度无关的 RVV 建立 ISA 模型，再建立两者的对应关系；这些模型还涵盖 kernel 用不到的异常处理和特权执行。
-- `Vek06Level-3` (12.0 s)
-  - en: Vekto works at the C level. Every supported intrinsic gets an explicit C definition of its numerical and memory behaviour, and human experts review these definitions against the ISA documentation.
-  - zh: Vekto 选择在 C 层工作。每个支持的 intrinsic 都有一个显式的 C 定义，描述其数值行为和内存行为，并由人类专家对照 ISA 文档审查这些定义。
+- `Vek06Level-2` (10.1 s)
+  - en: At the assembly level, NEON and RVV need separate ISA models plus a correspondence between them, and those models also cover exceptions and privileged execution.
+  - zh: 在汇编层，NEON 和 RVV 需要各自的 ISA 模型以及两者之间的对应关系；这些模型还涵盖异常处理和特权执行。
+- `Vek06Level-3` (10.9 s)
+  - en: Vekto works at the C level. Each supported intrinsic gets an explicit C definition of its numerical and memory behaviour, which experts review against the ISA documentation.
+  - zh: Vekto 在 C 层工作。每个支持的 intrinsic 都有一个显式的 C 定义，描述其数值行为和内存行为，由专家对照 ISA 文档审查。
 
-## 7. Vek07Pipeline  (~63 s)
+## 7. Vek07Pipeline  (~57 s)
 
-**Purpose.** Architecture diagram built step by step; the NaN path (failure → counterexample → triage → spec) pulsed at the end.
+**Purpose.** Architecture diagram built step by step; the failure path (VCs → counterexample → expert review → spec) pulsed at the end.
 
-**On screen.** Middle row: impl/ → rule tool → QCP → VCs → Coq; above QCP: intrinsic contracts ← differential tests; below QCP: spec.c (accent); below Coq: check.py (12 gates → APPROVAL, OK); bottom: counterexample (BAD) → L1/L3 triage (WARN) → spec.c. Beat 2 adds a muted note on the rule tool. Beat 7 pulses VCs → counterexample → triage → spec.
+**On screen.** Middle row: impl/ → rule tool → QCP → VCs → Coq; above QCP: C semantic shims ← differential tests; below QCP: spec.c ('equivalent(): expert-reviewed', accent); below Coq: check.py (12 gates → APPROVAL, OK); bottom: counterexample (BAD) → expert review ('precondition · repair · divergence', WARN) → spec.c. Beat 2 adds a muted note on the rule tool. Beat 7 pulses VCs → counterexample → expert review → spec.
 
 **Code panels.** none
 
@@ -168,32 +165,32 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 **Narration.**
 
 - `Vek07Pipeline-1` (5.9 s)
-  - en: Here is the pipeline. It starts from the original kernels, kept byte-identical to upstream.
-  - zh: 这是整个流水线。它从原始 kernel 出发，它们与上游逐字节一致。
-- `Vek07Pipeline-2` (12.0 s)
-  - en: The C verifier, QCP, mishandles vectors passed by value, so a deterministic rule tool rewrites just the vector statements into pointer form. No language model or person edits the sources.
-  - zh: C 验证器 QCP 处理按值传递的向量时有缺陷，所以由一个确定性的规则工具只把涉及向量的语句改写成指针形式。源代码不由语言模型或人工修改。
+  - en: Here is the Vekto pipeline. It starts from the original kernels, byte-identical to upstream.
+  - zh: 这是 Vekto 的流水线。它从原始 kernel 出发，它们与上游逐字节一致。
+- `Vek07Pipeline-2` (7.8 s)
+  - en: Because QCP mishandles vectors passed by value, a deterministic rule tool rewrites only the vector statements into pointer form.
+  - zh: 由于 QCP 处理按值传递的向量时有缺陷，一个确定性的规则工具只把涉及向量的语句改写成指针形式。
 - `Vek07Pipeline-3` (6.7 s)
   - en: QCP symbolically executes the annotated C and emits verification conditions, which agents then prove in Coq.
   - zh: QCP 对带标注的 C 代码做 symbolic execution，生成 verification condition，再由 agent 在 Coq 中证明。
-- `Vek07Pipeline-4` (9.3 s)
-  - en: Intrinsic calls resolve to one shared contract library, differentially tested against real instructions: natively for x86, under QEMU for NEON, RVV and Hexagon.
-  - zh: intrinsic 调用统一对应一个共享的契约库，并与真实指令做差分测试：x86 在本机运行，NEON、RVV 和 Hexagon 在 QEMU 中运行。
-- `Vek07Pipeline-5` (8.2 s)
-  - en: The human-reviewed part is small: spec.c holds only equivalent, which runs both kernels on one input and relates their outputs.
-  - zh: 需要人工审查的部分很小：spec.c 只包含函数 equivalent，它在同一输入上运行两个 kernel，并给出它们输出之间的关系。
-- `Vek07Pipeline-6` (7.4 s)
-  - en: Finally, check.py re-runs everything from an empty directory, and a package counts only if all twelve gates pass.
-  - zh: 最后，check.py 在一个空目录中把一切从头重跑；只有十二道 gate 全部通过，这个包才算数。
-- `Vek07Pipeline-7` (12.8 s)
-  - en: When a proof fails, it becomes a concrete input, replayed on the original code, then triaged into an explicit condition, a minimal fix, or a recorded divergence. Our NaN took that path.
-  - zh: 证明失败时，失败被转化为一个具体输入，在原始代码上重放，再分流为显式条件、最小修复或登记在案的分歧。我们的 NaN 走的就是这条路。
+- `Vek07Pipeline-4` (8.6 s)
+  - en: Intrinsic calls resolve to one shared library of C semantic shims, differentially tested against the real instructions, natively or under QEMU.
+  - zh: intrinsic 调用统一对应一个共享的 C semantic shim 库，并与真实指令做差分测试，在本机或 QEMU 中运行。
+- `Vek07Pipeline-5` (9.7 s)
+  - en: Experts review only the equivalence spec and the verification feedback. The spec's function, equivalent, runs both kernels on one input and relates their outputs.
+  - zh: 专家只需审查等价性 spec 和验证反馈。spec 中的函数 equivalent 在同一输入上运行两个 kernel，并给出它们输出之间的关系。
+- `Vek07Pipeline-6` (7.0 s)
+  - en: check.py re-runs everything from an empty directory, and a package counts only if all twelve gates pass.
+  - zh: check.py 在一个空目录中把一切从头重跑；只有十二道 gate 全部通过，这个包才算数。
+- `Vek07Pipeline-7` (11.3 s)
+  - en: When a proof fails, the failure becomes a concrete input, replayed on the original code. Experts then add a missing precondition, guide a repair, or record a divergence.
+  - zh: 证明失败时，失败被转化为一个具体输入，并在原始代码上重放。专家随后补上缺失的前置条件、指导修复，或登记一条分歧。
 
-## 8. Vek08Gates  (~49 s)
+## 8. Vek08Gates  (~11 s)
 
-**Purpose.** The 12 gates of check.py as a checklist, grouped as narrated.
+**Purpose.** The 12 gates of check.py as a checklist, in one beat.
 
-**On screen.** Two columns of 6 rows: empty tick box, gate name (mono bold), short description (muted). Each group appears and is outlined (inputs g1–g4, proofs g5–g7, trust g8–g9 and g10–g11 in accent, tests g12).
+**On screen.** Two columns of 6 rows: empty tick box, gate name (mono bold), short description (muted). Groups appear and are outlined in turn: inputs g1–g4, proofs g5–g7 (INFO), trust and tests g8–g12 (accent).
 
 **Code panels.** none
 
@@ -201,23 +198,11 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 
 **Narration.**
 
-- `Vek08Gates-1` (10.9 s)
-  - en: The twelve gates read like a checklist. The first four pin the inputs: sources identical to upstream, the rewrite regenerated byte for byte, libraries pinned and rebuilt.
-  - zh: 这十二道 gate 就像一张检查清单。前四道固定输入：源代码与上游一致，改写结果逐字节重新生成，各个库固定版本并重新编译。
-- `Vek08Gates-2` (8.6 s)
-  - en: Then the proofs: every condition is closed with Qed, including the equivalence units, and Print Assumptions may list only whitelisted axioms.
-  - zh: 接着是证明：每个 verification condition（包括等价性单元）都以 Qed 结束，Print Assumptions 只能列出白名单内的公理。
-- `Vek08Gates-3` (11.3 s)
-  - en: Next, trust checks: each kernel contract must be textually identical wherever it appears, and a scan rejects goals that a known QCP soundness bug could make vacuously true.
-  - zh: 然后是信任检查：每个 kernel 契约在出现的每一处都必须文本一致；另有一次扫描，排除那些可能因 QCP 一个已知 soundness bug 而空洞成立的目标。
-- `Vek08Gates-4` (12.4 s)
-  - en: A concrete witness shows the precondition is satisfiable, so the proof is not about an empty input set, and every callee must be a proved body or a pinned library contract.
-  - zh: 一个具体见证说明前置条件可以满足，因此证明讨论的不是空的输入集合。并且每个被调用函数都必须是已证明的函数体，或是固定版本的库契约。
-- `Vek08Gates-5` (5.9 s)
-  - en: Last, the library models and the two original kernels are tested against each other.
-  - zh: 最后，库模型与两个原始 kernel 相互做测试比对。
+- `Vek08Gates-1` (11.3 s)
+  - en: The twelve gates pin the sources and libraries, require every condition closed with Qed and only whitelisted axioms, and check contracts, callees, a satisfiable precondition, and differential tests.
+  - zh: 十二道 gate 固定源代码和库，要求每个 condition 都以 Qed 结束且只用白名单公理，并检查契约、被调用函数、前置条件可满足性以及差分测试。
 
-## 9. Vek09Walk  (~55 s)
+## 9. Vek09Walk  (~51 s)
 
 **Purpose.** Walk-through of the x24-transposec SSSE3 → RVV package: source, target, spec, conditions, observation.
 
@@ -230,29 +215,29 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 **Narration.**
 
 - `Vek09Walk-1` (7.4 s)
-  - en: Now one complete package, x24-transposec, which transposes blocks of three-byte pixels. The source is XNNPACK's x86 SSSE3 kernel.
+  - en: Now one complete package: x24-transposec, which transposes blocks of three-byte pixels. The source is XNNPACK's x86 SSSE3 kernel.
   - zh: 现在看一个完整的包：x24-transposec，它转置由三字节像素构成的块。源程序是 XNNPACK 的 x86 SSSE3 kernel。
-- `Vek09Walk-2` (9.7 s)
-  - en: It works on four-by-four tiles with 16-byte loads, unpacks and byte shuffles. Its loads may read past the bytes it needs, which XNNPACK declares.
-  - zh: 它按四乘四的 tile 工作，使用 16 字节加载、unpack 和字节 shuffle。它的加载可能读到所需字节之外，XNNPACK 对此做了声明。
-- `Vek09Walk-3` (10.9 s)
-  - en: The RVV target is new code. It handles one column per pass: vsetvl picks how many rows fit, and a strided segment load does the transpose itself.
-  - zh: RVV 目标程序是新写的代码。它每一轮处理一列：vsetvl 决定能放下多少行，一条 strided segment load 本身就完成了转置。
+- `Vek09Walk-2` (7.4 s)
+  - en: It works on four-by-four tiles with 16-byte loads, unpacks and shuffles; XNNPACK declares that these loads may over-read.
+  - zh: 它按四乘四的 tile 工作，使用 16 字节加载、unpack 和 shuffle；XNNPACK 声明这些加载可能越界读取。
+- `Vek09Walk-3` (9.7 s)
+  - en: The RVV target is new code: one column per pass, vsetvl picks how many rows fit, and a strided segment load does the transpose.
+  - zh: RVV 目标程序是新写的代码：每一轮处理一列，vsetvl 决定能放下多少行，一条 strided segment load 完成转置。
 - `Vek09Walk-4` (6.3 s)
   - en: The spec, equivalent, runs both kernels on the same input into two separate output buffers.
   - zh: spec 中的 equivalent 在同一个输入上运行两个 kernel，结果写入两个独立的输出缓冲区。
-- `Vek09Walk-5` (13.6 s)
-  - en: Its precondition names the conditions: blocks at least one by one, C-022, and the input window C-033, since x86 may read to the end of a 16-byte vector while RVV reads only a prefix.
-  - zh: 它的前置条件写出了带编号的条件：块至少为一乘一，即 C-022；以及输入窗口 C-033，因为 x86 一侧可能读到 16 字节向量的末尾，而 RVV 只读其中的前缀。
+- `Vek09Walk-5` (14.0 s)
+  - en: The precondition names its conditions: blocks of at least one by one, C-022; no address wrap, C-024; and the input window, C-033, because x86 may read a full 16-byte vector where RVV reads a prefix.
+  - zh: 前置条件写出了带编号的条件：块至少为一乘一（C-022）；地址不回绕（C-024）；以及输入窗口（C-033），因为 x86 可能读满一个 16 字节向量，而 RVV 只读其前缀。
 - `Vek09Walk-6` (6.3 s)
   - en: The postcondition is outputs_related: the two outputs agree on every byte that a transpose writes.
   - zh: 后置条件是 outputs_related：两个输出在转置会写入的每一个字节上都一致。
 
-## 10. Vek10Results  (~49 s)
+## 10. Vek10Results  (~39 s)
 
-**Purpose.** Results of the supervisor recheck for x24, with assumptions on screen.
+**Purpose.** x24 package result from the clean-directory check.py run, with the conditions the claim depends on.
 
-**On screen.** Row of 12 green gate chips; 'RESULT: PASS · 12 / 12 gates · 5,990 s'. Beat 2: tiles '435 / x86 VCs, all Qed' and '22 per VLEN / RVV VCs at VLEN 128/256/512'. Beats 3–4: WARN 'assumptions' list (fixed VLEN set; C-022, C-024, C-031, C-033; G-004; G-002; modelling: 6 aligned const tables, NDEBUG). Beat 5: BAD line on out-of-domain edge cases 14/25.
+**On screen.** Row of 12 green gate chips; 'PASS · 12 / 12 gates · 5,990 s'. Beat 2: tiles '435 / x86 VCs, all Qed' and '22 per VLEN / RVV VCs at VLEN 128/256/512'. Beats 3–4: WARN list headed 'holds under' (VLEN 128/256/512; C-022, C-024, C-031, C-033; partial correctness G-004; intrinsics = reviewed C definitions + differential tests G-002; 6 const tables modelled 16-byte aligned, NDEBUG). Beat 5: BAD line on out-of-domain edge cases 14/25.
 
 **Code panels.** none
 
@@ -260,77 +245,87 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 
 **Narration.**
 
-- `Vek10Results-1` (9.3 s)
-  - en: The supervisor re-ran check.py for this package from an empty directory. The record reports RESULT PASS: twelve of twelve gates, in 5,990 seconds.
-  - zh: 监督者在一个空目录中为这个包重跑了 check.py。记录显示 RESULT PASS：十二道 gate 全部通过，用时 5,990 秒。
-- `Vek10Results-2` (10.9 s)
-  - en: QCP produced 435 verification conditions for the x86 kernel and 22 for the RVV kernel at each vector length, and all of them are closed in Coq.
-  - zh: QCP 为 x86 kernel 生成了 435 个 verification condition，为 RVV kernel 在每个向量长度下各生成 22 个，全部在 Coq 中证完。
-- `Vek10Results-3` (12.8 s)
-  - en: The assumptions stay on screen. The result holds at three fixed vector lengths, 128, 256 and 512 bits, not at any length, and under conditions C-022, C-024, C-031 and the window C-033.
-  - zh: 假设要始终留在屏幕上。结果只在三个固定向量长度 128、256 和 512 位下成立，并非任意长度，且依赖条件 C-022、C-024、C-031 和输入窗口 C-033。
-- `Vek10Results-4` (10.5 s)
-  - en: Globally, this is partial correctness, intrinsic semantics rest on reviewed contracts and tests rather than a formal ISA proof, and six constant tables are assumed aligned.
-  - zh: 从全局看，这是部分正确性；intrinsic 的语义依赖经审查的契约和测试，而不是相对 ISA 的形式化证明；另外假设六个常量表是对齐的。
-- `Vek10Results-5` (7.8 s)
-  - en: Of 25 edge cases outside the domain, 14 behave differently, such as block width zero: exactly what C-022 excludes.
-  - zh: 在定义域之外的 25 个边界用例中，有 14 个行为不同，例如块宽为 0：这正是 C-022 排除的输入。
+- `Vek10Results-1` (6.3 s)
+  - en: check.py re-ran this package from an empty directory: all twelve gates pass, in 5,990 seconds.
+  - zh: check.py 在一个空目录中重跑了这个包：十二道 gate 全部通过，用时 5,990 秒。
+- `Vek10Results-2` (8.2 s)
+  - en: QCP produced 435 verification conditions for the x86 kernel and 22 per vector length for RVV, all closed in Coq.
+  - zh: QCP 为 x86 kernel 生成了 435 个 verification condition，为 RVV 在每个向量长度下各生成 22 个，全部在 Coq 中证完。
+- `Vek10Results-3` (7.4 s)
+  - en: The result holds at vector lengths 128, 256 and 512 bits, under conditions C-022, C-024, C-031 and C-033.
+  - zh: 结果在向量长度 128、256 和 512 位下成立，前提是条件 C-022、C-024、C-031 和 C-033。
+- `Vek10Results-4` (9.7 s)
+  - en: It is a partial-correctness result. The intrinsic definitions rest on reviewed contracts and differential tests, and six constant tables are modelled as 16-byte aligned.
+  - zh: 这是一个部分正确性结果。intrinsic 定义以经审查的契约和差分测试为依据；六个常量表按 16 字节对齐建模。
+- `Vek10Results-5` (7.4 s)
+  - en: Outside the domain, 14 of 25 edge cases behave differently, such as block width zero, which C-022 excludes.
+  - zh: 在定义域之外的 25 个边界用例中，有 14 个行为不同，例如块宽为 0，这正是 C-022 排除的输入。
 
-## 11. Vek11Status  (~47 s)
+## 11. Vek11Status  (~35 s)
 
-**Purpose.** E1–E4 status as of 2026-11-23, labelled established / in progress / not started.
+**Purpose.** E1–E4 status as of 2026-11-23, labelled established / in progress / not started; tasks named as in the Introduction ¶8–9.
 
-**On screen.** Four rows: key (accent), what it measures, detail line, status badge(s) on the right. E1 IN PROGRESS; E2 ESTABLISHED: 24 + IN PROGRESS; E3 ESTABLISHED: 15 + IN PROGRESS (3 planned pairs not started); E4 NOT STARTED. The cite changes per row.
-
-**Code panels.** none
-
-**Citations.** E1 APPROVAL files; DECISIONS-FOR-REVIEW 11-23; SUMMARY-20261111; EXPERIMENT-DESIGN
-
-**Narration.**
-
-- `Vek11Status-1` (15.5 s)
-  - en: As of November 23, 2026: E1 asks whether LLM-optimised RVV kernels verify against their NEON originals without rewriting. It is in progress: 17 approval records so far, most keeping the main result that A is not equivalent to B-opt.
-  - zh: 截至 2026 年 11 月 23 日：E1 研究 LLM 优化后的 RVV kernel 能否不经改写、相对 NEON 原版得到验证。它仍在进行中：目前有 17 份审批记录，多数保留了“A 与 Bopt 不等价”的主结果。
-- `Vek11Status-2` (11.7 s)
-  - en: E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations, with a Hexagon port of x64-transposec still in progress.
-  - zh: E2 把 RVV 和 Hexagon 缺少的 x86 操作翻译过去，并证明每次翻译：监督者日志记录了 24 个已批准的迁移，x64-transposec 的 Hexagon 移植仍在进行中。
-- `Vek11Status-3` (12.0 s)
-  - en: E3 cross-checks independent XNNPACK implementations of the same operator. 14 pairs are approved, one pair was proved not equivalent, and three planned pairs have not started.
-  - zh: E3 交叉检查同一算子在 XNNPACK 中的不同独立实现。截至 11 月 11 日，有 14 对获批，一对被证明不等价，另有三对计划中的配对尚未开始。
-- `Vek11Status-4` (8.6 s)
-  - en: E4, one application-level program, with softmax as the candidate, has not started. So none of this is a program-level result yet.
-  - zh: E4 针对一个应用级程序，候选是 softmax，目前尚未开始。所以以上都还不是程序级的结果。
-
-## 12. Vek12Close  (~35 s)
-
-**Purpose.** Limitations, then the series close: map with all tiles lit, what the counterexample was in each episode, the trust line.
-
-**On screen.** Beat 1: WARN bullet list 'What Vekto does not claim'. Beat 2: series map all lit (no default caption), header 'what the counterexample was', one caption per tile in its accent. Beat 3: trust line below.
+**On screen.** Heading 'Experiments E1–E4 · 2026-11-23'. Four rows: key (accent), task, detail line, status badge(s). E1 'verify optimised kernels' IN PROGRESS, '17 pairs approved: 13 A ≠ Bopt, 4 A ≡ Bopt (one under C-005)'; E2 'translate x86 kernels to RVV / HVX libraries that lack them' ESTABLISHED: 24 + IN PROGRESS, detail includes 'HVX modelled with 64-bit pointers'; E3 'cross-check independent XNNPACK implementations' ESTABLISHED: 15 + IN PROGRESS; E4 NOT STARTED. Beat 3 adds a muted footer: E2/E3 element-wise kernels assume disjoint buffers, no in-place calls (C-018). The cite changes per row.
 
 **Code panels.** none
 
-**Citations.** CONDITIONS (G-004, VEKTO-M-ilp32, C-018); research/bugs/xnnpack/; docs/SERIES.md
+**Citations.** E1 APPROVAL files (status fields); DECISIONS-FOR-REVIEW 11-23; CONDITIONS [VEKTO-M-ilp32], C-018; SUMMARY-20261111; EXPERIMENT-DESIGN
 
 **Narration.**
 
-- `Vek12Close-1` (14.3 s)
-  - en: Vekto does not claim termination or a link from C to machine code. Hexagon is modelled as 64-bit though it is 32-bit, in-place calls are not covered, and no bug found has been reported upstream yet.
-  - zh: Vekto 不声称终止性，也不声称 C 与机器码之间的对应。Hexagon 是 32 位平台，却按 64 位建模；原地调用没有覆盖；发现的 bug 目前都还没有向上游报告。
-- `Vek12Close-2` (14.0 s)
-  - en: Across the series, the counterexample took four forms: a program state in ExVerus, a learned explanation in TopoVerus, an audit of a spec in Vero, and an input on which two kernels disagree in Vekto.
-  - zh: 回顾整个系列，counterexample 有四种形态：ExVerus 中的程序状态，TopoVerus 中学到的解释，Vero 中对 spec 的审计，以及 Vekto 中让两个 kernel 产生分歧的输入。
-- `Vek12Close-3` (6.7 s)
-  - en: And one trust thread held throughout: every proof re-checked, no spec silently weakened, every assumption stated.
-  - zh: 贯穿始终的是同一条信任主线：每个证明都被重新检查，没有任何 spec 被悄悄削弱，每个假设都明确写出。
+- `Vek11Status-1` (10.5 s)
+  - en: E1 checks LLM-optimised RVV kernels against their 35 NEON originals and is in progress: of 17 approved pairs, 13 are not equivalent and 4 are equivalent.
+  - zh: E1 检查 LLM 优化后的 RVV kernel 与其 35 个 NEON 原版是否等价，仍在进行中：已批准的 17 对中，13 对不等价，4 对等价。
+- `Vek11Status-2` (10.1 s)
+  - en: E2 translates x86 operations missing from RVV and Hexagon libraries, each with a proof: 24 migrations are approved, and one Hexagon port is in progress.
+  - zh: E2 把 RVV 和 Hexagon 库中缺少的 x86 操作翻译过去，并逐个证明：已批准 24 个迁移，另有一个 Hexagon 移植仍在进行中。
+- `Vek11Status-3` (9.3 s)
+  - en: E3 cross-checks independent XNNPACK implementations of one operator: 14 pairs are approved and one is proved not equivalent; three pairs have not started.
+  - zh: E3 交叉检查同一算子在 XNNPACK 中的不同独立实现：14 对已批准，一对被证明不等价；另有三对尚未开始。
+- `Vek11Status-4` (5.1 s)
+  - en: E4, an application-level program with softmax as the candidate, has not started.
+  - zh: E4 针对一个应用级程序，候选是 softmax，目前尚未开始。
+
+## 12. Vek12Close  (~24 s)
+
+**Purpose.** Vekto's own takeaway.
+
+**On screen.** Heading 'Takeaway' (accent). Beat 1: chain of three cards: 'two SIMD kernels' → 'C program verification' (reviewed C definition per intrinsic) → 'QCP + Coq' (same outputs on every allowed input). Beat 2: second chain 'proof fails' (concrete input) → 'f32-vmax' (NaN vs 1.0) → 'expert review' (precondition · repair · divergence), then 'never a weaker spec' in accent.
+
+**Code panels.** none
+
+**Citations.** none
+
+**Narration.**
+
+- `Vek12Close-1` (11.7 s)
+  - en: Vekto turns SIMD kernel equivalence into C program verification: each intrinsic has a reviewed C definition, and QCP and Coq prove equal outputs for every input the spec allows.
+  - zh: Vekto 把 SIMD kernel 的等价性变成 C 程序验证：每个 intrinsic 都有经审查的 C 定义，QCP 和 Coq 证明在 spec 允许的每个输入上输出相同。
+- `Vek12Close-2` (12.4 s)
+  - en: When a proof fails, the result is a concrete input, like the NaN in f32-vmax. It leads to a precondition, a repair, or a recorded divergence, never to a weaker spec.
+  - zh: 证明失败时，得到的是一个具体输入，比如 f32-vmax 中的 NaN。它会引出一个前置条件、一次修复或一条登记在案的分歧，而不是一个被削弱的 spec。
 
 ## Open issues
 
-1. **E2/E3 counts.** Resolved 2026-11-23: the author confirmed the counts (E2 24 approved migrations, E3 14 approved + 1 proved not equivalent) are to be shown as approved results; the "supervisor log" / "as of 11-11" labels were removed.
-2. **C-001 conditional proof.** CONDITIONS row C-001 records it as passed and rechecked, but the evidence package is on an earlier server and cannot be re-run (SUMMARY-20261111 §2). Shown as a WARN badge with that caveat, never as a fresh result.
-3. **vmax as motivating example.** The repo itself notes no confirmed speed advantage of Bopt over XNNPACK (0.982×) and a +18.8 % repair cost. The episode uses vmax as a correctness case only; it does not claim Bopt is fast. 0.982× / 0.826× are left off screen.
-4. **Vero ↔ Vekto parallels** (Vek05-5, Vek12) are the research brief's [INFERRED] framing plus docs/SERIES.md's fixed lines; they need author confirmation.
-5. **Vek03 lane picture.** a1–a3/b1–b3 are placeholders, not data. The only values shown are the counterexample's NaN and 1.0.
-6. **Local helpers** not in common/components.py: `example()` (strip source header, split .v panels), `heading()`, `tag()`, `lane_box()/lane_row()`, `gate_row()/gate_grid()`, `status_row()`. `example()` and `heading()` would likely be reused by other episodes.
-7. **code_panel frame offset.** When the title bar is wider than the code, `code_panel` centres the card on the wider body, so the card is narrower than the title (seen while building Vek05 and Vek09; worked around with shorter titles). Worth fixing in common/components.py.
-8. **Draft Intro wording.** Quotes from Intro V2 (Vek05-5, Vek06) come from the draft bullet points, labelled "Intro V2, draft" on screen.
-9. Not shown on screen, on purpose: the vclamp C-019 inconsistency (brief §10.3), the early 16 E1 pairs, worker costs, and the upstream bug list. None of the bugs has been reported upstream.
+1. **E2/E3 counts.** The author confirmed (2026-11-23) that E2 = 24 approved migrations and E3 = 14 approved + 1 proved not equivalent are shown as approved results.
+2. **C-001 conditional result.** CONDITIONS row C-001 records the conditional pairing as passed and rechecked by the supervisor; shown as a WARN badge, counted separately from the main result.
+3. **vmax as motivating example.** The repo notes no confirmed speed advantage of Bopt over XNNPACK (0.982×) and a +18.8 % repair cost. The video uses vmax as a correctness case only; it does not claim Bopt is fast. 0.982× / 0.826× are left off screen.
+4. **Vek03 lane picture.** a1–a3/b1–b3 are placeholders, not data. The only values shown are the counterexample's NaN and 1.0.
+5. **Local helpers** not in common/components.py: `example()`, `heading()`, `tag()`, `lane_box()/lane_row()`, `gate_row()/gate_grid()`, `status_row()`.
+6. **code_panel frame offset.** When the title bar is wider than the code, `code_panel` centres the card on the wider body (worked around with shorter titles).
+7. Not shown on screen, on purpose: the vclamp C-019 inconsistency, the early 16 E1 pairs, worker costs, and the upstream bug list.
+
+## Revision 2026-11-23
+
+Following docs/REVISION-BRIEF.md (video self-contained, no hedges, Introduction V2 framing):
+
+- **Vek01Open:** removed "Episode four", the "unpublished work in progress / status report" line, the series map and the recap. Title card shows "Vekto" and its subtitle only. New hook framing from Introduction ¶2–3 (agents optimise intrinsic kernels; tests can be passed without preserving behaviour) and Vekto's question.
+- **Vek04Resolve:** "lane model" → "explicit definition"; triage heading/answers rephrased plainly; removed "early evidence cannot be re-run here" and "tested, not proved"; repair panel retitled "Bopt with NaN repair".
+- **Vek05Testing:** removed the "Vero's lesson again" analogy and its on-screen line; merged the intro beat into item 1 (5 → 4 beats); goal quote without "(Intro V2, draft)".
+- **Vek06Level / Vek07Pipeline:** terms aligned with Introduction ¶4–7 ("C semantic shims", experts review the equivalence spec and verification feedback, precondition / repair / divergence instead of "L1/L3 triage"); shorter narration.
+- **Vek08Gates:** 5 beats → 1 beat (same 12-gate grid).
+- **Vek09Walk:** narration tightened; C-024 now named in narration as well as on screen.
+- **Vek10Results:** "supervisor recheck" / "assumptions stay on screen" / "not at any length" removed; conditions shown under "holds under".
+- **Vek11Status:** tasks named as in the Introduction; E1 detail now 13 not equivalent / 4 equivalent of 17 approved (from the APPROVAL status fields); HVX 64-bit-pointer modelling (VEKTO-M-ilp32) and C-018 (no in-place calls) kept, as the E2/E3 claims depend on them; removed "none of this is a program-level result yet".
+- **Vek12Close:** removed the "does not claim" list, the four-forms-of-counterexample series close and the trust thread; replaced by Vekto's own takeaway (two beats).
+- Total: 12 scenes, 49 beats, about 7.0 min (was 55 beats, about 9.0 min).

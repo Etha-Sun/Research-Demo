@@ -1,6 +1,6 @@
-"""Episode 4: Vekto (work in progress). Manim Community 0.19.
+"""Vekto: proving SIMD kernel migrations equivalent. Manim Community 0.19.
 
-Scenes Vek01Open .. Vek12Close. Narration: episodes/vekto/narration.json.
+Scenes Vek01Open .. Vek12Close (revision 2026-11-23: self-contained, no series material). Narration: episodes/vekto/narration.json.
 On-screen code: episodes/vekto/examples/ (each file's header names the exact repo source and the trims).
 Local helpers (not in common/components.py): example(), heading(), chip_row(), lane_box(), gate_row(), status_row(), tag().
 """
@@ -16,8 +16,8 @@ from manim import (
 
 from common import style as S
 from common.components import (
-    NarratedScene, T, badge, bullet_list, card, cite, code_panel, highlight_lines, pipeline, series_map,
-    state_table, title_card,
+    NarratedScene, T, badge, bullet_list, card, cite, code_panel, highlight_lines, pipeline, state_table,
+    title_card,
 )
 
 EP = "vekto"
@@ -90,6 +90,8 @@ def status_row(key: str, what: str, statuses, detail: str) -> VGroup:
     w = T(what, size=S.SMALL_SIZE + 2)
     dt = T(detail, size=S.SMALL_SIZE - 2, color=S.MUTED)
     txt = VGroup(w, dt).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+    if txt.width > 8.9:
+        txt.scale_to_fit_width(8.9)
     bs = VGroup(*[badge(t, c) for t, c in statuses]).arrange(DOWN, aligned_edge=RIGHT, buff=0.1)
     k.move_to([-6.3, 0, 0], aligned_edge=LEFT)
     txt.move_to([-5.4, 0, 0], aligned_edge=LEFT)
@@ -103,24 +105,26 @@ class Vek01Open(NarratedScene):
 
     def construct(self):
         with self.beat("Vek01Open-1"):
-            tc = title_card(EP, 4, extra="work in progress · unpublished")
+            tc = title_card(EP)
             self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.2)
         with self.beat("Vek01Open-2"):
-            m = series_map(EP).shift(DOWN * 0.3)
-            recap = T("We have seen counterexamples drive proof repair,\n"
-                      "and that a proof is only as good as its spec and its checker.",
-                      size=S.BODY_SIZE - 2, color=S.MUTED, line_spacing=1.2).to_edge(UP, buff=0.9)
+            l1 = T("agents translate and optimise SIMD kernels in C intrinsics", size=S.BODY_SIZE)
+            l2 = T("tests decide what is accepted", size=S.BODY_SIZE, color=S.MUTED)
+            l3 = T("a kernel can pass its tests and still change its behaviour", size=S.BODY_SIZE, color=S.BAD)
+            ls = VGroup(l1, l2, l3).arrange(DOWN, buff=0.35).shift(UP * 1.0)
             self.play(FadeOut(tc), run_time=0.6)
-            self.play(FadeIn(m), run_time=1.0)
-            self.play(FadeIn(recap, shift=DOWN * 0.1), run_time=0.8)
+            self.play(FadeIn(l1, shift=UP * 0.1), run_time=0.8)
+            self.play(FadeIn(l2, shift=UP * 0.1), run_time=0.7)
+            self.play(FadeIn(l3, shift=UP * 0.1), run_time=0.8)
         with self.beat("Vek01Open-3"):
-            q1 = T("Ported to another instruction set,", size=S.BODY_SIZE + 4)
-            q2 = T("does an optimised kernel still compute the same thing?", size=S.BODY_SIZE + 4, color=ACC)
-            q3 = T("Which assumptions does the answer rely on?", size=S.BODY_SIZE + 4, color=S.WARN)
-            q = VGroup(q1, q2, q3).arrange(DOWN, buff=0.35)
-            self.play(FadeOut(m), FadeOut(recap), run_time=0.6)
-            self.play(FadeIn(q1), FadeIn(q2), run_time=1.0)
-            self.play(FadeIn(q3, shift=UP * 0.1), run_time=0.8)
+            q1 = T("Do two kernels on different instruction sets give the same outputs",
+                   size=S.BODY_SIZE + 2, color=ACC)
+            q2 = T("for every input the spec's preconditions allow?", size=S.BODY_SIZE + 2, color=ACC)
+            q = VGroup(q1, q2).arrange(DOWN, buff=0.25).next_to(ls, DOWN, buff=0.8)
+            if q.width > 13:
+                q.scale_to_fit_width(13)
+            self.play(ls.animate.set_opacity(0.45), run_time=0.5)
+            self.play(FadeIn(q, shift=UP * 0.1), run_time=1.0)
 
 
 # ================================================================== 2. hook
@@ -242,12 +246,12 @@ class Vek04Resolve(NarratedScene):
             self.play(Create(highlight_lines(pr, 2, 3, color=S.INFO)), FadeIn(lr), run_time=0.8)
         with self.beat("Vek04Resolve-2"):
             self.play(*[FadeOut(m) for m in self.mobjects if m is not h], run_time=0.6)
-            t = T("Counterexample triage (L1)", size=S.BODY_SIZE, color=S.MUTED).next_to(h, DOWN, buff=0.45)
+            t = T("Is the counterexample real?", size=S.BODY_SIZE, color=S.MUTED).next_to(h, DOWN, buff=0.45)
             r1 = VGroup(T("Can the input occur?", size=S.BODY_SIZE - 2),
                         T("yes: no NaN check on the XNNPACK call path", size=S.SMALL_SIZE + 2, color=S.MUTED)
                         ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
-            r2 = VGroup(T("Which side deviates?", size=S.BODY_SIZE - 2),
-                        T("no reference: min/max NaN behaviour not guaranteed (XNNPACK #441)",
+            r2 = VGroup(T("Which side is the reference?", size=S.BODY_SIZE - 2),
+                        T("neither: min/max NaN behaviour is not guaranteed (XNNPACK #441)",
                           size=S.SMALL_SIZE + 2, color=S.MUTED)).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
             rows = VGroup(r1, r2).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(t, DOWN, buff=0.4)
             rows.set_x(0)
@@ -264,7 +268,7 @@ class Vek04Resolve(NarratedScene):
         with self.beat("Vek04Resolve-4"):
             m2 = badge("conditional:  A ≡ Bopt under C-001 (no NaN inputs)", S.WARN).scale(1.25)
             m2.next_to(m1, DOWN, buff=0.3).align_to(m1, LEFT)
-            n2 = T("counted separately · recorded as passed + rechecked · early evidence not re-runnable here",
+            n2 = T("proved under the precondition · counted separately",
                    size=S.SMALL_SIZE - 2, color=S.MUTED).next_to(m2, DOWN, buff=0.15).align_to(m2, LEFT)
             c2 = cite("repo: research/project-plan-20261102/CONDITIONS.zh-CN.md row C-001; SUMMARY-20261111.zh-CN.md §2")
             self.play(FadeIn(m2, shift=UP * 0.1), run_time=0.8)
@@ -273,14 +277,14 @@ class Vek04Resolve(NarratedScene):
             self.play(*[FadeOut(m) for m in self.mobjects if m is not h], run_time=0.6)
             rep_src = example("04_vmax_bopt_nan_repair.c")
             one = code_panel(rep_src.splitlines()[0], "c", title="Bopt", max_width=12.6)
-            full = code_panel(rep_src, "c", title="Bopt, NaN-repaired (candidate)", max_width=12.6)
+            full = code_panel(rep_src, "c", title="Bopt with NaN repair", max_width=12.6)
             full.move_to([0, 0.9, 0])
             one.move_to(full).align_to(full, UP)
             self.play(FadeIn(one), run_time=0.6)
             self.play(ReplacementTransform(one, full), run_time=1.2)
             hl = highlight_lines(full, 2, 5, color=S.WARN)
             cost = T("+18.8 % cycles", size=S.HEADING_SIZE, weight="BOLD", color=S.WARN)
-            sub = T("geometric mean over 7 sizes, Saturn RTL · tested, not proved", size=S.SMALL_SIZE,
+            sub = T("geometric mean over 7 sizes, Saturn RTL", size=S.SMALL_SIZE,
                     color=S.MUTED)
             VGroup(cost, sub).arrange(DOWN, buff=0.15).next_to(full, DOWN, buff=0.5)
             c3 = cite("repo: research/project-plan-20261102/vmax-performance/REPORT.zh-CN.md (结论); repair.patch")
@@ -306,17 +310,16 @@ class Vek05Testing(NarratedScene):
                  "research/bugs/xnnpack/XNN-005-f32-vexp-nan-clamp/README.zh-CN.md (supplement)")
         r2 = row("2", "QEMU keeps RVV tail lanes unchanged: a tail-lane bug stays hidden",
                  "research/bugs/xnnpack/XNN-003-s8u8-rminmax-rvv-tail-agnostic/README.zh-CN.md:20")
-        r3 = row("3", "An earlier bounded checker said VERIFIED: its NEON model ignored NaN",
+        r3 = row("3", "SALTy-RN's bounded checker said VERIFIED: its NEON model ignored NaN",
                  "research/project-plan-20261102/final-minmax-reproduction/README.zh-CN.md")
         rows = VGroup(r1, r2, r3).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(h, DOWN, buff=0.5)
         rows.set_x(0)
         with self.beat("Vek05Testing-1"):
             self.play(FadeIn(h), run_time=0.6)
-        with self.beat("Vek05Testing-2"):
             self.play(FadeIn(r1, shift=UP * 0.1), run_time=0.8)
-        with self.beat("Vek05Testing-3"):
+        with self.beat("Vek05Testing-2"):
             self.play(FadeIn(r2, shift=UP * 0.1), run_time=0.8)
-        with self.beat("Vek05Testing-4"):
+        with self.beat("Vek05Testing-3"):
             self.play(FadeIn(r3, shift=UP * 0.1), run_time=0.8)
             d = code_panel(example("05_bounded_checker_patch.diff"), "diff",
                            title="patch to the checker's NEON model",
@@ -329,18 +332,15 @@ class Vek05Testing(NarratedScene):
             self.play(FadeIn(v), run_time=0.5)
             self.play(FadeIn(d), run_time=0.8)
             self.play(Create(strike), FadeIn(x, shift=UP * 0.1), run_time=0.8)
-        with self.beat("Vek05Testing-5"):
+        with self.beat("Vek05Testing-4"):
             self.play(*[FadeOut(m) for m in self.mobjects if m is not h], run_time=0.6)
             goal = VGroup(
-                T("Goal", size=S.SMALL_SIZE, color=ACC, weight="BOLD"),
+                T("Vekto's goal", size=S.SMALL_SIZE, color=ACC, weight="BOLD"),
                 T("“establish equivalence for all inputs permitted", size=S.BODY_SIZE + 2),
                 T("by the preconditions in the spec”", size=S.BODY_SIZE + 2),
             ).arrange(DOWN, aligned_edge=LEFT, buff=0.15).move_to(UP * 0.5)
-            vero = T("Vero's lesson: the model and the spec decide what a verdict means",
-                     size=S.SMALL_SIZE + 2, color=S.ACCENT["vero"]).next_to(goal, DOWN, buff=0.7)
-            c = cite("repo: research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶3 (Intro V2, draft)")
+            c = cite("repo: research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶3")
             self.play(FadeIn(goal), FadeIn(c), run_time=1.0)
-            self.play(FadeIn(vero, shift=UP * 0.1), run_time=0.8)
 
 
 # ================================================================== 6. level
@@ -360,8 +360,8 @@ class Vek06Level(NarratedScene):
             return VGroup(r, g)
 
         cols = VGroup(col("Assembly / ISA", "Sail, Islaris"), col("Compiler IR", "Alive2, Rake"),
-                      col("C + intrinsic contracts", "Vekto")).arrange(RIGHT, buff=0.4).shift(UP * 1.1)
-        c = cite("repo: research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶4–5 (Intro V2, draft)")
+                      col("C + semantic shims", "Vekto")).arrange(RIGHT, buff=0.4).shift(UP * 1.1)
+        c = cite("repo: research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶4–5")
         with self.beat("Vek06Level-1"):
             self.play(FadeIn(h), FadeIn(c), run_time=0.6)
             self.play(LaggedStart(*[FadeIn(x, shift=UP * 0.15) for x in cols], lag_ratio=0.3), run_time=1.4)
@@ -392,17 +392,17 @@ class Vek07Pipeline(NarratedScene):
             {"id": "qcp", "label": "QCP", "sub": "symbolic execution", "pos": [-0.35, y0], "w": 2.3, "h": 0.95},
             {"id": "vcs", "label": "VCs", "sub": "verification conditions", "pos": [2.3, y0], "w": 2.3, "h": 0.95},
             {"id": "coq", "label": "Coq", "sub": "proofs by agents", "pos": [5.25, y0], "w": 2.3, "h": 0.95},
-            {"id": "lib", "label": "intrinsic contracts", "sub": "one shared library", "pos": [-0.35, yt],
+            {"id": "lib", "label": "C semantic shims", "sub": "one shared library", "pos": [-0.35, yt],
              "w": 2.9, "h": 0.95},
             {"id": "diff", "label": "differential tests", "sub": "native x86 · QEMU", "pos": [3.3, yt],
              "w": 2.9, "h": 0.95},
-            {"id": "spec", "label": "spec.c", "sub": "equivalent(): human-reviewed", "pos": [-0.35, yb],
+            {"id": "spec", "label": "spec.c", "sub": "equivalent(): expert-reviewed", "pos": [-0.35, yb],
              "w": 2.9, "h": 0.95, "color": ACC},
             {"id": "gates", "label": "check.py", "sub": "12 gates → APPROVAL", "pos": [5.25, yb], "w": 2.3,
              "h": 0.95, "color": S.OK},
             {"id": "cex", "label": "counterexample", "sub": "replayed on originals", "pos": [3.45, yc], "w": 2.8,
              "h": 0.95, "color": S.BAD},
-            {"id": "tri", "label": "L1/L3 triage", "sub": "condition · fix · divergence", "pos": [-0.35, yc],
+            {"id": "tri", "label": "expert review", "sub": "precondition · repair · divergence", "pos": [-0.35, yc],
              "w": 2.9, "h": 0.95, "color": S.WARN},
         ]
         edges = [
@@ -493,21 +493,13 @@ class Vek08Gates(NarratedScene):
             return box
 
         with self.beat("Vek08Gates-1"):
-            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
+            self.play(FadeIn(h), FadeIn(c), run_time=0.5)
             b = group([0, 1, 2, 3], S.INFO)
-        with self.beat("Vek08Gates-2"):
-            self.play(FadeOut(b), run_time=0.3)
+            self.play(FadeOut(b), run_time=0.2)
             b = group([4, 5, 6], S.INFO)
-        with self.beat("Vek08Gates-3"):
+            self.play(FadeOut(b), run_time=0.2)
+            b = group([7, 8, 9, 10, 11], ACC)
             self.play(FadeOut(b), run_time=0.3)
-            b = group([7, 8], ACC)
-        with self.beat("Vek08Gates-4"):
-            self.play(FadeOut(b), run_time=0.3)
-            b = group([9, 10], ACC)
-        with self.beat("Vek08Gates-5"):
-            self.play(FadeOut(b), run_time=0.3)
-            b = group([11], S.INFO)
-            self.play(FadeOut(b), run_time=0.4)
 
 
 # ================================================================== 9. walk-through
@@ -578,13 +570,13 @@ class Vek10Results(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        h = heading("x24-transposec: supervisor recheck")
+        h = heading("x24-transposec: result")
         c = cite("repo: build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x24-rvv.json; "
                  "rechecks/w36x24/run/status.json")
         with self.beat("Vek10Results-1"):
             chips = VGroup(*[badge(f"g{i}", S.OK) for i in range(1, 13)]).arrange(RIGHT, buff=0.18)
             chips.next_to(h, DOWN, buff=0.55)
-            res = T("RESULT: PASS   ·   12 / 12 gates   ·   5,990 s", size=S.BODY_SIZE, weight="BOLD", color=S.OK)
+            res = T("PASS   ·   12 / 12 gates   ·   5,990 s", size=S.BODY_SIZE, weight="BOLD", color=S.OK)
             res.next_to(chips, DOWN, buff=0.35)
             self.play(FadeIn(h), FadeIn(c), run_time=0.5)
             self.play(LaggedStart(*[FadeIn(x, scale=1.2) for x in chips], lag_ratio=0.08), run_time=1.4)
@@ -606,18 +598,18 @@ class Vek10Results(NarratedScene):
             self.play(FadeIn(t2, shift=UP * 0.1), run_time=0.7)
         with self.beat("Vek10Results-3"):
             self.play(FadeOut(tiles), run_time=0.4)
-            a = bullet_list(["fixed VLEN 128 / 256 / 512 bits, not arbitrary VLEN",
+            a = bullet_list(["VLEN 128 / 256 / 512 bits",
                              "C-022 block ≥ 1×1   ·   C-024 no address wrap",
                              "C-031 window ≤ INT64_MAX   ·   C-033 input window (XNN_OOB_READS)"],
                             size=S.SMALL_SIZE + 2, color=S.WARN, buff=0.2)
-            lab = T("assumptions", size=S.SMALL_SIZE, color=S.WARN, weight="BOLD")
+            lab = T("holds under", size=S.SMALL_SIZE, color=S.WARN, weight="BOLD")
             blk = VGroup(lab, a).arrange(DOWN, aligned_edge=LEFT, buff=0.2).next_to(res, DOWN, buff=0.45)
             blk.set_x(0)
             self.play(FadeIn(lab), LaggedStart(*[FadeIn(x) for x in a], lag_ratio=0.35), run_time=1.6)
         with self.beat("Vek10Results-4"):
-            g = bullet_list(["G-004 partial correctness only",
-                             "G-002 intrinsics = reviewed contracts + differential tests, no formal ISA proof",
-                             "modelling: 6 const tables 16-byte aligned · assert() off (NDEBUG)"],
+            g = bullet_list(["partial correctness (G-004)",
+                             "intrinsics: reviewed C definitions + differential tests (G-002)",
+                             "6 const tables modelled 16-byte aligned · assert() off (NDEBUG)"],
                             size=S.SMALL_SIZE + 2, color=S.WARN, buff=0.2)
             g.next_to(blk, DOWN, buff=0.25).align_to(blk, LEFT)
             c2 = cite("repo: APPROVAL-x24-rvv.json (conditions); research/project-plan-20261102/CONDITIONS.zh-CN.md G-rows")
@@ -636,25 +628,27 @@ class Vek11Status(NarratedScene):
     EPISODE = EP
 
     def construct(self):
-        h = heading("Experiments E1–E4, status as of 2026-11-23")
+        h = heading("Experiments E1–E4  ·  2026-11-23")
         rows = [
-            status_row("E1", "original NEON A vs LLM-optimised RVV Bopt (35 pairs)", [("IN PROGRESS", S.WARN)],
-                       "17 approval records in the current batch; most: main result A ≠ Bopt"),
-            status_row("E2", "translate x86 ops that RVV / HVX lack, and prove it",
+            status_row("E1", "verify optimised kernels: NEON A vs RVV Bopt (35 pairs)",
+                       [("IN PROGRESS", S.WARN)],
+                       "17 pairs approved: 13 A ≠ Bopt, 4 A ≡ Bopt (one under C-005)"),
+            status_row("E2", "translate x86 kernels to RVV / HVX libraries that lack them",
                        [("ESTABLISHED: 24", S.OK), ("IN PROGRESS", S.WARN)],
-                       "24 approved migrations; x64 → HVX in progress"),
+                       "24 approved; x64-transposec → HVX in progress; HVX modelled with 64-bit pointers"),
             status_row("E3", "cross-check independent XNNPACK implementations",
                        [("ESTABLISHED: 15", S.OK), ("IN PROGRESS", S.WARN)],
                        "14 pairs approved, 1 proved not equivalent, 3 not started"),
             status_row("E4", "one application-level program (softmax candidate)", [("NOT STARTED", S.MUTED)],
-                       "no program-level result yet"),
+                       "translate a NEON program to RVV and verify it"),
         ]
         for i, r in enumerate(rows):
             r.shift(UP * (1.85 - i * 1.35))
         cites = [
-            "repo: build/e1-codex-20261111/c*/APPROVAL*.json (17 files); EXPERIMENT-DESIGN.zh-CN.md (E1)",
-            "repo: research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md, 11-23 04:05 and 14:20 entries",
-            "repo: research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2",
+            "repo: build/e1-codex-20261111/c*/APPROVAL*.json (17 files, status fields); EXPERIMENT-DESIGN.zh-CN.md (E1)",
+            "repo: research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md, 11-23 04:05 and 14:20 entries; "
+            "CONDITIONS.zh-CN.md [VEKTO-M-ilp32]",
+            "repo: research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2; CONDITIONS.zh-CN.md C-018",
             "repo: research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2; EXPERIMENT-DESIGN.zh-CN.md (E4)",
         ]
         c = cite(cites[0])
@@ -671,6 +665,9 @@ class Vek11Status(NarratedScene):
             reveal(1)
         with self.beat("Vek11Status-3"):
             reveal(2)
+            foot = T("E2 / E3 element-wise kernels: input and output buffers disjoint, no in-place calls (C-018)",
+                     size=S.CITE_SIZE, color=S.MUTED).move_to([0, -3.05, 0])
+            self.play(FadeIn(foot), run_time=0.5)
         with self.beat("Vek11Status-4"):
             reveal(3)
 
@@ -680,32 +677,34 @@ class Vek12Close(NarratedScene):
     EPISODE = EP
 
     def construct(self):
+        def box(title, sub, edge):
+            r = card(3.9, 1.35, edge=edge)
+            g = VGroup(T(title, size=S.BODY_SIZE - 4, weight="BOLD"), T(sub, size=S.SMALL_SIZE - 2, color=S.MUTED))
+            g.arrange(DOWN, buff=0.12)
+            if g.width > 3.6:
+                g.scale_to_fit_width(3.6)
+            g.move_to(r)
+            return VGroup(r, g)
+
+        def chain(boxes, y):
+            row = VGroup(*boxes).arrange(RIGHT, buff=0.55).move_to([0, y, 0])
+            arr = VGroup(*[Arrow(row[k].get_right(), row[k + 1].get_left(), buff=0.06, stroke_width=3,
+                                 color=S.MUTED, max_tip_length_to_length_ratio=0.25) for k in range(len(row) - 1)])
+            return row, arr
+
+        h = heading("Takeaway", color=ACC)
         with self.beat("Vek12Close-1"):
-            h = heading("What Vekto does not claim")
-            lst = bullet_list(["termination (partial correctness, G-004); C-to-machine-code correspondence",
-                               "Hexagon modelled as LP64, though it is ILP32 (M-ilp32)",
-                               "in-place calls: not covered (C-018)",
-                               "bugs found: confirmed candidates, not yet reported upstream"],
-                              size=S.SMALL_SIZE + 3, color=S.WARN, buff=0.35)
-            lst.next_to(h, DOWN, buff=0.7).set_x(0)
-            c = cite("repo: research/project-plan-20261102/CONDITIONS.zh-CN.md (G-004, VEKTO-M-ilp32, C-018); "
-                     "research/bugs/xnnpack/")
-            self.play(FadeIn(h), FadeIn(c), run_time=0.6)
-            self.play(LaggedStart(*[FadeIn(x, shift=UP * 0.1) for x in lst], lag_ratio=0.4), run_time=2.2)
+            top, ta = chain([box("two SIMD kernels", "different instruction sets", S.PANEL_EDGE),
+                             box("C program verification", "reviewed C definition per intrinsic", ACC),
+                             box("QCP + Coq", "same outputs on every allowed input", S.OK)], 1.3)
+            self.play(FadeIn(h), run_time=0.5)
+            for k in range(3):
+                self.play(FadeIn(top[k], shift=RIGHT * 0.1), *( [GrowArrow(ta[k - 1])] if k else []), run_time=0.8)
         with self.beat("Vek12Close-2"):
-            self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.6)
-            m = series_map(None).shift(UP * 0.6)
-            nodes = m[0]
-            caps = ["a program state", "a learned\nexplanation", "an audit of\na spec",
-                    "an input where two\nkernels disagree"]
-            labs = VGroup(*[T(t, size=S.SMALL_SIZE - 1, color=S.EPISODES[i][3], line_spacing=1.1)
-                            .next_to(nodes[i], DOWN, buff=0.3) for i, t in enumerate(caps)])
-            head = T("what the counterexample was", size=S.SMALL_SIZE, color=S.MUTED).next_to(nodes, UP, buff=0.4)
-            self.play(FadeIn(m[0]), FadeIn(m[1]), FadeIn(head), run_time=1.0)
-            self.play(LaggedStart(*[FadeIn(x, shift=UP * 0.1) for x in labs], lag_ratio=0.5), run_time=2.4)
-        with self.beat("Vek12Close-3"):
-            trust = T("every proof re-checked  ·  no spec silently weakened  ·  every assumption stated",
-                      size=S.SMALL_SIZE + 2, color=S.INK).next_to(labs, DOWN, buff=0.7)
-            if trust.width > 13:
-                trust.scale_to_fit_width(13)
-            self.play(FadeIn(trust, shift=UP * 0.1), run_time=1.0)
+            bot, ba = chain([box("proof fails", "concrete input", S.BAD),
+                             box("f32-vmax", "NaN vs 1.0", S.BAD),
+                             box("expert review", "precondition · repair · divergence", S.WARN)], -1.0)
+            never = T("never a weaker spec", size=S.BODY_SIZE, weight="BOLD", color=ACC).next_to(bot, DOWN, buff=0.5)
+            for k in range(3):
+                self.play(FadeIn(bot[k], shift=RIGHT * 0.1), *( [GrowArrow(ba[k - 1])] if k else []), run_time=0.8)
+            self.play(FadeIn(never, shift=UP * 0.1), run_time=0.8)

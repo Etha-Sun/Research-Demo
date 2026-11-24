@@ -1,4 +1,4 @@
-# ExVerus (Episode 1) — sources for everything on screen
+# ExVerus — sources for everything on screen
 
 Paper: *ExVerus: Verus Proof Repair via Counterexample Reasoning*. Yang, Sun, Wu, Caridad, Yuan, Yao, Lu, Pei. ICML 2026,
 arXiv 2603.25810v2, local copy `papers/exverus.pdf`. "p.N" means the PDF page. Repo: github.com/claudeyj/exverus @ 4e513a1c
@@ -23,8 +23,7 @@ arXiv 2603.25810v2, local copy `papers/exverus.pdf`. "p.N" means the PDF page. R
 
 | Scene | On screen | Source |
 |---|---|---|
-| ExV01 | Author card: senior undergraduate, School of the Gifted Young, USTC; Data Science and Big Data Technology; advisors Kexin Pei (UChicago), Alvin Cheung (UC Berkeley); interests | Author homepage, fetched 2026-11-23, as summarised in `research/topoverus/BRIEF.md` §10 |
-| ExV01 | Author list, "ICML 2026" | p.1; `docs/SERIES.md` "Attribution on screen" |
+| ExV01 | Title card: author list, "ICML 2026" | p.1; `docs/SERIES.md` "Attribution" |
 | ExV02 | error "invariant not satisfied at end of loop body" | Fig. 1, p.3 |
 | ExV02 | "7,083-line SMT query", "unknown", `i@ 537`, `1681`, `Poly!val!31` | Fig. 1 p.3; §2.2 p.3–4 (BRIEF R10) |
 | ExV02/03 | CEX_1 `nums = vec![-1, -1], i = 1, max = 0`, "Status: SAT" | Fig. 1 top right, p.3 |
@@ -40,12 +39,11 @@ arXiv 2603.25810v2, local copy `papers/exverus.pdf`. "p.N" means the PDF page. R
 | ExV06 | reachable → wrong_fact → replace; spurious → too_weak → strengthen | §3.2, p.5; App. I.5 p.28 |
 | ExV06 | brs1 verdict `wrong_fact` and rationale | Fig. 3 panel 3, p.13 |
 | ExV06 | findmax: `max = 0` not in `[-1, -1]`, spurious, `too_weak` | Fig. 8, p.23 |
-| ExV07 | five candidate proofs | §4.1, p.6 (5 mutants) |
+| ExV07 | "5 candidates by default"; only mutant_1 shown (Fig. 3 shows only mutant_1) | §4.1, p.6 (5 mutants); Fig. 3 panel 4, p.13 |
 | ExV07 | shared pattern "i = 0 and sum[0] > 0" | App. A.1 text, p.13 |
-| ExV07 | rank by # validated CEXs blocked; PDR/IC3 inspiration; definition of blocking | p.6 "Mutant ranking"; Def. 2.2 p.4 |
-| ExV07 | "mutant_1 blocks all CEXs and passes Verus" | App. A.1, p.13 ("mutant-1 successfully blocks all counterexamples and passes Verus verification") |
+| ExV07 | rank by # validated CEXs blocked; "inspired by PDR"; definition of blocking | p.6 "Mutant ranking" ("Inspired by the PDR algorithm"); Def. 2.2 p.4 |
+| ExV07/08 | "mutant_1 blocks all CEXs", "passes Verus", "task solved" | App. A.1, p.13 ("mutant-1 successfully blocks all counterexamples and passes Verus verification, resolving this task") |
 | ExV07 | "assertion passes: CEX_1 blocked" | Fig. 3 panel 5 green callout, p.13 |
-| ExV07 | reference proof uses the same guard | repo `cleaned-verusbench/Diffy/verified/brs1.rs:35` (`i > 0 ==> sum[0] <= i`) |
 | ExV08 | pipeline nodes and edges | Fig. 2, p.4; Alg. 1–3, p.19 |
 | ExV08 | "≤ 10 CEXs" (default 10), "retry if not SAT" | §4.3 p.7 (default 10 CEXs); Alg. 2 p.19 |
 | ExV08 | "5 candidates", "max 10" iterations | §4.1, p.6 |
@@ -56,11 +54,9 @@ arXiv 2603.25810v2, local copy `papers/exverus.pdf`. "p.N" means the PDF page. R
 | ExV10 | blocking mutants 172/243 (70.78%) verify vs non-blocking 38/153 (24.84%), ExVerus_ONE_CEX | §4.3, p.8 (BRIEF R8) |
 | ExV10 | cost/time per task: DeepSeek-V3.1 $0.04 vs $0.17, 720.3 s vs 2989.1 s; GPT-4o $0.42 vs $0.69, 250.0 s vs 233.9 s | Table 3, p.8 (BRIEF R5, R5b) |
 | ExV11 | validation only for loop-invariant errors; other CEXs unvalidated | §3.1 p.5; §5 p.8 |
-| ExV11 | CEX generation can fail or be wrong; only Verus trusted | p.2; p.5 |
 | ExV11 | passing Verus ≠ user intent | Impact Statement, p.9 |
 | ExV11 | weaker on assert / proof-block tasks (GPT-4o) | Table 5, p.23; App. H.3 p.22 |
-| ExV11 | Verus version change lowered AutoVerus baseline (narration: built for older Verus, scores lower on the newer version; GPT-4o VerusBench 75.33% vs 52.7%) | App. H.4, p.22; footnote 3, p.6 |
-| ExV12 | bridge sentence | `docs/SERIES.md` (fixed bridge line) |
+| ExV12 | "concrete program states, not one-line errors"; "open-ended proof search → targeted search"; "Verus has the final word" | App. A.2, p.14 ("converts debugging into a targeted search"); §7 Conclusion, p.9 ("transforms open-ended proof search into more grounded process"); final Verus check: Fig. 2 p.4, Alg. 3 p.19 |
 
 ## Deliberately not shown (numbers policy, `docs/SERIES.md`)
 

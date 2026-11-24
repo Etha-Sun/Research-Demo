@@ -1,6 +1,0 @@
-# SOURCE: github.com/Etha-Sun/Topoverus @ 878496237052eeccdd8478b9f9037041affe1431
-# FILE: docs/case-studies/b-prefix-invariant/verifier-error.txt lines 2-3 (copy: research/topoverus/examples/caseB-2-verifier-error.txt:5-6)
-# SCREEN TRIM: only the two message lines; the caret excerpt and summary lines are dropped.
-# ---- screen text below ----
-error: invariant not satisfied before loop
-  --> best_time_sell_v2.rs:44:13

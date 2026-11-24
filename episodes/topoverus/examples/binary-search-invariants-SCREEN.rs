@@ -1,5 +1,5 @@
 // SOURCE: TopoVerus paper (arXiv 2611.13627v1), Figure 2 bottom panel "Correct Case (Inductive)", invariant list, PDF p.4
-//   (copy: research/topoverus/examples/paper-fig2-diagnostics.txt:31-35). ILLUSTRATIVE example from the paper.
+//   (copy: research/topoverus/examples/paper-fig2-diagnostics.txt:31-35). 
 //   Fig. 2 lists I1..I5 with I5 carrying the "[Boundary error]" `high <= i`; I1..I4 equal Fig. 1 (p.3) lines I1..I4
 //   up to the `: int` annotation.
 // SCREEN TRIMS: the "[Boundary error]" tag is dropped (the scene marks the line in red instead); labels I1..I5 kept as prefixes.

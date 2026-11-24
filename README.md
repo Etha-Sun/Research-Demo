@@ -1,18 +1,17 @@
-# Research-Demo: from a failed proof to a trusted one
+# Research-Demo: four research explainer videos
 
-This is the source kit for a four-part explainer video series about Yuechun Sun's research on LLMs and formal
-verification. Everything is code: storyboards, narration, Manim scenes and the source audit. The videos are rendered on
+This is the source kit for four self-contained explainer videos about Yuechun Sun's research on LLMs and formal
+verification, one video per work. Everything is code: storyboards, narration, Manim scenes and the source audit. The videos are rendered on
 your own machine.
 
 | # | Episode | Topic | Narration |
 |---|---------|-------|-----------|
-| 1 | **ExVerus** (ICML 2026) | Verus proof repair via counterexample reasoning; also opens the series | ~9 min |
-| 2 | **TopoVerus** (NeurIPS 2026) | A model trained with RL to produce counterexamples and repairs; safety gate; topological graph reward | ~8 min |
-| 3 | **Vero** (NeurIPS 2026) | Can AI agents build formally verified software repositories? Benchmark, checker, spec audit | ~8 min |
-| 4 | **Vekto** (work in progress) | C-level equivalence proofs for SIMD kernel migrations (NEON/SSE → RVV/HVX) with QCP + Coq | ~9 min |
+| 1 | **ExVerus** (ICML 2026) | Verus proof repair via counterexample reasoning | ~7 min |
+| 2 | **TopoVerus** (NeurIPS 2026) | A model trained with RL to produce counterexamples and repairs; safety gate; topological graph reward | ~7 min |
+| 3 | **Vero** (NeurIPS 2026) | Can AI agents build formally verified software repositories? Benchmark, checker, spec audit | ~7 min |
+| 4 | **Vekto** (ongoing) | C-level equivalence proofs for SIMD kernel migrations (NEON/SSE → RVV/HVX) with QCP + Coq | ~7 min |
 
-Through-line: **counterexamples connect a failed proof to its repair**, and **a proof is only as good as its spec and
-its checker**. See `docs/SERIES.md`.
+Each video follows its arXiv paper (Vekto: the research repository). The four share a visual style but do not refer to each other; see `docs/SERIES.md`.
 
 ## Quick start (macOS / Linux)
 
@@ -42,7 +41,7 @@ Outputs go to `out/<episode>.mp4` with `out/<episode>.en.srt` and `out/<episode>
 ## How the kit is organised
 
 ```
-docs/SERIES.md            series arc, fixed recap/bridge lines, chosen examples, numbers policy
+docs/SERIES.md            principles (independent, paper first), chosen examples, numbers
 docs/PRODUCTION-SPEC.md   conventions every episode follows
 docs/REVIEW.md            final fact-check / continuity review and open issues for the author
 episodes/<ep>/            STORYBOARD.md, narration.json (en + zh), scenes.py, examples/, SOURCES.md
@@ -72,6 +71,4 @@ they must follow.
 - Every on-screen number has a citation footnote, and every code panel is verbatim from the paper or repository.
   Trims are documented in the example file headers and in `SOURCES.md`.
 - Where the papers' own numbers were inconsistent, the episode uses per-table values only (see `docs/SERIES.md`).
-- Some examples were not re-run by us. The TopoVerus Case B repair is narrated as "the paper reports". `verify/` lets
-  you check the Verus examples locally.
-- Vekto is unpublished ongoing work; its episode labels results as established / in progress / not started.
+- `verify/` lets you re-run the Verus examples locally.

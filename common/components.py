@@ -105,13 +105,13 @@ def card(width: float, height: float, edge: str = S.PANEL_EDGE, fill: str = S.PA
                             stroke_color=edge, stroke_width=2, fill_color=fill, fill_opacity=1)
 
 
-def title_card(episode_key: str, number: int, extra: str | None = None) -> VGroup:
-    """Episode opening: number, title, subtitle in the episode accent colour."""
+def title_card(episode_key: str, number: int | None = None, extra: str | None = None) -> VGroup:
+    """Video opening: title and subtitle in the video's accent colour; `extra` = authors · venue.
+    `number` is kept for backward compatibility and ignored: each video stands on its own."""
     _, title, subtitle, accent = next(e for e in S.EPISODES if e[0] == episode_key)
-    n = T(f"Episode {number}", size=S.SMALL_SIZE, color=accent)
     t = T(title, size=S.TITLE_SIZE + 16, weight="BOLD")
     s = T(subtitle, size=S.HEADING_SIZE - 8, color=S.MUTED)
-    g = VGroup(n, t, s).arrange(DOWN, buff=0.3)
+    g = VGroup(t, s).arrange(DOWN, buff=0.3)
     if extra:
         g.add(T(extra, size=S.SMALL_SIZE, color=S.MUTED).next_to(s, DOWN, buff=0.4))
     bar = Line(LEFT * 1.5, RIGHT * 1.5, color=accent, stroke_width=6).next_to(g, DOWN, buff=0.4)

@@ -1,7 +1,7 @@
-# Episode 4 — Vekto: sources
+# Vekto: sources
 
 Every on-screen number, quote and code snippet, with its repository-relative locator (repository = the surrounding
-`vekto` branch; nothing was re-run for this episode). Translations of Chinese sources are ours. Status as of 2026-11-23.
+`vekto` branch; nothing was re-run for this video). Translations of Chinese sources are ours. Status as of 2026-11-23.
 
 ## Code on screen (examples/)
 
@@ -29,13 +29,15 @@ Research-agent copies of all of these (with fuller headers) are in research/vekt
 | Vek04 | Arm FMAX propagates NaN; RVV vfmax = IEEE 754-2019 maximumNumber | NeonLib.v lines 87–89, 102–110 (comment at 104); RvvModel.v lines 59–68 (comment at 60–61) |
 | Vek04 | L1: input reachable (no NaN check on the API → create/setup → ukernel path; narration says exactly this, not "XNNPACK never checks"); no reference (google/XNNPACK#441) | research/project-plan-20261102/LESSONS.zh-CN.md L1, L3; DIV-001 item 5 (links the maintainer comment on issue #441) |
 | Vek04 | main result A ≠ Bopt (DIV-001) | DIV-001 header; research/project-plan-20261102/CONDITIONS.zh-CN.md row C-001 (line 40) |
-| Vek04 | conditional A ≡ Bopt under C-001 (no NaN), "passed + rechecked", counted separately; early evidence not re-runnable | CONDITIONS.zh-CN.md row C-001 ("条件配对通过（W19），监督者复检通过"); research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2 (earlier server unavailable) |
-| Vek04 | repair = 4 statements after each vfmax; +18.8 % cycles, geometric mean over 7 sizes, Saturn RTL; tested, not proved | research/project-plan-20261102/vmax-performance/REPORT.zh-CN.md, 结论 and 逐尺寸周期 (7 sizes 16…65,536); repair.patch; final-minmax-reproduction README ("regression-tested, not formally proved", via research/vekto/examples/02d) |
+| Vek04 | conditional A ≡ Bopt under C-001 (no NaN), proved under the precondition, counted separately | CONDITIONS.zh-CN.md row C-001 ("条件配对通过（W19），监督者复检通过"); research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2 |
+| Vek04 | repair = 4 statements after each vfmax; +18.8 % cycles, geometric mean over 7 sizes, Saturn RTL (the video makes no proof claim for the repair) | research/project-plan-20261102/vmax-performance/REPORT.zh-CN.md, 结论 and 逐尺寸周期 (7 sizes 16…65,536); repair.patch; final-minmax-reproduction README ("regression-tested, not formally proved", via research/vekto/examples/02d) |
 | Vek05 | random test buffers flush NaN to 0, tester NaN assertion never fires | research/bugs/xnnpack/XNN-005-f32-vexp-nan-clamp/README.zh-CN.md, 补充 (2026-11-08), NaN 契约 bullet (cites XNNPACK `buffer.h:973-979`) |
 | Vek05 | QEMU keeps tail lanes unchanged by default → XNNPACK tests on QEMU don't expose XNN-003 (named in narration; which real chips fail is unknown per the record) | research/bugs/xnnpack/XNN-003-s8u8-rminmax-rvv-tail-agnostic/README.zh-CN.md line 20 |
 | Vek05 | SALTy-RN's own bounded checker (local SALTyRN cvc5 backend, run on the final vmax, length 1, VLEN 512) said VERIFIED; NEON model ignored NaN; patched model → COUNTEREXAMPLE | final-minmax-reproduction/README.zh-CN.md, "bounded 检查对照及机制"; diagnostic-neon-model.patch; diagnostic-model-result.json |
-| Vek05 | quote "establish equivalence for all inputs permitted by the preconditions in the spec" | research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶3 (Intro V2 draft bullets) |
-| Vek06 | three levels (Sail/Islaris, Alive2/Rake, C); assembly needs separate models + correspondence, covers exceptions/privileged execution; C: explicit definition per intrinsic, reviewed against ISA docs | v2-preconditions.md ¶4–5 |
+| Vek01 | framing: agents translate/optimise SIMD kernels with C intrinsics; tests can be passed without preserving intended behaviour; question = equivalence for all inputs the spec's preconditions allow | research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶2–3 (Introduction V2) |
+| Vek05 | quote "establish equivalence for all inputs permitted by the preconditions in the spec" | research/project-plan-20261102/intro-bullets/v2-preconditions.md ¶3 |
+| Vek06 | three levels (Sail/Islaris, Alive2/Rake, C); assembly needs separate models + correspondence, covers exceptions/privileged execution; C: explicit definition per intrinsic ("semantic shims"), reviewed against ISA docs | v2-preconditions.md ¶4–5 |
+| Vek07, Vek12 | experts review only the equivalence spec and verification feedback; counterexample → add missing precondition / repair / divergence; repaired kernel re-verified; no weakening of the equivalence requirement | v2-preconditions.md ¶6–7; PAPER-EXPERIMENTS-HANDOFF.zh-CN.md §2 ("绝不能通过降低等价性要求换取证明通过"); LESSONS.zh-CN.md L1, L3 |
 | Vek07 | rule tool: deterministic, vector statements only, no LLM/hand edits, rejects unknown constructs; reason = QCP by-value vector defects | tools/rvv_ptr_lower/README.zh-CN.md (header user rule 2026-11-04; 为什么需要; 做法) |
 | Vek07 | one shared intrinsic library, differential tests native x86 / QEMU (NEON, RVV, Hexagon) | build/e2e3-workers-20261106/intrinsics-v1.7.3/INTRINSICS-COMMON.zh-CN.md (交付物 2, 4) |
 | Vek07 | spec.c holds only `equivalent()`; impl/ byte-identical | build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/README.md |
@@ -44,18 +46,16 @@ Research-agent copies of all of these (with fuller headers) are in research/vekt
 | Vek09 | x24 source = XNNPACK SSSE3, byte-identical; `XNN_OOB_READS`; target = new RVV code, frozen | pkg24/impl/ files; pkg24/ledger.json (via research/vekto/BRIEF.md §5) |
 | Vek09 | C-022 (block ≥ 1×1), C-024 (no address wrap), C-033 (input window) | pkg24/spec.c header comment and Require; CONDITIONS.zh-CN.md rows C-022 (line 69), C-024 (line 71), C-033 (line 81); APPROVAL-x24-rvv.json `conditions` |
 | Vek09 | `outputs_related`: equal on every byte a transpose writes | pkg24/spec.c header comment |
-| Vek10 | RESULT PASS, 12/12 gates, 5,990 s | build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x24-rvv.json `result`; build/e2e3-workers-20261106/rechecks/w36x24/run/status.json (`pass: true`, `seconds: 5990`) |
+| Vek10 | PASS, 12/12 gates, 5,990 s (clean-directory check.py run) | build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x24-rvv.json `result`; build/e2e3-workers-20261106/rechecks/w36x24/run/status.json (`pass: true`, `seconds: 5990`) |
 | Vek10 | 435 x86 VCs; 22 RVV VCs per VLEN at 128/256/512 | status.json gates g5/g6; APPROVAL-x24-rvv.json |
 | Vek10 | fixed VLEN 128/256/512; C-022, C-024, C-031, C-033 | APPROVAL-x24-rvv.json `status` and `conditions` |
 | Vek10 | G-004 partial correctness; G-002 intrinsics = reviewed contracts + differential tests, no formal ISA correspondence | CONDITIONS.zh-CN.md G-rows (lines 29–33) |
 | Vek10 | modelling assumptions: 6 `XNN_ALIGN(16)` constant tables assumed aligned (VEKTO-M-local-aligned); assert() compiled out (NDEBUG) | APPROVAL-x24-rvv.json `conditions` (last two entries) |
 | Vek10 | out-of-domain edge cases: 14 of 25 differ (e.g. block_width = 0), excluded by C-022 | APPROVAL-x24-rvv.json `notes`; status.json g12 `edge_cases: 25`, `edge_differences: 14` |
-| Vek11 | E1: 35 pairs; IN PROGRESS; 17 approval records; most main result A ≠ Bopt | research/project-plan-20261102/EXPERIMENT-DESIGN.zh-CN.md (E1); count of build/e1-codex-20261111/c*/APPROVAL*.json = 17, `status` fields |
-| Vek11 | E2: 24 approved migrations; x64-transposec → HVX in progress | research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md, 11-23 04:05 entry ("E2 → 24") and 11-23 14:20 entry (484 of 529 non-entail VCs Qed; not shown) — see STORYBOARD open issue 1 |
-| Vek11 | E3: 14 pairs approved + 1 proved not equivalent; 3 planned pairs not started (status ESTABLISHED: 15 + IN PROGRESS) | research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2 — see STORYBOARD open issue 1 |
+| Vek11 | E1: 35 pairs; IN PROGRESS; 17 approved pairs: 13 A ≠ Bopt (c01–c05, c07, c08, c12, c13, c15–c18), 4 A ≡ Bopt (c09, c10 under C-005, c11, c14) | research/project-plan-20261102/EXPERIMENT-DESIGN.zh-CN.md (E1); build/e1-codex-20261111/c*/APPROVAL*.json (17 files), `status` fields |
+| Vek11 | E2: 24 approved migrations; x64-transposec → HVX in progress | research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md, 11-23 04:05 entry ("E2 → 24") and 11-23 14:20 entry (x64-transposec → HVX in progress) |
+| Vek11 | E3: 14 pairs approved + 1 proved not equivalent; 3 planned pairs not started (status ESTABLISHED: 15 + IN PROGRESS) | research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2 |
 | Vek11 | E4: not started, softmax candidate | SUMMARY-20261111.zh-CN.md §2; EXPERIMENT-DESIGN.zh-CN.md (E4); v2-preconditions.md ¶9 |
-| Vek12 | no termination / no C-to-machine-code correspondence | CONDITIONS.zh-CN.md G-004 |
-| Vek12 | Hexagon modelled as LP64 though ILP32 | CONDITIONS.zh-CN.md bullet [VEKTO-M-ilp32] (line 95) |
-| Vek12 | in-place calls not covered | CONDITIONS.zh-CN.md row C-018 (line 65) |
-| Vek12 | bugs not reported upstream | research/bugs/xnnpack/ records; research/vekto/BRIEF.md §7 |
-| Vek01, Vek12 | recap line, per-episode counterexample captions, trust line | docs/SERIES.md "Episode 4, Vekto" |
+| Vek11 | E2 detail: HVX targets modelled with 64-bit pointers (QCP has only an LP64 model; Hexagon is ILP32) | CONDITIONS.zh-CN.md bullet [VEKTO-M-ilp32] (line 95) |
+| Vek11 | footer: E2/E3 element-wise kernels assume disjoint input/output buffers, no in-place calls | CONDITIONS.zh-CN.md row C-018 (line 65) |
+| Vek12 | takeaway (no new numbers): C definitions per intrinsic, QCP + Coq, counterexample → precondition / repair / divergence, never a weaker spec | v2-preconditions.md ¶5–7; PAPER-EXPERIMENTS-HANDOFF.zh-CN.md §2 |

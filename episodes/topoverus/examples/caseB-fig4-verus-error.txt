@@ -1,0 +1,5 @@
+# SOURCE: TopoVerus paper Figure 4 "Verus error.", PDF p.9 (also App. B p.17).
+# SCREEN TRIM: the caret excerpt (lines 3-5: "37 | forall|j: int, k: int|" and the ^ marker) is dropped.
+# ---- screen text below ----
+error: invariant not satisfied before loop
+  --> best_time_sell_v2.rs:37:13
