@@ -86,5 +86,5 @@ the next tile lit. Use these sentences in narration.json; small wording changes 
 
 - ExVerus: Yang, Sun, Wu, Caridad, Yuan, Yao, Lu, Pei. ICML 2026.
 - TopoVerus: Sun, Yang, Pei. NeurIPS 2026.
-- Vero: Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song (Dawn Song). 2026. The arXiv v1 PDF is marked "Preprint"; the homepage lists NeurIPS 2026, so no venue is shown on screen. Do not claim which parts are Yuechun's.
+- Vero: Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song (Dawn Song). NeurIPS 2026 (confirmed by the author 2026-11-23; the arXiv v1 PDF says "Preprint"). Do not claim which parts are Yuechun's.
 - Vekto: ongoing work, unpublished. Say "work in progress" on its title card.

@@ -280,7 +280,7 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 
 **Purpose.** E1–E4 status as of 2026-11-23, labelled established / in progress / not started.
 
-**On screen.** Four rows: key (accent), what it measures, detail line, status badge(s) on the right. E1 IN PROGRESS; E2 ESTABLISHED: 24 + IN PROGRESS; E3 ESTABLISHED: 15 + IN PROGRESS (as of 11-11, 3 planned pairs not started); E4 NOT STARTED. The cite changes per row.
+**On screen.** Four rows: key (accent), what it measures, detail line, status badge(s) on the right. E1 IN PROGRESS; E2 ESTABLISHED: 24 + IN PROGRESS; E3 ESTABLISHED: 15 + IN PROGRESS (3 planned pairs not started); E4 NOT STARTED. The cite changes per row.
 
 **Code panels.** none
 
@@ -292,10 +292,10 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
   - en: As of November 23, 2026: E1 asks whether LLM-optimised RVV kernels verify against their NEON originals without rewriting. It is in progress: 17 approval records so far, most keeping the main result that A is not equivalent to B-opt.
   - zh: 截至 2026 年 11 月 23 日：E1 研究 LLM 优化后的 RVV kernel 能否不经改写、相对 NEON 原版得到验证。它仍在进行中：目前有 17 份审批记录，多数保留了“A 与 Bopt 不等价”的主结果。
 - `Vek11Status-2` (11.7 s)
-  - en: E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations in the supervisor log, with a Hexagon port of x64-transposec still in progress.
+  - en: E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations, with a Hexagon port of x64-transposec still in progress.
   - zh: E2 把 RVV 和 Hexagon 缺少的 x86 操作翻译过去，并证明每次翻译：监督者日志记录了 24 个已批准的迁移，x64-transposec 的 Hexagon 移植仍在进行中。
 - `Vek11Status-3` (12.0 s)
-  - en: E3 cross-checks independent XNNPACK implementations of the same operator. As of November 11, 14 pairs were approved, one pair was proved not equivalent, and three planned pairs had not started.
+  - en: E3 cross-checks independent XNNPACK implementations of the same operator. 14 pairs are approved, one pair was proved not equivalent, and three planned pairs have not started.
   - zh: E3 交叉检查同一算子在 XNNPACK 中的不同独立实现。截至 11 月 11 日，有 14 对获批，一对被证明不等价，另有三对计划中的配对尚未开始。
 - `Vek11Status-4` (8.6 s)
   - en: E4, one application-level program, with softmax as the candidate, has not started. So none of this is a program-level result yet.
@@ -325,7 +325,7 @@ Work in progress, unpublished. 12 scenes, 55 beats, narration estimate about 9.0
 
 ## Open issues
 
-1. **Numbers policy vs. E2/E3 counts.** docs/SERIES.md says Vekto numbers come only from APPROVAL/LEDGER files. E1's 17 is a count of `build/e1-codex-20261111/c*/APPROVAL*.json`. E2's "24 approved migrations" comes from the supervisor decision log (`DECISIONS-FOR-REVIEW.zh-CN.md`, 11-23 04:05, "E2 → 24", the entry that writes APPROVAL-x24-rvv.json), and E3's "14 approved + 1 proved not equivalent" comes from `SUMMARY-20261111.zh-CN.md` §2.2, not from a direct count of APPROVAL files. I did not recount them: `build/e2e3-workers-20261106` holds 46 APPROVAL*.json files mixing E2, E3, library and tool approvals. Labelled on screen as "supervisor log" / "as of 11-11". Supervisor: confirm, or drop the numbers and keep only the labels.
+1. **E2/E3 counts.** Resolved 2026-11-23: the author confirmed the counts (E2 24 approved migrations, E3 14 approved + 1 proved not equivalent) are to be shown as approved results; the "supervisor log" / "as of 11-11" labels were removed.
 2. **C-001 conditional proof.** CONDITIONS row C-001 records it as passed and rechecked, but the evidence package is on an earlier server and cannot be re-run (SUMMARY-20261111 §2). Shown as a WARN badge with that caveat, never as a fresh result.
 3. **vmax as motivating example.** The repo itself notes no confirmed speed advantage of Bopt over XNNPACK (0.982×) and a +18.8 % repair cost. The episode uses vmax as a correctness case only; it does not claim Bopt is fast. 0.982× / 0.826× are left off screen.
 4. **Vero ↔ Vekto parallels** (Vek05-5, Vek12) are the research brief's [INFERRED] framing plus docs/SERIES.md's fixed lines; they need author confirmation.

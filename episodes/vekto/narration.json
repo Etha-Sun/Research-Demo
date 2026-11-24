@@ -319,14 +319,14 @@
    {
     "id": "Vek11Status-2",
     "seconds": 11.7,
-    "en": "E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations in the supervisor log, with a Hexagon port of x64-transposec still in progress.",
-    "zh": "E2 把 RVV 和 Hexagon 缺少的 x86 操作翻译过去，并证明每次翻译：监督者日志记录了 24 个已批准的迁移，x64-transposec 的 Hexagon 移植仍在进行中。"
+    "en": "E2 translates x86 operations that RVV and Hexagon lack and proves each translation: 24 approved migrations, with a Hexagon port of x64-transposec still in progress.",
+    "zh": "E2 把 RVV 和 Hexagon 缺少的 x86 操作翻译过去，并证明每次翻译：已批准 24 个迁移，x64-transposec 的 Hexagon 移植仍在进行中。"
    },
    {
     "id": "Vek11Status-3",
     "seconds": 12.0,
-    "en": "E3 cross-checks independent XNNPACK implementations of the same operator. As of November 11, 14 pairs were approved, one pair was proved not equivalent, and three planned pairs had not started.",
-    "zh": "E3 交叉检查同一算子在 XNNPACK 中的不同独立实现。截至 11 月 11 日，有 14 对获批，一对被证明不等价，另有三对计划中的配对尚未开始。"
+    "en": "E3 cross-checks independent XNNPACK implementations of the same operator: 14 pairs are approved, one pair was proved not equivalent, and three planned pairs have not started.",
+    "zh": "E3 交叉检查同一算子在 XNNPACK 中的不同独立实现：14 对已批准，一对被证明不等价，另有三对计划中的配对尚未开始。"
    },
    {
     "id": "Vek11Status-4",

@@ -52,7 +52,7 @@ Research-agent copies of all of these (with fuller headers) are in research/vekt
 | Vek10 | out-of-domain edge cases: 14 of 25 differ (e.g. block_width = 0), excluded by C-022 | APPROVAL-x24-rvv.json `notes`; status.json g12 `edge_cases: 25`, `edge_differences: 14` |
 | Vek11 | E1: 35 pairs; IN PROGRESS; 17 approval records; most main result A ≠ Bopt | research/project-plan-20261102/EXPERIMENT-DESIGN.zh-CN.md (E1); count of build/e1-codex-20261111/c*/APPROVAL*.json = 17, `status` fields |
 | Vek11 | E2: 24 approved migrations; x64-transposec → HVX in progress | research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md, 11-23 04:05 entry ("E2 → 24") and 11-23 14:20 entry (484 of 529 non-entail VCs Qed; not shown) — see STORYBOARD open issue 1 |
-| Vek11 | E3: as of 11-11, 14 pairs approved + 1 proved not equivalent; 3 planned pairs not started (status ESTABLISHED: 15 + IN PROGRESS) | research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2 — see STORYBOARD open issue 1 |
+| Vek11 | E3: 14 pairs approved + 1 proved not equivalent; 3 planned pairs not started (status ESTABLISHED: 15 + IN PROGRESS) | research/project-plan-20261102/SUMMARY-20261111.zh-CN.md §2.2 — see STORYBOARD open issue 1 |
 | Vek11 | E4: not started, softmax candidate | SUMMARY-20261111.zh-CN.md §2; EXPERIMENT-DESIGN.zh-CN.md (E4); v2-preconditions.md ¶9 |
 | Vek12 | no termination / no C-to-machine-code correspondence | CONDITIONS.zh-CN.md G-004 |
 | Vek12 | Hexagon modelled as LP64 though ILP32 | CONDITIONS.zh-CN.md bullet [VEKTO-M-ilp32] (line 95) |

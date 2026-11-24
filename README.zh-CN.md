@@ -6,7 +6,7 @@
 |---|---|---|
 | 1 ExVerus（ICML 2026） | 用 counterexample 推理修复 Verus 证明；兼作系列开场 | 约 9 分钟 |
 | 2 TopoVerus（NeurIPS 2026） | 用 RL 训练模型自己给出 counterexample 和修复；safety gate；拓扑图奖励 | 约 8 分钟 |
-| 3 Vero（2026） | AI agent 能否构建经过形式化验证的整个代码仓库？benchmark、checker、spec 审计 | 约 8 分钟 |
+| 3 Vero（NeurIPS 2026） | AI agent 能否构建经过形式化验证的整个代码仓库？benchmark、checker、spec 审计 | 约 8 分钟 |
 | 4 Vekto（进行中） | 用 QCP + Coq 在 C 层证明 SIMD kernel 迁移（NEON/SSE → RVV/HVX）等价 | 约 9 分钟 |
 
 主线有两条：**counterexample 把失败的证明和修复连起来**；**证明的可信程度取决于 spec 和 checker**。详见 `docs/SERIES.md`。

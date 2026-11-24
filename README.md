@@ -8,7 +8,7 @@ your own machine.
 |---|---------|-------|-----------|
 | 1 | **ExVerus** (ICML 2026) | Verus proof repair via counterexample reasoning; also opens the series | ~9 min |
 | 2 | **TopoVerus** (NeurIPS 2026) | A model trained with RL to produce counterexamples and repairs; safety gate; topological graph reward | ~8 min |
-| 3 | **Vero** (2026) | Can AI agents build formally verified software repositories? Benchmark, checker, spec audit | ~8 min |
+| 3 | **Vero** (NeurIPS 2026) | Can AI agents build formally verified software repositories? Benchmark, checker, spec audit | ~8 min |
 | 4 | **Vekto** (work in progress) | C-level equivalence proofs for SIMD kernel migrations (NEON/SSE → RVV/HVX) with QCP + Coq | ~9 min |
 
 Through-line: **counterexamples connect a failed proof to its repair**, and **a proof is only as good as its spec and

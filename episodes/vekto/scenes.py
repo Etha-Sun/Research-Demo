@@ -642,10 +642,10 @@ class Vek11Status(NarratedScene):
                        "17 approval records in the current batch; most: main result A ≠ Bopt"),
             status_row("E2", "translate x86 ops that RVV / HVX lack, and prove it",
                        [("ESTABLISHED: 24", S.OK), ("IN PROGRESS", S.WARN)],
-                       "24 approved migrations (supervisor log); x64 → HVX in progress"),
+                       "24 approved migrations; x64 → HVX in progress"),
             status_row("E3", "cross-check independent XNNPACK implementations",
                        [("ESTABLISHED: 15", S.OK), ("IN PROGRESS", S.WARN)],
-                       "as of 11-11: 14 pairs approved, 1 proved not equivalent, 3 not started"),
+                       "14 pairs approved, 1 proved not equivalent, 3 not started"),
             status_row("E4", "one application-level program (softmax candidate)", [("NOT STARTED", S.MUTED)],
                        "no program-level result yet"),
         ]

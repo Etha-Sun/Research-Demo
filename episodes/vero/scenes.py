@@ -64,7 +64,7 @@ class Vero01Open(NarratedScene):
             self.play(FadeIn(m[0], lag_ratio=0.2), FadeIn(m[1]), run_time=1.5)
             self.play(FadeIn(m[2]), FadeIn(recap, shift=UP * 0.1), run_time=0.8)
             self.play(m[0][2][0].animate.set_stroke(width=6), run_time=0.5)
-        tc = title_card(EP, 3, extra="Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song · 2026")
+        tc = title_card(EP, 3, extra="Ye, Lou, Sun, Song, Yan, Kasriel, Zhang, Yang, Kong, He, Song · NeurIPS 2026")
         with self.beat("vero01open-2"):
             self.play(FadeOut(m), FadeOut(recap), run_time=0.6)
             self.play(FadeIn(tc, shift=UP * 0.2), run_time=1.0)
