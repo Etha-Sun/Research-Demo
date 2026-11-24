@@ -1,0 +1,297 @@
+[
+ {
+  "claim": "Goal: equivalence for all inputs permitted by the preconditions in the spec; agents may exploit test gaps",
+  "source": "research/project-plan-20261102/intro-bullets/v2-preconditions.md",
+  "locator": "Paragraph 3 bullets"
+ },
+ {
+  "claim": "C level chosen: explicit C definition per intrinsic, reviewed by experts; assembly needs separate ISA models and covers exceptions/privileged execution",
+  "source": "research/project-plan-20261102/intro-bullets/v2-preconditions.md",
+  "locator": "Paragraphs 4-5"
+ },
+ {
+  "claim": "Evaluation numbers in the paper are still [TBD]; E4 candidate is softmax",
+  "source": "research/project-plan-20261102/intro-bullets/v2-preconditions.md",
+  "locator": "Paragraph 9"
+ },
+ {
+  "claim": "E1-E4 definitions and what each demonstrates",
+  "source": "research/project-plan-20261102/EXPERIMENT-DESIGN.zh-CN.md",
+  "locator": "table '用户提出的四组核心实验' and sections E1-E4"
+ },
+ {
+  "claim": "E1 sources: A = SALTy-rn be16280c7 kernels/source, Bopt = optimized-rvv-kernels@80feb4564 (35 files)",
+  "source": "research/project-plan-20261102/E1-PAIRING-AND-WORKER-PLAN.zh-CN.md",
+  "locator": "section 1 table"
+ },
+ {
+  "claim": "Keagan paper performance protocol not recoverable from public sources",
+  "source": "research/project-plan-20261102/E1-PAIRING-AND-WORKER-PLAN.zh-CN.md",
+  "locator": "section 3"
+ },
+ {
+  "claim": "Never weaken equivalence to get a proof through; changes to B must be justified and reviewable",
+  "source": "research/project-plan-20261102/KERNEL-EXECUTION-POLICY.zh-CN.md",
+  "locator": "section 1 item 4"
+ },
+ {
+  "claim": "Per-kernel time and token accounting including failures",
+  "source": "research/project-plan-20261102/KERNEL-EXECUTION-POLICY.zh-CN.md",
+  "locator": "section 1 item 1; section 4"
+ },
+ {
+  "claim": "L1 counterexample triage procedure",
+  "source": "research/project-plan-20261102/LESSONS.zh-CN.md",
+  "locator": "section L1 (line 5)"
+ },
+ {
+  "claim": "L3 conditional verification when reference semantics are undefined",
+  "source": "research/project-plan-20261102/LESSONS.zh-CN.md",
+  "locator": "section L3 (line 36)"
+ },
+ {
+  "claim": "Global premises G-001..G-004 and observation R-000",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "rows G-001..G-004, R-000 (lines 29-33)"
+ },
+ {
+  "claim": "C-001 f32-vmax: no NaN; conditional pairing passed (W19), supervisor recheck passed",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row C-001 (line 40)"
+ },
+ {
+  "claim": "C-017 / C-017b NaN conditions, user ruling P-NaN 2026-11-09",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row C-017 (line 64) and [VEKTO-C-017b] bullet"
+ },
+ {
+  "claim": "C-018: in-place calls not covered (QCP does not model restrict)",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row C-018 (line 65)"
+ },
+ {
+  "claim": "C-033 x24 input window (XNN_OOB_READS) adopted 11-23",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row C-033 (line 81)"
+ },
+ {
+  "claim": "HVX modelled as LP64 although Hexagon is ILP32; uncovered aspects",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "bullet [VEKTO-M-ilp32] (line 95)"
+ },
+ {
+  "claim": "V-006 s8-rmax A == B_fixed proved, supervisor recheck 11-07",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row V-006 (line 55)"
+ },
+ {
+  "claim": "V-008 f32-vexp A == B_fixed proved, supervisor recheck 11-10",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row V-008 (line 73)"
+ },
+ {
+  "claim": "C-019 vclamp lo<=hi citing microparams-init.c:791/803",
+  "source": "research/project-plan-20261102/CONDITIONS.zh-CN.md",
+  "locator": "row C-019 (line 66)"
+ },
+ {
+  "claim": "E1 early period: 16 pairs done, evidence on an unavailable earlier server; E2 5/5; E3 14 approved + 1 refuted; E4 not started (as of 11-11)",
+  "source": "research/project-plan-20261102/SUMMARY-20261111.zh-CN.md",
+  "locator": "section 2 table and 2.1-2.2"
+ },
+ {
+  "claim": "Early-period E1 cost records lost",
+  "source": "research/project-plan-20261102/SUMMARY-20261111.zh-CN.md",
+  "locator": "section 5"
+ },
+ {
+  "claim": "E2 reached 24 approved migrations (11-23 04:05)",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "line 554"
+ },
+ {
+  "claim": "Tool v1.23.10 merged, 713/713 fixtures in supervisor recheck",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "line 556"
+ },
+ {
+  "claim": "x64 HVX: 484 of 529 non-entail VCs Qed at 11-23 14:20; user-manager stop killed GEMM regeneration",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "line 557"
+ },
+ {
+  "claim": "User decided 11-23 not to rerun c03 GEMM",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "line 558"
+ },
+ {
+  "claim": "E1 = GPT/Codex workers, E2 = Sonnet workers; migration to RVV and HVX counts twice",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "11-13 entry (grep '11-13：用户新 Claude 账户')"
+ },
+ {
+  "claim": "c06 dwconv2d-chw not equivalent on finite input, C/QEMU reproduction only",
+  "source": "research/project-plan-20261102/DECISIONS-FOR-REVIEW.zh-CN.md",
+  "locator": "11-12 entry on c06 (grep 'c06 dwconv2d-chw（订阅新线程）')"
+ },
+ {
+  "claim": "17 E1 Codex-batch approval records and their main results",
+  "source": "build/e1-codex-20261111/",
+  "locator": "c*/APPROVAL*.json, field 'status'"
+ },
+ {
+  "claim": "Rule tool: why (QCP by-value vector defects), user rule for deterministic rewriting, design principles, rule table",
+  "source": "tools/rvv_ptr_lower/README.zh-CN.md",
+  "locator": "sections '为什么需要', '做法', '规则表'"
+ },
+ {
+  "claim": "Unified intrinsic library motivation: 331 contracted functions, 103 shared, 78 written differently; differential testing requirements",
+  "source": "build/e2e3-workers-20261106/intrinsics-v1.7.3/INTRINSICS-COMMON.zh-CN.md",
+  "locator": "'背景' and '交付物' items 2, 4"
+ },
+ {
+  "claim": "RVV vfmax = IEEE 754-2019 maximumNumber model",
+  "source": "build/e2e3-workers-20261106/intrinsics-v1.7.3/rvv/RvvModel.v",
+  "locator": "lines 59-68"
+ },
+ {
+  "claim": "NEON FMAX propagates NaN model",
+  "source": "build/e2e3-workers-20261106/intrinsics-v1.7.3/neon/NeonLib.v",
+  "locator": "lines 87-89, 102-110"
+ },
+ {
+  "claim": "vlsseg3e8 and vsetvl_e8m1 contracts at VLEN 256",
+  "source": "build/e2e3-workers-20261106/intrinsics-v1.7.3/rvv/rvv_contracts_vlen256.h",
+  "locator": "lines 255-259, 1383-1389"
+ },
+ {
+  "claim": "x24 package layout and stale g2-pending note",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/README.md",
+  "locator": "whole file"
+ },
+ {
+  "claim": "x24 source is byte-identical to XNNPACK 867d5a34 file; target is new frozen code",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/ledger.json",
+  "locator": "fields sources.x86, targets.rvv"
+ },
+ {
+  "claim": "12 gates of check.py",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/check.py",
+  "locator": "docstring lines 4-17"
+ },
+ {
+  "claim": "equivalent() spec and preconditions",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/spec.c",
+  "locator": "lines 1-50"
+ },
+ {
+  "claim": "Observation relation outputs_related",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/coq/VektoSpec/Observation.v",
+  "locator": "lines 12-17"
+ },
+ {
+  "claim": "Kernel contracts output xt_result",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/bridge/contracts.json",
+  "locator": "keys x86, rvv128/256/512"
+ },
+ {
+  "claim": "Rule rewrites on the RVV target: R1, R6/R8, 0 rejections",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/lowered/rvv/x24-transposec-vl-rvv.lowering.json",
+  "locator": "fields rewrites, rule_counts, rejections"
+ },
+ {
+  "claim": "Axiom whitelist incl. forbidden addr_of_arrow_field_inv",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/assumptions-allowlist.txt",
+  "locator": "whole file"
+ },
+ {
+  "claim": "x24 recheck: PASS, 12/12, 5990 s; 435 x86 VCs, 22 RVV VCs per VLEN; 628 VCs B1; witness; 6 aligned calls; difftest case counts",
+  "source": "build/e2e3-workers-20261106/rechecks/w36x24/run/status.json",
+  "locator": "gates g1-g12, fields pass, seconds"
+ },
+ {
+  "claim": "Sample VC and its proof",
+  "source": "build/e2e3-workers-20261106/rechecks/w36x24/run/x24/eq/gen256/eq256_goal.v",
+  "locator": "lines 178-184; proof in pfe.v lines 33-35"
+ },
+ {
+  "claim": "x24 approval 11-23 and conditions",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x24-rvv.json",
+  "locator": "fields status, time, result, conditions"
+ },
+ {
+  "claim": "x8 approval 11-22: 863 x86 VCs + 105 RVV per VLEN, 11218 s",
+  "source": "build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x8-rvv.json",
+  "locator": "field result"
+ },
+ {
+  "claim": "w36 cost: 94.02 wall h, est. $3277.58 (API price, lower bound)",
+  "source": "build/e2e3-workers-20261106/LEDGER.md",
+  "locator": "header and row w36-e2-transposec (line 43)"
+ },
+ {
+  "claim": "vmax NaN counterexample, 480 calls / 360 comparisons / 180 differ; bounded cvc5 backend returned VERIFIED due to NEON model",
+  "source": "research/project-plan-20261102/final-minmax-reproduction/README.zh-CN.md",
+  "locator": "sections '实际输出', 'bounded 检查对照及机制'"
+ },
+ {
+  "claim": "vmax repair cost +18.8% cycles; 0.982x vs 0.826x relative to XNNPACK u8v",
+  "source": "research/project-plan-20261102/vmax-performance/REPORT.zh-CN.md",
+  "locator": "section '结论' and per-size table; summary.json"
+ },
+ {
+  "claim": "DIV-001: reachable input, maintainer does not guarantee min/max NaN (google/XNNPACK#441), main result A != Bopt",
+  "source": "research/bugs/divergences/DIV-001-f32-vmax-nan.zh-CN.md",
+  "locator": "items 2, 4, 5, 7"
+ },
+ {
+  "claim": "ARM FMAX propagates NaN; RVV maximumNumber",
+  "source": "research/project-plan-20261102/E1-PROOF-REUSE-MAP.zh-CN.md",
+  "locator": "line 87"
+ },
+ {
+  "claim": "XNN-003 counterexample, mechanism, family of 26 files / 15 kernels, fix _tu",
+  "source": "research/bugs/xnnpack/XNN-003-s8u8-rminmax-rvv-tail-agnostic/README.zh-CN.md",
+  "locator": "sections 1-8 and 11-07 supplement"
+ },
+ {
+  "claim": "Upstream PR #11839 fixed the same RVV accumulator root cause (merged 2026-10-29)",
+  "source": "research/project-plan-20261102/intro-bullets/LIT-BRIEF-20261115.zh-CN.md",
+  "locator": "section 6"
+ },
+ {
+  "claim": "XNN-005 vexp NaN -> +0.0 on x86, operand-swap fix, exhaustive 2^32",
+  "source": "research/bugs/xnnpack/XNN-005-f32-vexp-nan-clamp/README.zh-CN.md",
+  "locator": "'事实' and supplement"
+ },
+ {
+  "claim": "XNN-001 vclamp counterexample x=0,min=1,max=0; standalone clamp path has no min>max check; assert at 791 is in s8 minmax init",
+  "source": "research/bugs/xnnpack/XNN-001-vclamp-tail-order/README.zh-CN.md",
+  "locator": "'反例' and '原始应用能否出现这种输入'"
+ },
+ {
+  "claim": "Testing gaps: random test buffers flush NaN to 0",
+  "source": "research/bugs/xnnpack/XNN-005-f32-vexp-nan-clamp/README.zh-CN.md",
+  "locator": "supplement, NaN contract (§6)"
+ },
+ {
+  "claim": "QCP soundness issues B1 and B2",
+  "source": "research/bugs/README.zh-CN.md",
+  "locator": "index rows QCP-B1, QCP-B2"
+ },
+ {
+  "claim": "What equivalent() really means; wrapper-only proofs are conditional; VC kinds",
+  "source": "research/project-plan-20261102/QCP-MODULAR-VERIFICATION.zh-CN.md",
+  "locator": "sections 3-4"
+ },
+ {
+  "claim": "ExVerus / TopoVerus as self-citations for counterexample-guided proof repair",
+  "source": "research/project-plan-20261102/intro-bullets/LIT-BRIEF-20261115.zh-CN.md",
+  "locator": "section 5 table"
+ },
+ {
+  "claim": "TopoVerus arXiv 2611.13627; ExVerus arXiv 2603.25810",
+  "source": "research/project-plan-20261102/intro-bullets/v2-preconditions.zh-CN.md",
+  "locator": "appendix '两篇范文'"
+ }
+]

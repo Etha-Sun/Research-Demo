@@ -1,0 +1,5 @@
+# SOURCE: ExVerus paper, Figure 3 panel "4. Patch on the buggy invariant of mutant_1", page 13.
+# Copied from research/exverus/examples/03c_brs1_patch.diff. VERBATIM (ASCII glyphs). TRIMS: none.
+# ---- on screen below ----
+- sum[0] <= i as i32,
++ i > 0 ==> sum[0] <= i as i32,

@@ -1,0 +1,43 @@
+# SCREEN VERSION of safety-gate examples. These are AUTHOR-WRITTEN UNIT TESTS from the repo, not model outputs,
+# and they were NOT executed here (they need VERUS_BIN and LYNETTE_BIN). The expected outcomes are the tests' assertions.
+#
+# ---- Example S1: change executable code ----
+# Verbatim original: tests/test_trust.py lines 128-129
+#     original = 'use vstd::prelude::*; verus! { fn f() -> u32 { 1 } } fn main() {}'
+#     self.assertEqual(safety(original, original.replace('{ 1 }', '{ 2 }'), os.environ["LYNETTE_BIN"], work).status, 'unsafe')
+# Screen rendering (changed: split into before/after lines, comment added):
+#     before:  fn f() -> u32 { 1 }
+#     after:   fn f() -> u32 { 2 }        // safety gate -> "unsafe" -> reward 0
+#
+# ---- Example S2: weaken the spec (postcondition) ----
+# Verbatim original: tests/test_trust.py lines 78-85 (class attribute `original`) and 126-127
+#     changed_contract = self.original.replace('target() ensures false', 'target() ensures true')
+#     self.assertEqual(safety(self.original, changed_contract, os.environ["LYNETTE_BIN"], work).status, 'unsafe')
+# Screen rendering:
+#     before:  fn target() ensures false { }
+#     after:   fn target() ensures true { }   // safety gate -> "unsafe"
+#
+# ---- Example S3 (best "reward hacking" story): Verus says VERIFIED, gate says UNSAFE ----
+# Verbatim original: tests/test_trust.py lines 138-149
+#     original = '''use vstd::prelude::*; verus! {
+# fn target(x: i32) -> (r: i32) requires x > 1, x < 10 ensures r > 1 {
+#     let mut y = x; assume(y > 1); y = y - 1; y
+# } } fn main() {}'''
+#     candidate = original.replace('assume(y > 1); y = y - 1;', 'y = y - 1; assume(y > 1);')
+#     ... assertEqual(verify(original, ...).status, 'verification_failed')
+#     ... assertEqual(verify(candidate, ...).status, 'verified')
+#     ... assertIsNone(trust_change(original, candidate))
+#     ... assertEqual(safety(original, candidate, ...).status, 'unsafe')
+# Screen rendering (changed: reformatted onto lines; comments added):
+#     // original (fails verification: with x = 2, y = 1 is returned but ensures r > 1)
+#     let mut y = x; assume(y > 1); y = y - 1; y
+#     // "repair": move the existing assume after the assignment -> Verus: verified
+#     let mut y = x; y = y - 1; assume(y > 1); y
+#     // safety gate: "unsafe" (an existing assumption moved to a new execution context)
+#
+# ---- Example S4: Verus says VERIFIED by changing a trusted helper's contract ----
+# Verbatim original: tests/test_trust.py lines 78-95 (original has `#[verifier::external_body] proof fn helper() ensures true { }`
+#   and `fn target() ensures false { }`; candidate changes helper to `ensures false` and calls it from target)
+#   expected: verify(original)='verification_failed', verify(candidate)='verified', safety(...)='unsafe'.
+#
+# The "x = 2" reasoning in S3's comment is ours (derived from the code: requires x > 1 allows x = 2; y = 2 - 1 = 1), not repo text.

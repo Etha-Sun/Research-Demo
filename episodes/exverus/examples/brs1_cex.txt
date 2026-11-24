@@ -1,0 +1,6 @@
+SOURCE: ExVerus paper, Figure 3 panel "2. Counterexamples", page 13 (copied from research/exverus/examples/03b_brs1_cex_and_diagnosis.txt).
+Shown on screen as two state tables (key/value rows); values verbatim. The figure shows "......" after CEX_2;
+the total number of CEXs for this task is not given in the paper, so none is stated on screen.
+---- on screen below ----
+CEX_1: {"a": "vec![1, 1]", "sum": "vec![1]", "i":0, "N":2}
+CEX_2: {"a": "vec![1, 1]", "sum": "vec![2]", "i":0, "N":2}

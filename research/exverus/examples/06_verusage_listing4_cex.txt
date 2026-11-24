@@ -1,0 +1,19 @@
+SOURCE: ExVerus paper, Appendix A.3, Listing 4 "counterexample: concrete value assignments", page 16. VERBATIM.
+(Agent-produced counterexample in the Counterexample-Augmented Hands-Off Approach on a VeruSAGE-Bench Anvil/VReplicaSet task.)
+
+vrs = VReplicaSetView { object_ref: "vrs-123" }
+controller_id = 0
+s = ClusterState where:
+  s.ongoing_reconciles(0)["vrs-123"]
+    .triggering_cr.metadata
+    .deletion_timestamp = None // q(s) = true
+s_prime = ClusterState where
+  cluster.next()(s, s_prime) = true
+
+MUST PROVE q(s_prime):
+  s_prime.ongoing_reconciles(0)["vrs-123"]
+    .triggering_cr.metadata
+    .deletion_timestamp is None
+// Cannot be proven: empty proof body provides
+// no reasoning about how next() affects
+// ongoing_reconciles

@@ -1,0 +1,40 @@
+# SOURCE: build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x24-rvv.json and build/e2e3-workers-20261106/w36-e2-transposec/APPROVAL-x8-rvv.json
+# Supervisor approvals of the two E2 transposec migrations. VERBATIM.
+==== APPROVAL-x24-rvv.json ====
+{
+ "status": "approved (E2): x24-transposec x86 SSSE3 4x4 source == new RVV target, VLEN 128/256/512 (one migration: x24-transposec -> RVV)",
+ "time": "2026-11-23T03:58-08:00",
+ "worker": "Claude Sonnet 5.5 (w36)",
+ "package": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24",
+ "recheck": "build/e2e3-workers-20261106/rechecks/w36x24/run",
+ "result": "supervisor relocated pkg-only clean-dir check.py --jobs 32 RESULT: PASS (5990 s), rc=0, 12/12 gates (no --dev-reuse): x86 435 VCs + rvv 22 per VLEN, equivalent() at VLEN 128/256/512, contracts, B1, witness, call closure (6 qcp_assume_aligned calls, one per side-file record), difftests (x86 43158 reg + 4320 mem cases, rvv 214031/197506/164071 cases, kernel domain 26192 cases).",
+ "tool": "rvv_ptr_lower v1.23.9 (sha256 33da0926ffaf1cfb12ed9ded3c4f80454a364680131a57a4a41c06eef01e0443) pinned in the package; x86 flags include --local-aligned-sidefile",
+ "conditions": [
+  "C-022: block_width >= 1 and block_height >= 1",
+  "C-024: one-past-the-end addresses of input and outputs are representable",
+  "C-033 (instance of C-026, XNN_OOB_READS): input readable for nin16 = (BH-1)*IS + xt_last24(BW), xt_last24(w) = 12*((w-1)/4)+16; RVV reads the prefix (BH-1)*IS + 3*BW",
+  "C-031: nin16 <= INT64_MAX",
+  "VEKTO-M-local-aligned: 6 XNN_ALIGN(16) static const tables pos0..pos5, one qcp_assume_aligned each",
+  "VEKTO-M assert: assert() compiled out in both units (NDEBUG)"
+ ],
+ "notes": "qemu_sigsegv_retries = [] (no retries used). Edge set: 14 of 25 out-of-domain edge cases differ per RVV run (e.g. block_width=0: exit vs SIGALRM), excluded by C-022."
+}
+
+==== APPROVAL-x8-rvv.json ====
+{
+ "status": "approved (E2): x8-transposec x86 SSE2 16x16 source == new RVV target, VLEN 128/256/512 (one migration: x8-transposec -> RVV)",
+ "time": "2026-11-22T13:25-08:00",
+ "worker": "Claude Sonnet 5.5 (w36)",
+ "package": "build/e2e3-workers-20261106/w36-e2-transposec/work/pkg8",
+ "recheck": "build/e2e3-workers-20261106/rechecks/w36x8/run",
+ "result": "supervisor relocated pkg-only clean-dir check.py --jobs 32 RESULT: PASS (11218 s), rc=0, 12/12 gates (g1-g12 in one run, no --dev-reuse): x86 863 VCs + rvv 105 per VLEN, equivalent() at VLEN 128/256/512, contracts, B1, witness, call closure, difftests (x86 43158 reg + 4320 mem cases, rvv 214031+ cases). An earlier attempt was aborted 03:32 by machine memory exhaustion (another user); kept as w36x8/run-aborted-oom-0332, no conclusion.",
+ "tool": "rvv_ptr_lower v1.23.7 pinned in the package",
+ "conditions": [
+  "C-022: block_width >= 1 and block_height >= 1",
+  "C-024: one-past-the-end addresses of input and outputs are representable",
+  "C-032 (instance of C-026, XNN_OOB_READS): input readable for nin16 = (BH-1)*IS + xt_last16(1,BW) bytes; RVV reads the prefix nin = (BH-1)*IS + BW",
+  "C-031: nin <= INT64_MAX",
+  "VEKTO-M assert: assert() compiled out in both units (NDEBUG)"
+ ],
+ "notes": "g12 QEMU 7.2 rc=-11 retry policy (max 4 retries, only on rc=-11, never on output mismatch, counts recorded) accepted by supervisor 11-22; in this recheck qemu_sigsegv_retries = [] (no retries used). Out-of-domain block_width=0 cases reproduce the original inequivalence (27 cases)."
+}

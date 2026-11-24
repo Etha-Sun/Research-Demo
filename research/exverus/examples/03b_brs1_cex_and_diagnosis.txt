@@ -1,0 +1,17 @@
+SOURCE: ExVerus paper, Figure 3 panels "2. Counterexamples" and "3. LLM diagnosis", page 13. Transcribed verbatim
+(the diagnosis text also appears in the PDF text layer; line wraps as in the figure are removed).
+
+2. Counterexamples
+CEX_1: {"a": "vec![1, 1]", "sum": "vec![1]", "i":0, "N":2}
+CEX_2: {"a": "vec![1, 1]", "sum": "vec![2]", "i":0, "N":2}
+......
+
+3. LLM diagnosis
+{
+  "verdict": "wrong_fact",
+  "rationale": "The invariant sum[0] <= i as i32 fails before loop entry when i=0 and sum[0] is positive, which are reachable states (e.g., sum initialized to non-zero values), indicating it is an incorrect fact."
+}
+
+Paper text (Appendix A.1, p.13): "it identified the pattern shared by the counterexamples: i=0 and sum[0] is
+positive, and invoked the mutator to generate mutants that block this pattern. Finally, mutant-1 successfully
+blocks all counterexamples and passes Verus verification, resolving this task."

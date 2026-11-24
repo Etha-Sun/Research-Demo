@@ -1,0 +1,26 @@
+# SOURCES:
+#  [S1] research/bugs/xnnpack/XNN-003-s8u8-rminmax-rvv-tail-agnostic/README.zh-CN.md, sections 1-8 and the 11-07 supplement
+#  [S2] research/project-plan-20261102/CONDITIONS.zh-CN.md, row V-006
+#  [S3] research/project-plan-20261102/intro-bullets/LIT-BRIEF-20261115.zh-CN.md, section 6 (upstream PR #11839)
+# Translated from Chinese by the research agent; numbers copied exactly.
+
+Found: E3-33 (XNNPACK NEON s8-rmax-neon-u32-acc2 vs XNNPACK RVV s8-rmax-rvv-u8v); the RVV-side proof failed and yielded the
+       counterexample (found during verification, not by an auxiliary scan).                               [S1 s1]
+Mechanism: the first block loads vlmax lanes into the accumulator; later blocks update it with tail-AGNOSTIC
+       __riscv_vmax(vmax, vinput, vl); the final vredmax reduces all vlmax lanes. When a later vl < vlmax, RVV 1.0 allows
+       the tail lanes [vl, vlmax) to be overwritten with all ones (int8 -1), including lanes that already hold maxima. [S1 s2, supplement]
+Minimal counterexample: VLEN=128 (e8m8, VLMAX=128), batch=129, all inputs -128, output[0] initially -128.
+       Reference result -128; RVV kernel under QEMU rvv_ta_all_1s=true gives -1.                              [S1 s2]
+Evidence: 9 mismatches over the three VLENs with rvv_ta_all_1s=true, 0 with QEMU's default (tail undisturbed) policy;
+       independently reproduced by the supervisor.                                                         [S1 s3]
+Why tests miss it: QEMU's default keeps tails unchanged, so XNNPACK's own tests on QEMU do not expose it. Which real chips
+       are affected is unknown.                                                                            [S1 s4]
+L1: legal input (batch is any positive byte count); the kernel is registered as the production s8 rmax on RISC-V
+       (src/configs/reduce-config.c:144). Deviating side: B (XNNPACK's RVV kernel).                         [S1 s4-5]
+Resolution: main result "A != B" kept; fix with _tu (one line, examples/03c); A == B_fixed proved (V-006, VLEN 128/256/512,
+       supervisor independent recheck rc=0 on 11-07).                                                      [S2]
+Family: W11 scan widened it to 8 templates / 26 generated files / 15 registered kernels (s8/u8/f16 rminmax, f32/f16-f32acc/qs8/qu8 rsum),
+       e.g. sum of n = VLMAX+1 ones gives NaN (f32) or -29 instead of 33 (qs8).                              [S1 supplement]
+Upstream: not reported by this project. LIT-BRIEF notes XNNPACK PR #11839 (merged 2026-10-29) fixes the same root cause
+       for RVV reduction accumulators -> can only be described as an independent finding, already fixed upstream. [S3]
+Performance of the fix: not measured.                                                                     [S1 s6]

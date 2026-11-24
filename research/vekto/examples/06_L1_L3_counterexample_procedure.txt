@@ -1,0 +1,30 @@
+# SOURCE: research/project-plan-20261102/LESSONS.zh-CN.md, sections L1 (2026-11-05, from s8-vclamp / XNN-001, "user summarised and confirmed")
+#         and L3 (2026-11-05, user decision, from vmax/vmin and qs8-vmul).
+# English TRANSLATION by the research agent, slightly condensed (examples in parentheses kept). Not verbatim; the Chinese original is authoritative.
+
+L1  When A and B (or Bopt) produce different outputs on a concrete counterexample:
+ 1. First check whether the counterexample can occur in the original application.
+    Trace the actual call path in the pinned XNNPACK version: API definition -> operator creation -> parameter
+    initialisation -> ukernel call, including asserts, parameter checks and what callers really pass; cite code locations.
+    - Cannot occur (XNNPACK rejects or never produces such input): we missed an original constraint. Strengthen the
+      precondition of the common spec (the input domain of `equivalent`, the human-reviewed layer), with code evidence.
+      Add only the weakest condition that removes the difference (e.g. vclamp needs only <=, not <).
+    - Can occur: the counterexample is valid; do not strengthen the spec; go to step 2.
+ 2. Use XNNPACK's own semantics to decide which side deviates (test reference implementation, scalar kernel,
+    other backends, maintainer PRs/notes; without written spec the test reference is the de-facto spec).
+    - B/Bopt deviates: try to fix B without hurting performance, verify Bopt_fixed; performance must be measured.
+    - A deviates: check A is byte-identical to XNNPACK; if so it is an XNNPACK issue: minimally fix A, verify A_fixed,
+      record it; external reporting needs the user's consent.
+    - Both deviate, or the reference is undefined (e.g. NaN payload): report to the user, who decides.
+ 3. The original conclusion is always kept. "Original A != Bopt (with counterexample)" is the main result;
+    A_fixed == Bopt or A == Bopt_fixed is a separate result and does not replace it.
+ Anti-patterns: proposing a precondition before step 1 is done (happened on 2026-11-04); "fixing" with semantics that
+ neither XNNPACK nor Bopt has (e.g. swapping bounds when min > max).
+
+L3  Reference semantics undefined (e.g. maintainers state in google/XNNPACK#441 that min/max NaN behaviour is not guaranteed):
+ 1. Keep "A != B (with counterexample)" as the main result (research/bugs/divergences/).
+ 2. Additionally do a conditional verification within the range the library contract defines:
+    - input-domain type (vmax/vmin): write the condition in the Require of `equivalent` (e.g. "inputs contain no NaN"),
+      with its source and counterexample id next to it;
+    - observation type (different rounding, off by one): use a tolerance relation based on XNNPACK's tester tolerance.
+ 3. Conditional and unconditional results are counted and reported separately; never as completion of the original goal.

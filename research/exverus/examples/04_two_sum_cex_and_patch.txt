@@ -1,0 +1,22 @@
+SOURCE: ExVerus paper, Figure 4, page 14 (Appendix A.2). Task CloverBench_two_sum_3 in ObfsBench.
+Verifier error (figure annotation): "error: invariant not satisfied before loop"
+Counterexamples, diagnosis and patch are VERBATIM from the PDF text layer / figure (ASCII glyphs).
+
+2. Counterexamples
+CEX_1: {"nums": "vec![0, 0, 0]", "target": 0, "i": 0, "j": 1}
+CEX_2: {"nums": "vec![1, 1, 1]", "target": 2, "i": 1, "j": 2}
+......
+
+3. LLM diagnosis
+{
+  "verdict": "wrong_fact",
+  "rationale": "The invariant fails consistently across various states, including straightforward cases where `nums` and `target` have the same value, indicating a reachable counterexample. This suggests that the relation nums[ii] + nums[jj] != target may not hold under the given conditions, particularly before the loop starts, which aligns with it being a wrong fact rather than the invariant being inherently too weak."
+}
+
+4. Patch on the buggy invariant of mutant_1
+- forall|ii: int, jj: int|
+-     ((0 <= ii && ii < i && ii < jj && jj < nums.len()) || (ii == i
+-     && ii < jj && jj < n)) ==> nums[ii] + nums[jj] != target,
++ forall|ii: int, jj: int|
++     (0 <= ii && ii < i && ii < jj && jj < nums.len())
++ ==> nums[ii] + nums[jj] != target,

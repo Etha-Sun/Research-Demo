@@ -1,0 +1,11 @@
+SOURCE: ExVerus paper, Figure 3 panel "3. LLM diagnosis", page 13 (copied from research/exverus/examples/03b_brs1_cex_and_diagnosis.txt).
+TRIMS for screen: the rationale string is wrapped onto several lines for the screen (wrapping only, no words changed).
+---- on screen below ----
+{
+  "verdict": "wrong_fact",
+  "rationale": "The invariant sum[0] <= i as i32 fails
+    before loop entry when i=0 and sum[0] is positive,
+    which are reachable states (e.g., sum initialized
+    to non-zero values), indicating it is an incorrect
+    fact."
+}

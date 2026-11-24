@@ -1,0 +1,11 @@
+# SOURCE: build/e2e3-workers-20261106/w36-e2-transposec/work/pkg24/proof/bridge/contracts.json
+# Kernel contracts (QCP Require/Ensure) of the two kernels, as pinned in the bridge file. Keys "x86" and "rvv256" shown; rvv128/rvv512 differ only in vsl_ok(16|64, vf).
+# Extracted with json.load; the "contract" strings are VERBATIM.
+==== x86 ====
+signature: void xnn_x24_transposec_ukernel__4x4_ssse3( const void *input, void * output, size_t input_stride, size_t output_stride, size_t block_width, size_t block_height)
+/*@ With (IN : list Z) (OLD : list Z) (BW : Z) (BH : Z) (IS : Z) (OS : Z) (PI : Z) (PO : Z) Require input == PI && output == PO && input_stride == IS && output_stride == OS && block_width == BW && block_height == BH && 1 <= BW && 1 <= BH && xt_strideok_all(3, BW, BH, OS) == 1 && xt_strideok_all(3, BH, BW, IS) == 1 && 0 <= PI && PI + xt_nin_rows(BH, IS, xt_last24(BW)) <= 18446744073709551615 && xt_nin_rows(BH, IS, xt_last24(BW)) <= 9223372036854775807 && 0 <= PO && PO + xt_nout(3, BW, BH, OS) <= 18446744073709551615 && UCharArray::full(PI, xt_nin_rows(BH, IS, xt_last24(BW)), IN) * UCharArray::full(PO, xt_nout(3, BW, BH, OS), OLD) Ensure UCharArray::full(PI, xt_nin_rows(BH, IS, xt_last24(BW)), IN) * UCharArray::full(PO, xt_nout(3, BW, BH, OS), xt_result(3, IN, OLD, BW, BH, IS, OS)) */
+
+==== rvv256 ====
+signature: void xnn_x24_transposec_ukernel__vlx1_rvv( const void* input, void* output, size_t input_stride, size_t output_stride, size_t block_width, size_t block_height)
+/*@ With (IN : list Z) (OLD : list Z) (BW : Z) (BH : Z) (IS : Z) (OS : Z) (PI : Z) (PO : Z) (vf : Z -> Z) Require input == PI && output == PO && input_stride == IS && output_stride == OS && block_width == BW && block_height == BH && 1 <= BW && 1 <= BH && xt_strideok_all(3, BH, BW, IS) == 1 && xt_strideok_all(3, BW, BH, OS) == 1 && vsl_ok(32, vf) && 0 <= PI && PI + xt_nin_rows(BH, IS, 3 * BW) <= 18446744073709551615 && xt_nin_rows(BH, IS, 3 * BW) <= 9223372036854775807 && 0 <= PO && PO + xt_nout(3, BW, BH, OS) <= 18446744073709551615 && UCharArray::full(PI, xt_nin_rows(BH, IS, 3 * BW), IN) * UCharArray::full(PO, xt_nout(3, BW, BH, OS), OLD) Ensure UCharArray::full(PI, xt_nin_rows(BH, IS, 3 * BW), IN) * UCharArray::full(PO, xt_nout(3, BW, BH, OS), xt_result(3, IN, OLD, BW, BH, IS, OS)) */
+

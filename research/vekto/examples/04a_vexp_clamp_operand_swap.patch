@@ -1,0 +1,13 @@
+# SOURCE: build/e2e3-workers-20261106/w19-e3-vexp/work/variants/b_fixed.patch (excerpt: first hunk, lines 1-11 of the patch)
+# E3-03 f32-vexp: fix of the x86 FMA3 kernel (program variant V-008): swap operand order in the exponent clamp so NaN propagates. VERBATIM.
+--- ../impl/src/f32-vexp/gen/f32-vexp-fma3-rational-3-2-div.c	2026-11-07 18:08:06.759172381 -0800
++++ fixed/f32-vexp-fma3-rational-3-2-div.fixed.c	2026-11-07 18:18:57.232435173 -0800
+@@ -69,7 +69,7 @@
+ 
+     // Clamp `vz_prime = x * log2(e)` to the maximum exponents [-127, 128].
+     xnn_simd_f32_t vz_prime = xnn_mul_f32(vx, vlog2e);
+-    vz_prime = xnn_min_f32(xnn_max_f32(vz_prime, vm127), v128);
++    vz_prime = xnn_min_f32(v128, xnn_max_f32(vm127, vz_prime));
+ 
+     // Decompose x * log2e into `z` (integer part) and `r` (remainder).
+     const xnn_simd_f32_t vz = xnn_qd_round_f32(vz_prime);

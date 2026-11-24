@@ -1,0 +1,3 @@
+# SOURCE: ExVerus paper, Figure 3 panel "4. Patch on the buggy invariant of mutant_1", page 13. VERBATIM (ASCII glyphs).
+- sum[0] <= i as i32,
++ i > 0 ==> sum[0] <= i as i32,

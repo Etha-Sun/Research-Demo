@@ -1,0 +1,68 @@
+# DERIVED WORKED EXAMPLE (not from paper or repo outputs). Computed by a small local script (reproduced below), a re-implementation
+# copying the logic of repo topoverus/matcher_v2.py (TOKEN regex, normalized, similarity, match) and topoverus/graph.py
+# (component_ids, dependency_score). Canonical invariants = I1..I5 of paper Fig.1 (p.3). The EDGE SET IS ILLUSTRATIVE:
+# E = {I1->I2, I1->I3, I2->I4, I3->I4, I2->I5, I3->I5}, our reading of Sec.2.1 text (p.3: 'I1 as a prerequisite for proving
+# the bounds invariants I2 and I3, and ... the established bounds facts as prerequisites for proving the partition
+# invariants I4 and I5') and the Fig.2 graph drawing. The paper does not list exact edges for this program.
+# R_dep = alpha * beta, alpha = |V'|/|V|, beta = satisfied inter-SCC edges / considered edges (beta=1 if none) -- Eq.(6), p.6.
+# ----
+sim(I5_wrong, I5) = 0.941
+A_topological_order [I1,I2,I3,I4,I5] {'matches': [(0, 'I1', 'exact', 1.0), (1, 'I2', 'exact', 1.0), (2, 'I3', 'exact', 1.0), (3, 'I4', 'exact', 1.0), (4, 'I5', 'exact', 1.0)], 'alpha': 1.0, 'considered': 6, 'satisfied': 6, 'beta': 1.0, 'R_dep': 1.0}
+B_reversed [I5,I4,I3,I2,I1] {'matches': [(0, 'I5', 'exact', 1.0), (1, 'I4', 'exact', 1.0), (2, 'I3', 'exact', 1.0), (3, 'I2', 'exact', 1.0), (4, 'I1', 'exact', 1.0)], 'alpha': 1.0, 'considered': 6, 'satisfied': 0, 'beta': 0.0, 'R_dep': 0.0}
+C_partition_first [I4,I5,I1,I2,I3] {'matches': [(0, 'I4', 'exact', 1.0), (1, 'I5', 'exact', 1.0), (2, 'I1', 'exact', 1.0), (3, 'I2', 'exact', 1.0), (4, 'I3', 'exact', 1.0)], 'alpha': 1.0, 'considered': 6, 'satisfied': 2, 'beta': 0.333, 'R_dep': 0.333}
+D_paper_underconstrained [I4,I5wrong] {'matches': [(0, 'I4', 'exact', 1.0), (1, 'I5', 'fuzzy', 0.941)], 'alpha': 0.4, 'considered': 0, 'satisfied': 0, 'beta': 1.0, 'R_dep': 0.4}
+E_bounds_then_I4 [I1,I2,I3,I4] {'matches': [(0, 'I1', 'exact', 1.0), (1, 'I2', 'exact', 1.0), (2, 'I3', 'exact', 1.0), (3, 'I4', 'exact', 1.0)], 'alpha': 0.8, 'considered': 4, 'satisfied': 4, 'beta': 1.0, 'R_dep': 0.8}
+# ---- script used ----
+# Re-implementation (copied logic) of topoverus/matcher_v2.py + graph.py dependency_score, for a worked example.
+import re
+TOKEN = re.compile(r"[A-Za-z_][A-Za-z_0-9]*|\d+(?:[A-Za-z_][A-Za-z_0-9]*)?|==|!=|<=|>=|&&|\|\||::|->|=>|[^\s]")
+def normalized(t):
+    t = re.sub(r"//[^\n]*", "", t); return " ".join(t.strip().rstrip(",").split())
+def sim(a,b):
+    A,B=set(TOKEN.findall(normalized(a))),set(TOKEN.findall(normalized(b)))
+    return len(A&B)/len(A|B)
+def match(cands, canon, th=0.6):
+    assigned, used = {}, set()
+    for p,c in enumerate(cands):
+        ex=[i for i,v in enumerate(canon) if i not in used and normalized(c)==normalized(v)]
+        if ex: assigned[p]={"position":p,"canonical":ex[0],"kind":"exact","similarity":1.0}; used.add(ex[0])
+    for p,c in enumerate(cands):
+        if p in assigned: continue
+        av=[(sim(c,v),i) for i,v in enumerate(canon) if i not in used]
+        if av:
+            s,i=max(av,key=lambda x:(x[0],-x[1]))
+            if s>=th: assigned[p]={"position":p,"canonical":i,"kind":"fuzzy","similarity":round(s,3)}; used.add(i)
+    return [assigned[p] for p in sorted(assigned)]
+def comps(n,edges):
+    r=[[i==j for j in range(n)] for i in range(n)]
+    for a,b in edges: r[a][b]=True
+    for k in range(n):
+        for i in range(n):
+            for j in range(n): r[i][j]|=r[i][k] and r[k][j]
+    return [min(j for j in range(n) if r[i][j] and r[j][i]) for i in range(n)]
+def score(cands, canon, edges):
+    m=match(cands,canon); cov=len(m)/len(canon); c=comps(len(canon),edges)
+    cond={(c[a],c[b]) for a,b in edges if c[a]!=c[b]}
+    pos={}
+    for it in m: pos.setdefault(c[it["canonical"]], it["position"])
+    cons=[(a,b) for a,b in cond if a in pos and b in pos]
+    sat=(sum(pos[a]<pos[b] for a,b in cons)/len(cons)) if cons else 1.0
+    return dict(matches=[(x["position"],"I%d"%(x["canonical"]+1),x["kind"],x["similarity"]) for x in m],
+                alpha=round(cov,3), considered=len(cons), satisfied=sum(pos[a]<pos[b] for a,b in cons), beta=round(sat,3), R_dep=round(cov*sat,3))
+I = ["1 <= nums@.len() <= 10000",
+     "0 <= low <= nums@.len()",
+     "-1 <= high <= nums@.len() - 1",
+     "forall|i| 0 <= i < low ==> nums@[i] < target",
+     "forall|i| high < i < nums@.len() ==> nums@[i] > target"]
+I5_wrong = "forall|i| high <= i < nums@.len() ==> nums@[i] > target"
+# Illustrative edges (0-based): I1->I2, I1->I3, I2->I4, I3->I4, I2->I5, I3->I5
+E = [[0,1],[0,2],[1,3],[2,3],[1,4],[2,4]]
+print("sim(I5_wrong, I5) =", round(sim(I5_wrong, I[4]),3))
+cases = {
+ "A_topological_order [I1,I2,I3,I4,I5]": [I[0],I[1],I[2],I[3],I[4]],
+ "B_reversed [I5,I4,I3,I2,I1]": [I[4],I[3],I[2],I[1],I[0]],
+ "C_partition_first [I4,I5,I1,I2,I3]": [I[3],I[4],I[0],I[1],I[2]],
+ "D_paper_underconstrained [I4,I5wrong]": [I[3],I5_wrong],
+ "E_bounds_then_I4 [I1,I2,I3,I4]": [I[0],I[1],I[2],I[3]],
+}
+for k,v in cases.items(): print(k, score(v,I,E))

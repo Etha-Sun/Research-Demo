@@ -1,0 +1,49 @@
+# SOURCES (all repo-relative):
+#  [S1] research/project-plan-20261102/final-minmax-reproduction/README.zh-CN.md, section "实际输出" (table) and test-coverage paragraph
+#  [S2] research/bugs/divergences/DIV-001-f32-vmax-nan.zh-CN.md, item 2 and item 3
+#  [S3] research/project-plan-20261102/CONDITIONS.zh-CN.md, row C-001
+#  [S4] research/project-plan-20261102/LESSONS.zh-CN.md, L1 and L3
+#  [S5] research/project-plan-20261102/vmax-performance/REPORT.zh-CN.md, "结论" and per-size table
+# Translated from Chinese and restructured by the research agent; numbers and bit patterns are copied exactly.
+
+Counterexample (E1, f32-vmax, original NEON A vs final optimized RVV Bopt)            [S1][S2]
+  batch = 4 bytes (n = 1 element)
+  input_a[0] = 0x7fc12345   (a quiet NaN with payload)
+  input_b[0] = 0x3f800000   (1.0f)
+  A    (NEON, QEMU AArch64, FPCR=0)       output[0] = 0x7fc12345   (NaN)
+  Bopt (RVV, QEMU, VLEN 128/256/512)      output[0] = 0x3f800000   (1.0)
+  Swapping the inputs also reproduces the difference.                                  [S1]
+  Observation relation used in E1: "numerically equal, or both NaN (payload ignored); +0 == -0" -> NaN vs 1.0 is NOT related. [S1]
+
+Scale of the reproduction                                                             [S1]
+  lengths 1,4,15,16,17,31,32,33,63,64,65,127,128,129,257 x 4 input groups (left qNaN, right qNaN, both qNaN, finite)
+  480 kernel calls -> 360 NEON/RVV comparisons; the 180 one-sided-NaN comparisons all differ; both-NaN and finite cases agree.
+  DIV-001: 450 cases / 252 unequal per VLEN configuration; all 44 historical counterexamples replayed.                 [S2]
+  (These are QEMU executions of compiled code, not a proof and not physical hardware.)
+
+Why (semantics)
+  Arm FMAX (vmaxq_f32) propagates NaN; RVV vfmax implements IEEE 754-2019 maximumNumber and returns the non-NaN operand.
+  See examples/02e_fmax_lane_models.v (library lane models) and
+  research/project-plan-20261102/E1-PROOF-REUSE-MAP.zh-CN.md line 87.
+
+A prior bounded checker accepted this pair                                             [S1]
+  The local SALTyRN cvc5 backend (length 1, VLEN512, 20 s per query) returned VERIFIED / ALL_PASSED on the final vmax.
+  Cause: its NEON model of vmaxq_f32 builds FLOATINGPOINT_MAX with no NaN propagation (neon/ops/core.hpp).
+  Adding "either operand NaN -> NaN" in an isolated copy makes the same harness return COUNTEREXAMPLE at position 0.
+  (examples/02g_bounded_checker_neon_model_patch.diff)
+
+Resolution by the L1/L3 procedure                                                      [S2][S3][S4]
+  L1 step 1 (can the input occur?): yes -- the XNNPACK path API -> create -> params -> ukernel has no non-NaN check.
+  L1 step 2 (which side deviates?): no defined reference -- the XNNPACK maintainer states min/max NaN behaviour is not
+           guaranteed (google/XNNPACK issue #441).
+  L3: main result kept: "original A != Bopt" (DIV-001). Separately, conditional verification:
+      C-001 "inputs contain no NaN" added to the Require of equivalent(), with the source and counterexample id next to it;
+      CONDITIONS.zh-CN.md records C-001 as "conditional pairing passed (W19), supervisor recheck passed".
+      Conditional and unconditional results are counted and reported separately.
+  Caveat: per SUMMARY-20261111 the evidence packages of that early E1 period are on an earlier server that is
+      no longer available and cannot be re-run on the current machine.
+
+Cost of the alternative (repair Bopt to propagate NaN), measured on Saturn RTL (GENV512D256ShuttleConfig) [S5]
+  Repair: 4 extra C statements after each vfmax (2x vmfne NaN test, vmor, vfmerge canonical NaN). examples/02f_*.patch
+  Cycles +18.8 % vs the optimized version (geometric mean of cycle ratios over 7 sizes 16..65536);
+  speed vs XNNPACK u8v: optimized 0.982x, repaired 0.826x. The repair was regression-tested, not formally proved.

@@ -1,0 +1,19 @@
+SOURCE: ExVerus artifact repo github.com/claudeyj/exverus @ 4e513a1c, skills/counterexample-guided-proof/SKILL.md,
+sections "3. Get the counterexample", "4. Analyze", "5. Fix and re-verify". VERBATIM excerpts (not from the paper):
+
+"Plug the values into the harness (replace the `assume` with `let n = 1; let i = 0;
+let j = 1000;`) and run the verifier. It is a real counterexample if the "before"
+checks pass and an "after" check fails: here `assert(j <= 1000)` fails."
+
+"Can a real run reach `{n: 1, i: 0, j: 1000}`? No: `j == i` always holds in this
+loop. An unreachable counterexample means the invariant is **too weak**:
+strengthen it. A reachable one means the invariant is **wrong**: weaken or fix it."
+
+"Here, with `j == i` added, `{n: 1, i: 0, j: 1000}`
+now fails a "before" check (`j == i` is false), so it is **blocked**."
+
+"Still failing? Repeat. Round 2 finds `{n: 1001, i: 1000, j: 1000}`. The loop
+can't see `requires n < 1000`, so add `n < 1000` to the invariant. The file verifies."
+
+NOTE: the skill text asserts "The file verifies"; the final fixed program is described in prose only (invariants
+i <= n, j <= 1000 plus added j == i and n < 1000) and is not given as a code block. We have not run Verus on it.

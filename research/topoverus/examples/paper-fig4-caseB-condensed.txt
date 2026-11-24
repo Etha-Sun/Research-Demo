@@ -1,0 +1,51 @@
+# SOURCE: TopoVerus paper, Figure 4 "Maximum-profit case study: buggy proof, Verus feedback, and generated counterexample", PDF p.9
+#         (identical box repeated as Appendix B Case Study B, PDF p.17). Transcribed from PDF text layer; indentation re-added for code (text layer loses it).
+# NOTE: this is the paper's CONDENSED display (uses `price`, 3 invariants, error at line 37, "max pro" = max_pro with the
+#       underscore lost in the text layer). The recorded artifact is caseB-1-buggy.rs / caseB-2 / caseB-3 (uses `prices`, 6 invariants, line 44).
+# ---- verbatim content below ----
+Full-array claim used as a prefix invariant
+Task. Leetcode/121-BestTimeSell
+Compute the maximum profit from one buy-sell pair in a price sequence.
+Buggy code.
+pub fn max_profit(price: Vec<i32>) -> (res: i32)
+    requires
+        1 <= price.len() <= 100000,
+        forall|i: int| 0 <= i < price.len()
+            ==> 0 <= price[i] <= 10000,
+    ensures
+        forall|j: int, k: int| 0 <= j < k < price.len()
+            ==> price[k] - price[j] <= res,
+{
+    let mut max_pro = 0;
+    let mut min_price = i32::MAX;
+    for i in 0..price.len()
+        invariant
+            forall|j: int| 0 <= j < i
+                ==> price[j] >= min_price,
+            i > 0 ==> exists|j: int| 0 <= j < i
+                && price[j] == min_price,
+            // BUG: full-array range; should be k < i.
+            forall|j: int, k: int|
+                0 <= j < k < price.len()
+                ==> price[k] - price[j] <= max_pro,
+    {
+        min_price = min_i32(min_price, price[i]);
+        max_pro = max_i32(max_pro,
+            price[i] - min_price);
+    }
+    max_pro
+}
+Verus error.
+error: invariant not satisfied before loop
+--> best_time_sell_v2.rs:37:13
+|
+37 | forall|j: int, k: int|
+| ^^^^^^^^^^^^^^^^^^^^^^^
+Counterexample.
+[State] price = [5,3,7]. Before the first loop iteration, i = 0, max pro = 0, and min price = i32::MAX. All input bounds hold.
+[Execution Trace] Verus checks the loop invariants at entry. The buggy invariant requires every pair in the whole array to have
+profit at most max pro. Instantiate it with j = 0, k = 2. Then price[2] - price[0] = 7 - 5 = 2.
+[Violation] The invariant demands 2 <= max pro = 0, which is false. The counterexample identifies the quantifier range as
+the root cause: before processing any day, the proof can only make claims about the empty prefix 0..i, not about the full input
+sequence.
+The last invariant talks about all future days. It should only summarize the processed prefix: 0 <= j < k < i.

@@ -1,0 +1,5 @@
+SOURCE: ExVerus paper, Figure 1 top-right panel "ExVerus-Synthesized Z3Py script execution output", page 3
+(copied from research/exverus/examples/02c_findmax_cex_outputs.txt). Shown on screen as a state table (CEX_1 only).
+---- on screen below ----
+Status: SAT
+CEX_1: {"nums": "vec![-1, -1]", "i":1, "max":0}

@@ -1,0 +1,36 @@
+SOURCE: ExVerus paper, Figure 1 (right panels), page 3. Transcribed from the rendered figure.
+
+--- (top right) "ExVerus-Synthesized Z3Py script execution output" ---
+Status: SAT
+
+Generated counterexamples:
+CEX_1: {"nums": "vec![-1, -1]", "i":1, "max":0}
+CEX_2: {"nums": "vec![-2, -2]", "i":1, "max":-1}
+CEX_3: {"nums": "vec![-3, -3]", "i":1, "max":-2}
+......
+CEX_9: {"nums": "vec![-9, -9]", "i":1, "max":-8}
+
+--- (bottom right) "SMT-LIB query execution output (simplified)" — what Verus' own backend gives ---
+(left of it, "Verus compiled SMT query (simplified)": lines 5558..5570 shown, query has 7083 lines;
+ "compiled from a single invariant: forall |k: int| 0 <= k < i ==> nums@[k] <= max")
+   6  unknown
+   7  (:reason-unknown "(incomplete quantifiers)")
+ ...
+ 625  (define-fun i@ () Int 537)
+ ...
+ 980  (define-fun vstd!slice.spec_slice_len.?
+          ((x!0 Dcr) (x!1 Type) (x!2 Poly)) Int
+ 981      1681)                                   <- figure label: "length of nums"
+ ...
+1007  (define-fun %I ((x!0 Poly)) Int
+1008    (ite (= x!0 Poly!val!31) (- 2147474703)
+1009    (ite (= x!0 Poly!val!33 ...
+ ...
+1094  (define-fun vstd!seq.Seq.index.? ((x!0 Dcr)
+          (x!1 Type) (x!2 Poly) (x!3 Poly)) Poly
+1095      Poly!val!31)                            <- figure label: "reference ID of nums[k]"
+ ...
+3130
+Figure callouts: "Solver returns 'unknown' status instead of 'SAT'"; "Random, large, semantically
+meaningless values"; "Hard-to-recover reference ID"; "Type stripped away after compilation".
+Panel header: "Verus CEX Generation (deprecated by Verus due to misleading info)".

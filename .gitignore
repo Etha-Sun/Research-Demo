@@ -1,0 +1,10 @@
+.venv/
+.venv-install.log
+media/
+out/
+audio/
+repos/
+papers/*.pdf
+__pycache__/
+*.pyc
+.DS_Store

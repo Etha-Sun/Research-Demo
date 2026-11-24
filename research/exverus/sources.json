@@ -1,0 +1,252 @@
+[
+ {
+  "claim": "ExVerus solves 38% more tasks on average than SOTA; advantage widens to 2x on LCBench and HumanEval",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.2, Section 1 'Results'"
+ },
+ {
+  "claim": "ExVerus outperforms AutoVerus by 60.92% on average on VerusBench",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6, Section 4.2"
+ },
+ {
+  "claim": "ExVerus solves about 2x and 1.5x as many tasks as AutoVerus on LCBench and HumanEval",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6, Section 4.2"
+ },
+ {
+  "claim": "Robust under obfuscation: success above 73% vs SOTA below 50% (intro); AutoVerus below 40% (sec 4.2)",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.2 Section 1; p.7 Section 4.2 (contradicted in part by Table 2, see BRIEF 9.3)"
+ },
+ {
+  "claim": "ExVerus costs $0.04/task vs AutoVerus $0.17; 720.34s vs 2989.07s; 4.25x less cost",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.2; p.7 'Cost'; Table 3 p.8 (DeepSeek-V3.1 Total row)"
+ },
+ {
+  "claim": "GPT-4o cost $0.42 vs $0.69; time 250.0s vs 233.9s",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Table 3 p.8"
+ },
+ {
+  "claim": "Tasks >=5 invariants: 111k vs 431k input tokens",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.7 'Cost'; Table 3 p.8"
+ },
+ {
+  "claim": "Repair success rates per method/model/benchmark",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Table 1 p.7"
+ },
+ {
+  "claim": "ObfsBench success rates per obfuscation strategy",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Table 2 p.7"
+ },
+ {
+  "claim": "Ablation: ExVerus vs ExVerus_NO_MUT vs Iterative Refinement; ObfsBench DeepSeek 81.6 vs 65.4; VerusBench 71.9 vs 64.4",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Table 4 p.8; p.7 'Ablations'"
+ },
+ {
+  "claim": "InvariantInjectBench 187 tasks; 10 CEX solves 106, 1 CEX solves 100",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.7-8 Section 4.3; App G.1 p.21 (187 of 426)"
+ },
+ {
+  "claim": "Blocking discriminative power: 32/83, 9/21, 158/245, 41/51 (stated 64.49%), 38/153, 12/36, 172/243, 45/53",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.8 Section 4.3"
+ },
+ {
+  "claim": "Models: Claude-Sonnet-4.5, GPT-4o, o4-mini, Qwen3-480B-A35B, DeepSeek-V3.1; temperature 1.0; max 10 iterations; 5 mutants",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6 Section 4.1"
+ },
+ {
+  "claim": "Default 10 counterexamples",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.7 Section 4.3"
+ },
+ {
+  "claim": "Benchmarks: VerusBench 146 (of 150), Dafny2Verus 67, Leetcode-Verus 28 (~200 LoC), HumanEval-Verus 68, ObfsBench 266",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6 Section 4.1 + footnote 2; App E p.20"
+ },
+ {
+  "claim": "Implementation: Verus 0.2025.07.12.0b6f3cb; Python ~13K LoC, Rust ~2K LoC; Z3Py 4.15.1.0; AMD EPYC 9554, 1.1 TB RAM",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6 'Implementation'"
+ },
+ {
+  "claim": "Verus compiles findmax proof into 7,083-line SMT query; Z3 returns unknown with 3,130-line log; i=537, nums.len=1681; Poly!val!31",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.3-4 Section 2.2; Figure 1 p.3"
+ },
+ {
+  "claim": "Verus developers discontinued counterexample support due to misleading values",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.4 (refs App F); Figure 1 panel label"
+ },
+ {
+  "claim": "Verus frequently returns unknown due to limited quantifier support",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.3 footnote 1 (Verus Team, 2025, issue #2018)"
+ },
+ {
+  "claim": "findmax buggy proof, Z3Py script, CEX_1..CEX_9",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Figure 1 p.3"
+ },
+ {
+  "claim": "findmax triage verdict too_weak, CEX spurious (max=0 not in [-1,-1])",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Figure 8 p.23"
+ },
+ {
+  "claim": "findmax ground-truth invariant uses exists ... && ...",
+  "source": "repos/exverus (github.com/claudeyj/exverus @ 4e513a1c)",
+  "locator": "cleaned-verusbench/Misc/verified/findmax.rs:18"
+ },
+ {
+  "claim": "findmax and brs1 ended in verification_pass at phase cex_repair (DeepSeek VerusBench run)",
+  "source": "repos/exverus (github.com/claudeyj/exverus @ 4e513a1c)",
+  "locator": "vinv/analysis/figure/data/ExVerus/ds_vb_global_repair_status_z3_mut_val.json keys verusbench_misc_findmax, verusbench_diffy_brs1"
+ },
+ {
+  "claim": "Workflow: initial proof; CEX generation & validation; mutation-based CEX-guided repair; ranking by #CEXs blocked",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Figure 2 p.4; Sections 3.1-3.2 p.4-6; Algorithms 1-3 p.19"
+ },
+ {
+  "claim": "Counterexample definition sigma |= A and not C; iterative blocking",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Definitions 2.1, 2.2 p.4"
+ },
+ {
+  "claim": "Validation: loop extraction, invariant translation, CEX instrumentation; InvFailFront/InvFailEnd symptoms",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Section 3.1 p.5"
+ },
+ {
+  "claim": "Error triage: reachable -> wrong_fact (replace), spurious -> too_weak (strengthen), other",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Section 3.2 p.5; App I.5 p.28"
+ },
+ {
+  "claim": "Mutant ranking by validated CEXs blocked, inspired by PDR; non-invariant errors fall back to verified sub-goals",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.6 'Mutant ranking'"
+ },
+ {
+  "claim": "Alg 2 retry when not SAT or fewer than k/2 models",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Algorithm 2 p.19"
+ },
+ {
+  "claim": "Z3Py query-generation prompt (naming __vec__arr__i, tiny domains, avoid quantifiers, enumerate up to num_cex models)",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App I.1 p.23-24"
+ },
+ {
+  "claim": "brs1 buggy proof, CEX_1/CEX_2, wrong_fact diagnosis, patch i > 0 ==> sum[0] <= i as i32, validation harness",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Figure 3 p.13"
+ },
+ {
+  "claim": "brs1: mutant-1 blocks all CEXs and passes Verus",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App A.1 p.13"
+ },
+ {
+  "claim": "AutoVerus failed brs1 after 15+4+21 attempts, 16 on the before-loop error",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App A.1 p.13"
+ },
+ {
+  "claim": "brs1 ground truth uses i > 0 ==> sum[0] <= i",
+  "source": "repos/exverus (github.com/claudeyj/exverus @ 4e513a1c)",
+  "locator": "cleaned-verusbench/Diffy/verified/brs1.rs:35"
+ },
+ {
+  "claim": "two_sum CEXs, wrong_fact diagnosis and patch",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Figure 4 p.14, App A.2"
+ },
+ {
+  "claim": "AutoVerus failed two_sum after 15+1+24 attempts, 14 on assertion failures",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App A.2 p.13"
+ },
+ {
+  "claim": "VeruSAGE-Bench: 800+ tasks, 947 LoC/task; Hands-Off with Sonnet 4.5 proved 81% (Yang et al. 2025b)",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App A.3 p.14"
+ },
+ {
+  "claim": "VeruSAGE case: 4,179-line proof file, six temporal axiom lemmas; CEX-augmented prompt succeeded where Hands-Off and Double Hands-Off failed",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App A.3 p.15-18, Listings 1-5"
+ },
+ {
+  "claim": "Validation limited to invariants; unvalidated CEXs still help",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Section 5 p.8"
+ },
+ {
+  "claim": "Initial proof generation reuses AutoVerus prompt",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Section 5 p.8; App D p.20"
+ },
+ {
+  "claim": "AutoVerus beats ExVerus on VerusBench tasks with asserts (39.4 vs 18.2) and proof blocks (36.4 vs 9.1), GPT-4o",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "Table 5 p.23; App H.3 p.22"
+ },
+ {
+  "claim": "ExVerus uniquely solves 101 tasks, AutoVerus 26; 63 vs 4 on high-invariant tasks",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App H.1 p.21; Figures 6-7 p.22"
+ },
+ {
+  "claim": "AutoVerus 75.33% on Verus 2024/8/13 vs 52.7% on 2025/7/12 (GPT-4o, VerusBench)",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App H.4 p.22"
+ },
+ {
+  "claim": "Re-runs may not match numbers bit for bit (LLM stochasticity)",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "App C p.19"
+ },
+ {
+  "claim": "Impact statement: risk of confusing verifier-passing with correct intent",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.9 Impact Statement"
+ },
+ {
+  "claim": "SAFE data curation: a month of non-stop GPT-4o invocations",
+  "source": "papers/exverus.pdf (arXiv 2603.25810v2)",
+  "locator": "p.1, p.3, p.9"
+ },
+ {
+  "claim": "count_up teaching example (rounds {n:1,i:0,j:1000} -> add j == i; {n:1001,i:1000,j:1000} -> add n < 1000)",
+  "source": "repos/exverus (github.com/claudeyj/exverus @ 4e513a1c)",
+  "locator": "skills/counterexample-guided-proof/SKILL.md"
+ },
+ {
+  "claim": "Project page: +45% over SOTA; 90% robust vs 33-50%; 70.2% counterexample-blocking; ~75% fewer tokens (DeepSeek), ~25% (GPT-4o); up to 95.5% with o4-mini",
+  "source": "https://exverus-proof.github.io/ (fetched 2026-11-23)",
+  "locator": "Results / highlights text"
+ },
+ {
+  "claim": "Code repo link and OpenReview forum FNDkXA0OUJ; ICML 2026",
+  "source": "https://exverus-proof.github.io/ (fetched 2026-11-23)",
+  "locator": "links section; BibTeX"
+ },
+ {
+  "claim": "Paper uses Verus version 0.2025.07.12.0b6f3cb; 10 repair attempts and 10 CEXs default",
+  "source": "repos/exverus (github.com/claudeyj/exverus @ 4e513a1c)",
+  "locator": "README.md 'Setup', 'Paper Experiment Map'"
+ }
+]

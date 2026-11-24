@@ -1,0 +1,323 @@
+{
+ "episode": "exverus",
+ "scenes": {
+  "ExV01SeriesIntro": [
+   {
+    "id": "exv01-1",
+    "seconds": 20.9,
+    "en": "This is a four-part tour of one research thread: getting AI systems to write proofs we can actually trust. Each part climbs a level: from fixing one loop invariant, to a model that learns to fix proofs, to proving whole software repositories, to proving that optimised machine-level kernels still compute the same thing.",
+    "zh": "这是一个四集的系列，讲同一条研究主线：让 AI 系统写出我们真正可以信任的证明。每一集上升一个层次：从修复一个 loop invariant，到一个学会修复证明的模型，再到证明整个软件仓库，最后证明优化过的机器级 kernel 仍然计算同样的结果。"
+   },
+   {
+    "id": "exv01-2",
+    "seconds": 12.8,
+    "en": "Two ideas connect the four parts. Counterexamples are the evidence: concrete states or inputs that show why a proof fails. Trust is the guard: every repair is checked again by a verifier.",
+    "zh": "四集由两个想法串起来。Counterexample 是证据：它是具体的状态或输入，说明证明为什么失败。信任是守门人：每一次修复都要由 verifier 重新检查。"
+   },
+   {
+    "id": "exv01-3",
+    "seconds": 14.0,
+    "en": "The thread follows the work of Yuechun Sun, a senior undergraduate at the School of the Gifted Young of USTC, advised by Kexin Pei at the University of Chicago and Alvin Cheung at UC Berkeley.",
+    "zh": "这条主线来自孙悦淳的研究。孙悦淳是中国科学技术大学少年班学院的大四本科生，导师是芝加哥大学的 Kexin Pei 教授和加州大学伯克利分校的 Alvin Cheung 教授。"
+   },
+   {
+    "id": "exv01-4",
+    "seconds": 8.2,
+    "en": "Episode one is ExVerus: proof repair via counterexample reasoning, by Jun Yang, Yuechun Sun and colleagues, published at ICML 2026.",
+    "zh": "第一集是 ExVerus：基于 counterexample 推理的证明修复。作者是 Jun Yang、孙悦淳等人，发表于 ICML 2026。"
+   }
+  ],
+  "ExV02ColdOpen": [
+   {
+    "id": "exv02-1",
+    "seconds": 12.0,
+    "en": "Here is a small Rust function checked by the Verus verifier. It finds the maximum of a vector, and its loop carries invariants: facts that must hold on every pass.",
+    "zh": "这是一个由 Verus verifier 检查的小 Rust 函数。它求一个 vector 的最大值，循环上带着若干 loop invariant：每一轮都必须成立的事实。"
+   },
+   {
+    "id": "exv02-2",
+    "seconds": 9.3,
+    "en": "Verus rejects the last invariant: invariant not satisfied at end of loop body. The message says where the proof broke, but not why.",
+    "zh": "Verus 拒绝了最后一条 invariant：invariant not satisfied at end of loop body。这条消息说明了证明在哪里断掉，却没有说明为什么。"
+   },
+   {
+    "id": "exv02-3",
+    "seconds": 15.1,
+    "en": "So ask the solver for a counterexample. Verus compiles this proof into a 7,083-line SMT query. The solver answers unknown, and the model it prints says i is 537 and the vector has length 1681, in internal symbols.",
+    "zh": "那就向 solver 要一个 counterexample。Verus 把这个证明编译成 7,083 行的 SMT 查询。Solver 的回答是 unknown，它打印的模型说 i 是 537、vector 长度是 1681，而且用的是内部符号。"
+   },
+   {
+    "id": "exv02-4",
+    "seconds": 14.0,
+    "en": "ExVerus gets this instead: nums is minus one, minus one; i is one; max is zero. Max is zero, a value that is not even in the array. Now the failure has a concrete shape.",
+    "zh": "ExVerus 得到的则是：nums 是负一、负一；i 是一；max 是零。max 等于零，这个值甚至不在数组里。现在，失败有了具体的样子。"
+   },
+   {
+    "id": "exv02-5",
+    "seconds": 9.0,
+    "en": "That is the idea of this episode: turn a verifier's one-line error into concrete counterexamples, and use them to repair the proof.",
+    "zh": "这就是本集的核心想法：把 verifier 的一行报错变成具体的 counterexample，再用它们来修复证明。"
+   }
+  ],
+  "ExV03Background": [
+   {
+    "id": "exv03-1",
+    "seconds": 10.9,
+    "en": "First, the background. In Verus you write Rust plus a specification: requires states what holds on entry, ensures states what holds on return. Every loop needs invariants.",
+    "zh": "先讲背景。在 Verus 中，你写的是 Rust 加上 specification：requires 说明进入函数时成立什么，ensures 说明返回时成立什么。每个循环都需要 loop invariant。"
+   },
+   {
+    "id": "exv03-2",
+    "seconds": 14.0,
+    "en": "An invariant must hold before the loop starts, and it must survive one iteration. Verus turns each of these obligations into a formula, a verification condition, and asks the SMT solver Z3 to prove it.",
+    "zh": "一条 invariant 必须在循环开始前成立，并且在执行一轮之后仍然成立。Verus 把每一项这样的义务变成一个公式，即 verification condition，再交给 SMT solver Z3 去证明。"
+   },
+   {
+    "id": "exv03-3",
+    "seconds": 11.3,
+    "en": "A counterexample is a concrete state that satisfies the assumptions but breaks the goal. With quantifiers in the formula, the solver often gives up instead of producing one.",
+    "zh": "Counterexample 是一个具体的状态，它满足前提，却违反目标。公式里一旦有 quantifier，solver 常常直接放弃，而不是给出一个 counterexample。"
+   },
+   {
+    "id": "exv03-4",
+    "seconds": 13.2,
+    "en": "ExVerus's trick: the language model writes a small Z3Py query at the source level, using the program's own variable names. Here it fixes the vector length to two, so no quantifiers are needed.",
+    "zh": "ExVerus 的技巧是：让语言模型在源码层面写一个小的 Z3Py 查询，直接使用程序自己的变量名。这里它把 vector 的长度固定为二，于是不再需要 quantifier。"
+   },
+   {
+    "id": "exv03-5",
+    "seconds": 9.7,
+    "en": "The solver then quickly returns small, readable states. The query may even relax soundness, because nothing it says is trusted until Verus checks it.",
+    "zh": "这样 solver 就能很快返回小而易读的状态。这个查询甚至可以放松 soundness，因为它给出的任何东西在 Verus 检查之前都不被信任。"
+   }
+  ],
+  "ExV04Brs1Bug": [
+   {
+    "id": "exv04-1",
+    "seconds": 14.0,
+    "en": "Now the main example, brs1 from VerusBench. A first loop, hidden here, fills the array a with ones. The second loop adds them into sum zero, resetting it to zero only on its first pass.",
+    "zh": "现在看主例子，VerusBench 里的 brs1。第一个循环（这里省略）把数组 a 全部填成一。第二个循环把它们累加到 sum[0] 中，只在第一轮把它清零。"
+   },
+   {
+    "id": "exv04-2",
+    "seconds": 7.8,
+    "en": "The language model's proof claims, as an invariant of the second loop, that sum zero is at most i.",
+    "zh": "语言模型给出的证明，把“sum[0] 不超过 i”作为第二个循环的 invariant。"
+   },
+   {
+    "id": "exv04-3",
+    "seconds": 10.9,
+    "en": "Verus answers: invariant not satisfied before loop. The paper reports that the earlier tool AutoVerus spent 16 attempts on exactly this error and still failed the task.",
+    "zh": "Verus 的回答是：invariant not satisfied before loop。论文报告说，之前的工具 AutoVerus 在这个错误上尝试了 16 次，最终仍然没能完成这个任务。"
+   }
+  ],
+  "ExV05Brs1Cex": [
+   {
+    "id": "exv05-1",
+    "seconds": 15.1,
+    "en": "ExVerus asks the solver for states that break the invariant at loop entry. It gets, for example: a is one, one; sum is one; i is zero; N is two. A second one has sum equal to two.",
+    "zh": "ExVerus 向 solver 要在进入循环时违反这条 invariant 的状态。比如它得到：a 是一、一；sum 是一；i 是零；N 是二。第二个 counterexample 中 sum 等于二。"
+   },
+   {
+    "id": "exv05-2",
+    "seconds": 12.4,
+    "en": "Plug the first one in: sum zero is one, i is zero, and one is not at most zero. At loop entry, sum zero still holds whatever the caller passed in.",
+    "zh": "代入第一个：sum[0] 是一，i 是零，而一并不小于等于零。进入循环时，sum[0] 里仍然是调用者传进来的任意值。"
+   },
+   {
+    "id": "exv05-3",
+    "seconds": 12.8,
+    "en": "But the language model could be wrong. So a validator, with no language model involved, extracts the loop into a standalone function, turns the invariants into assertions, and injects the counterexample values.",
+    "zh": "但语言模型也可能出错。所以一个不涉及语言模型的 validator 把这个循环抽取成独立的函数，把 invariant 变成 assertion，并注入 counterexample 的取值。"
+   },
+   {
+    "id": "exv05-4",
+    "seconds": 7.8,
+    "en": "Verus runs it. The last assertion fails, the same symptom as the real error, so this counterexample is validated.",
+    "zh": "Verus 运行它。最后一条 assertion 失败，和真实错误的症状一致，因此这个 counterexample 通过了验证。"
+   }
+  ],
+  "ExV06Triage": [
+   {
+    "id": "exv06-1",
+    "seconds": 10.1,
+    "en": "Next comes triage. A counterexample can be reachable, a state that a real run can produce, or spurious, a state that no run ever reaches.",
+    "zh": "接下来是 triage。一个 counterexample 可能是 reachable 的，即真实运行能够产生的状态；也可能是 spurious 的，即任何运行都到达不了的状态。"
+   },
+   {
+    "id": "exv06-2",
+    "seconds": 12.8,
+    "en": "Reachable means the invariant is simply wrong and must be replaced. Spurious means the invariant may be true but is too weak to carry through the loop, so it must be strengthened.",
+    "zh": "Reachable 说明这条 invariant 本身就是错的，必须替换。Spurious 说明 invariant 可能是对的，但太弱，无法撑过一轮循环，所以必须加强。"
+   },
+   {
+    "id": "exv06-3",
+    "seconds": 11.7,
+    "en": "For brs1 the language model's verdict is wrong fact: the invariant fails at loop entry when i is zero and sum zero is positive, and those states are reachable.",
+    "zh": "对 brs1，语言模型的判定是 wrong_fact：当 i 为零且 sum[0] 为正时，这条 invariant 在进入循环前就不成立，而这些状态是可达的。"
+   },
+   {
+    "id": "exv06-4",
+    "seconds": 10.1,
+    "en": "For findmax, the verdict went the other way: max equal to zero cannot occur there, so the states were spurious and the invariants too weak.",
+    "zh": "而对 findmax，判定正好相反：在那里 max 等于零不可能出现，所以这些状态是 spurious 的，invariant 太弱。"
+   }
+  ],
+  "ExV07Repair": [
+   {
+    "id": "exv07-1",
+    "seconds": 10.5,
+    "en": "Guided by the verdict, a replace mutator proposes five candidate proofs. It looks at what the counterexamples share: i is zero and sum zero is positive.",
+    "zh": "根据这个判定，一个替换型 mutator 提出五个候选证明。它观察这些 counterexample 的共同点：i 为零，sum[0] 为正。"
+   },
+   {
+    "id": "exv07-2",
+    "seconds": 10.9,
+    "en": "Candidates are ranked by how many validated counterexamples they block, meaning how many no longer trigger the failure. The idea is borrowed from the model-checking algorithm PDR.",
+    "zh": "候选证明按照它们 block 了多少个经过验证的 counterexample 来排序，也就是有多少个 counterexample 不再触发失败。这个想法借鉴自 model checking 算法 PDR。"
+   },
+   {
+    "id": "exv07-3",
+    "seconds": 8.6,
+    "en": "The top candidate, mutant one, guards the invariant: if i is greater than zero, then sum zero is at most i.",
+    "zh": "排名第一的候选，mutant_1，给 invariant 加上了条件：如果 i 大于零，那么 sum[0] 不超过 i。"
+   },
+   {
+    "id": "exv07-4",
+    "seconds": 7.4,
+    "en": "Run the validation harness again with the new invariant: the assertion now passes, so counterexample one is blocked.",
+    "zh": "用新的 invariant 再运行一次 validation harness：assertion 现在通过了，所以第一个 counterexample 被 block 了。"
+   },
+   {
+    "id": "exv07-5",
+    "seconds": 9.7,
+    "en": "The paper reports that mutant one blocks all counterexamples and passes Verus, solving the task. The benchmark's own reference proof uses the same guard.",
+    "zh": "论文报告说，mutant_1 block 了所有 counterexample，并通过了 Verus 验证，从而解决了这个任务。benchmark 自带的参考证明也使用了同样的条件。"
+   }
+  ],
+  "ExV08Architecture": [
+   {
+    "id": "exv08-1",
+    "seconds": 8.2,
+    "en": "Here is the whole method. It starts from a proof drafted by the language model and the error Verus reports.",
+    "zh": "下面是整个方法。它从语言模型起草的证明以及 Verus 报告的错误开始。"
+   },
+   {
+    "id": "exv08-2",
+    "seconds": 8.6,
+    "en": "Generate: the model writes a Z3Py query and enumerates counterexamples, ten by default, retrying when the solver does not say SAT.",
+    "zh": "Generate：模型写出 Z3Py 查询并枚举 counterexample，默认十个；solver 没有返回 SAT 时就重试。"
+   },
+   {
+    "id": "exv08-3",
+    "seconds": 11.7,
+    "en": "Validate: Verus runs each counterexample in the extracted loop, and only those that reproduce the error survive. Triage: the model labels the failure a wrong fact or too weak.",
+    "zh": "Validate：Verus 在抽取出的循环里运行每个 counterexample，只有能复现错误的才会保留。Triage：模型把失败归类为 wrong fact 或 too weak。"
+   },
+   {
+    "id": "exv08-4",
+    "seconds": 11.7,
+    "en": "Mutate and rank: five candidates, scored by the counterexamples they block. Verus checks the candidates, and if none passes, the loop goes around again, for up to ten iterations.",
+    "zh": "Mutate and rank：五个候选，按 block 的 counterexample 数打分。Verus 检查这些候选；如果都没通过，就再走一轮，最多十轮。"
+   },
+   {
+    "id": "exv08-5",
+    "seconds": 10.9,
+    "en": "Follow brs1 through it. The buggy invariant fails before the loop; the solver produces states with i zero and sum positive; Verus confirms they reproduce the error.",
+    "zh": "让 brs1 走一遍。有错的 invariant 在循环前失败；solver 给出 i 为零、sum 为正的状态；Verus 确认它们能复现这个错误。"
+   },
+   {
+    "id": "exv08-6",
+    "seconds": 7.8,
+    "en": "Triage says wrong fact; the guarded invariant blocks the counterexamples; and, as the paper reports, Verus accepts the proof.",
+    "zh": "Triage 判定为 wrong fact；加了条件的 invariant block 了这些 counterexample；正如论文报告的，Verus 接受了这个证明。"
+   },
+   {
+    "id": "exv08-7",
+    "seconds": 6.7,
+    "en": "Notice where trust sits. The language model proposes counterexamples, verdicts and repairs, but only Verus decides.",
+    "zh": "注意信任放在哪里。语言模型负责提出 counterexample、判定和修复，但只有 Verus 做最终决定。"
+   }
+  ],
+  "ExV09Results": [
+   {
+    "id": "exv09-1",
+    "seconds": 10.9,
+    "en": "Now the results. Table 1 of the paper compares ExVerus with AutoVerus and with a plain iterative refinement loop on four benchmarks, here with Claude Sonnet 4.5.",
+    "zh": "接下来看结果。论文的 Table 1 在四个 benchmark 上比较了 ExVerus、AutoVerus 和一个简单的 iterative refinement 循环，这里是 Claude Sonnet 4.5 的结果。"
+   },
+   {
+    "id": "exv09-2",
+    "seconds": 9.7,
+    "en": "ExVerus leads on VerusBench, LCBench and HumanEval, and all three tie on DafnyBench. On the harder LCBench and HumanEval, success stays below one half.",
+    "zh": "ExVerus 在 VerusBench、LCBench 和 HumanEval 上领先，三者在 DafnyBench 上打平。在更难的 LCBench 和 HumanEval 上，成功率仍不到一半。"
+   },
+   {
+    "id": "exv09-3",
+    "seconds": 9.3,
+    "en": "With a weaker model, DeepSeek V3.1, the gap on VerusBench widens: 71.9 percent for ExVerus, 24.7 for AutoVerus, and 60.3 for iterative refinement.",
+    "zh": "换成较弱的模型 DeepSeek V3.1，VerusBench 上的差距变大：ExVerus 是 71.9%，AutoVerus 是 24.7%，iterative refinement 是 60.3%。"
+   },
+   {
+    "id": "exv09-4",
+    "seconds": 10.5,
+    "en": "On ObfsBench, where the same tasks are obfuscated in six ways, ExVerus with DeepSeek scores between 73.9 and 86.5 percent, and AutoVerus between 24.7 and 36.5.",
+    "zh": "在 ObfsBench 上，同样的任务被用六种方式混淆。使用 DeepSeek 时，ExVerus 的成功率在 73.9% 到 86.5% 之间，AutoVerus 在 24.7% 到 36.5% 之间。"
+   }
+  ],
+  "ExV10Evidence": [
+   {
+    "id": "exv10-1",
+    "seconds": 12.0,
+    "en": "Do the counterexamples matter? A variant that hands them straight to the model, with no mutators and no validation, reaches 65.4 percent on ObfsBench with DeepSeek. Full ExVerus reaches 81.6.",
+    "zh": "Counterexample 真的有用吗？一个把 counterexample 直接交给模型、不用 mutator 也不做 validation 的变体，在 DeepSeek 和 ObfsBench 上达到 65.4%，完整的 ExVerus 是 81.6%。"
+   },
+   {
+    "id": "exv10-2",
+    "seconds": 10.1,
+    "en": "And blocking predicts success. With one counterexample per repair, 172 of 243 mutants that block it verify, against 38 of 153 mutants that block nothing.",
+    "zh": "而且 block 能预测成功。每次修复只用一个 counterexample 时，block 了它的 243 个 mutant 中有 172 个通过验证；而什么都没 block 的 153 个 mutant 中只有 38 个通过。"
+   },
+   {
+    "id": "exv10-3",
+    "seconds": 14.3,
+    "en": "Cost depends on the model. With DeepSeek V3.1 a task costs 4 cents instead of 17 and takes 720 seconds instead of 2989. With GPT-4o it is 42 cents against 69, and ExVerus is slightly slower.",
+    "zh": "成本取决于模型。使用 DeepSeek V3.1 时，每个任务花费 4 美分而不是 17 美分，耗时 720 秒而不是 2989 秒。使用 GPT-4o 时是 42 美分对 69 美分，而且 ExVerus 稍慢一些。"
+   }
+  ],
+  "ExV11Limits": [
+   {
+    "id": "exv11-1",
+    "seconds": 7.8,
+    "en": "What the paper does not claim. Validation covers only loop invariant errors. Counterexamples for other errors are unvalidated hints.",
+    "zh": "论文没有声称的东西。Validation 只覆盖 loop invariant 错误。其他错误的 counterexample 只是未经验证的提示。"
+   },
+   {
+    "id": "exv11-2",
+    "seconds": 11.3,
+    "en": "Counterexample generation can fail or be wrong; only the final Verus check is trusted. And passing Verus does not show that the specification matches what the user intended.",
+    "zh": "Counterexample 的生成可能失败，也可能出错；只有最后的 Verus 检查是被信任的。而且通过 Verus 并不说明 specification 符合用户的本意。"
+   },
+   {
+    "id": "exv11-3",
+    "seconds": 12.0,
+    "en": "ExVerus is weaker on proofs that need assertions or proof blocks. And the paper reports that AutoVerus, built for an older Verus, scores lower on the newer version used here.",
+    "zh": "ExVerus 在需要 assertion 或 proof block 的证明上较弱。另外，论文报告说，为旧版 Verus 设计的 AutoVerus 在这里使用的新版本上成绩更低。"
+   }
+  ],
+  "ExV12Bridge": [
+   {
+    "id": "exv12-1",
+    "seconds": 8.6,
+    "en": "To sum up: ExVerus makes the counterexample the unit of feedback, and scores every repair by the counterexamples it rules out.",
+    "zh": "总结一下：ExVerus 把 counterexample 当作反馈的基本单位，并用一个修复排除了多少 counterexample 来给它打分。"
+   },
+   {
+    "id": "exv12-2",
+    "seconds": 7.8,
+    "en": "ExVerus searches for a counterexample at every repair. What if the model could learn to produce the counterexample itself?",
+    "zh": "ExVerus 在每一次修复时都要去搜索 counterexample。如果模型能学会自己给出 counterexample 呢？"
+   }
+  ]
+ }
+}

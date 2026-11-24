@@ -1,0 +1,14 @@
+# SOURCE: github.com/Etha-Sun/Topoverus @ 878496237052eeccdd8478b9f9037041affe1431
+# FILE: configs/reward.json
+# ---- verbatim content below (no edits) ----
+{
+  "verus_mode": "fraction",
+  "dependency_enabled": true,
+  "matcher_version": "v2.0",
+  "matcher_threshold": 0.6,
+  "verus_weight": 1.0,
+  "dependency_weight": 1.0,
+  "format_partial": 0.5,
+  "format_none": 0.2,
+  "timeout_sec": 30
+}

@@ -1,0 +1,6 @@
+manim==0.19.1
+# voice (optional; local, no API key)
+kokoro>=0.9
+soundfile
+# Chinese voice for kokoro
+misaki[zh]

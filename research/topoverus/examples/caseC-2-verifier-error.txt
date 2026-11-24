@@ -1,0 +1,24 @@
+# SOURCE: github.com/Etha-Sun/Topoverus @ 878496237052eeccdd8478b9f9037041affe1431
+# FILE: docs/case-studies/c-arithmetic-context/verifier-error.txt
+# ---- verbatim content below (no edits) ----
+verification results:: 1 verified, 1 errors
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+  --> task_id_447.rs:31:5
+   |
+31 |     while i < nums.len()
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+  --> task_id_447.rs:40:26
+   |
+40 |         cubed_array.push(nums[i] * nums[i] * nums[i]);
+   |                          ^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+  --> task_id_447.rs:40:26
+   |
+40 |         cubed_array.push(nums[i] * nums[i] * nums[i]);
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 2 previous errors

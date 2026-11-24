@@ -1,0 +1,44 @@
+# SCREEN VERSION of one TopoVerus trajectory (for an on-screen code block).
+# Built ONLY from verbatim pieces; what changed is listed below. Originals:
+#   (a) Paper Sec.4.1 "Training data" (PDF p.7): "This reasoning consists of a <think> block, a <counterexample> block with
+#       [State], [Execution Trace], and [Violation] fields, and a <reasoning> block containing an explicit repair plan. We extract
+#       the generated reasoning and append the verified reference program unchanged to form the target response for SFT."
+#   (b) Paper Appendix D (PDF p.20): "a chain-of-thought reasoning block <think>, a semi-formal counterexample block
+#       <counterexample> with three mandatory subsections ([State], [Execution Trace], [Violation]), a repair rationale block
+#       <reasoning>, and a single rust code block containing the repaired program."
+#   (c) Repo topoverus/code.py lines 54 and 59 (ctx_target): parts.append(f"<{tag}>\n{text}\n</{tag}>") for tag in
+#       ("think","counterexample","reasoning"), then parts.append(f"```rust\n{final_code(response)}\n```"), joined by "\n\n".
+#   (d) Filled values: verbatim from repo docs/case-studies/b-prefix-invariant/model-output.txt lines 2-17, 21-23, 73.
+# CHANGES vs. originals: placeholders "..." mark elided text; the <think> body is not recorded for Case B (the recorded output
+#   has no <think> block, only a stray closing </think> at line 85), so it is shown as "..."; reasoning shortened to items 1-2;
+#   the rust block shows only the one changed invariant line.
+# ----
+<think>
+...
+</think>
+
+<counterexample>
+[State]
+- prices = [5, 3, 7] (length 3, all values in range [0, 10000])
+- Before loop: max_pro = 0, min_price = i32::MAX
+
+[Execution Trace]
+1. Verifier checks invariants hold *before* the first iteration (i = 0).
+...
+5. Consider the pair (j=0, k=2): prices[2] - prices[0] = 7 - 5 = 2 > 0 = max_pro.
+6. The invariant claims 2 <= 0, which is false.
+
+[Violation]
+- **Property violated**: `forall|j: int, k: int| 0 <= j < k < prices.len() ==> prices[k] - prices[j] <= max_pro` ...
+</counterexample>
+
+<reasoning>
+1. **Identify the root cause**: ... quantified over the full array `prices.len()` rather than the processed prefix `i`. ...
+2. **Fix the quantifier range**: Change the invariant to `forall|j: int, k: int| 0 <= j < k < i ==> prices[k] - prices[j] <= max_pro`. ...
+</reasoning>
+
+```rust
+...
+            forall|j: int, k: int| 0 <= j < k < i ==> prices[k] - prices[j] <= max_pro,
+...
+```

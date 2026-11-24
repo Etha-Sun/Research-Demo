@@ -1,0 +1,58 @@
+# SOURCE: TopoVerus paper, Appendix D "Prompt Templates", D.1 (PDF p.20-21) and D.2 (PDF p.21). Transcribed from PDF text layer;
+#         the PDF renders backticks as ‘ and ``` as ‘‘‘ -- normalised back to ` and ``` here (only change).
+# NOTE: the released code uses a DIFFERENT, shorter system prompt (see code-data-system-prompt.py).
+# ---- verbatim content below ----
+=== System Message (D.1) ===
+You are an expert in Verus, a formal verification framework for Rust.
+You fix buggy Verus programs by analyzing verification errors,
+constructing concrete counterexamples, and writing repaired code
+that passes the verifier.
+
+Common Verus fix patterns:
+- Missing decreases clause: add `decreases <expr>` to while/for loops
+- Postcondition not satisfied: add loop invariants that mirror the
+  postcondition
+- Precondition not satisfied: add invariants proving bounds
+  (e.g., index < len)
+- Arithmetic overflow: add bounds invariants or use checked arithmetic
+- Recommendation not met: add `assert` to guide the prover
+
+=== User Message (D.1) ===
+Fix the following buggy Verus Rust program so it passes the verifier.
+
+Respond with these sections in order:
+1. <counterexample> with [State], [Execution Trace], [Violation]
+2. <reasoning> with a concise repair plan
+3. A single ```rust ... ``` block with the complete fixed program
+
+---
+Benchmark: {benchmark}
+Problem:   {problem}
+
+[Buggy Code]
+```rust
+{buggy_code}
+```
+
+[Verifier Error]
+{verifier_error}
+
+=== Refinement Turn (D.2; appended after the original prompt, iteration t >= 2) ===
+{original_prompt}
+
+---
+# Previous Attempt
+The code generated in the previous turn was:
+```rust
+{previous_code}
+```
+
+# Verifier Output
+The Verus verifier reported the following errors:
+{verifier_output}
+
+# Task
+Analyze the remaining verification errors. Respond with:
+1. <counterexample> with [State], [Execution Trace], [Violation]
+2. <reasoning> with a concise repair plan
+3. A single ```rust ... ``` block with the complete fixed program.

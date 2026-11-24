@@ -1,0 +1,337 @@
+[
+ {
+  "claim": "Authors, affiliations, equal contribution of Ye, Lou, Sun",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.1 header"
+ },
+ {
+  "claim": "Code released at github.com/sunblaze-ucb/vero",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.1 abstract; arXiv abstract page"
+ },
+ {
+  "claim": "43 instances from Python, Dafny, Verus, Coq; each a multi-module Lean 4 repository",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.1 abstract; p.2"
+ },
+ {
+  "claim": "743 scored APIs and 2,705 specifications",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.2; p.6 §3.4; Fig 1 p.4"
+ },
+ {
+  "claim": "13 Track 1 (formal) + 30 Track 2 (Python) instances; per-track API/spec/LoC stats",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.6 §3.4; Table 1 p.7"
+ },
+ {
+  "claim": "Instance format: data types/helpers, API signatures, RepoImpl, specs RepoImpl->Prop, canonical",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.4 §3.1; Fig 2 p.5"
+ },
+ {
+  "claim": "Two modes: proof-only and code-and-proof",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.5 §3.2"
+ },
+ {
+  "claim": "Full-solve metric rationale",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.5 §3.2; p.8"
+ },
+ {
+  "claim": "Anti-cheat: marker re-rendering, axiom allowlist, rule-based detector + LLM judge",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.6 'Preventing reward hacking'; Appendix D p.19-20"
+ },
+ {
+  "claim": "Allowlist = Classical.choice, propext, Quot.sound; extendable via manifest.trusted_axioms",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.19 Layer 2"
+ },
+ {
+  "claim": "Allowlist code",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "src/vero/evaluation/axioms.py line 31"
+ },
+ {
+  "claim": "368 spec outcomes rejected by axiom allowlist; base58 67, verified_bitmasks 60, reedsolo 53, sortedcontainers 52; native_decide -> Lean.ofReduceBool",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.19"
+ },
+ {
+  "claim": "base58 GPT-5.5 xhigh cell: 28 of 53 fail via native_decide, 25 pass",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.19"
+ },
+ {
+  "claim": "Typeclass cheat patterns: hollow body, priority shadowing (2000 vs ~1000), decidability laundering",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.19-20"
+ },
+ {
+  "claim": "Spec-oracle @[implemented_by] hack on dijkstar; no output difference across 20,440 graphs; grader voids run as impl_oracle",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.20"
+ },
+ {
+  "claim": "implemented_by check code",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "src/vero/evaluation/hygiene.py lines 20-27; runner.py lines 99-123"
+ },
+ {
+  "claim": "Grader stages: fresh render, lake build Harness (impl_broken on fail), axiom check, joint rerender, grade",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "src/vero/evaluation/runner.py lines 1-13"
+ },
+ {
+  "claim": "Spec statuses list",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "src/vero/evaluation/grade.py lines 11-23"
+ },
+ {
+  "claim": "Curation stages discover/select/plan/translate/spec write/validate with human approval",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.6 §3.3; Fig 1 p.4"
+ },
+ {
+  "claim": "Curation effort hours-to-days; ~$60 model usage per instance",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.16-17"
+ },
+ {
+  "claim": "Audit mechanism equations (1)-(3)",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.7 §3.5"
+ },
+ {
+  "claim": "Audit found 38 defects across 9 instances + 6 joint-unsat groups; all repaired",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.24 Appendix F"
+ },
+ {
+  "claim": "Audit evidence basis 34/3/1",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.24"
+ },
+ {
+  "claim": "Audit defect categories 18/17/2/1",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "Table 6 p.24"
+ },
+ {
+  "claim": "Two auditors: Opus 33, Codex 30, overlap 25",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.24"
+ },
+ {
+  "claim": "verdict charToBits padding vs reject conflict, found by GPT-5.5 xhigh via joint-unsat; fix excludes 0x3D",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.24 Audit 1"
+ },
+ {
+  "claim": "Released verdict reject spec splits range around 0x3D",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/verdict/Verdict/Spec/Base64.lean lines 38-48"
+ },
+ {
+  "claim": "verdict reference charToBits maps 0x3D to some none",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/verdict/Verdict/Impl/Base64.lean lines 48-65; Test.lean line 20"
+ },
+ {
+  "claim": "ironkv adversarial comparator unsat proof; LawfulKeyTrait fix",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.25 Audit 2"
+ },
+ {
+  "claim": "verified_bitmasks length precondition repair; positive certificates _chk_X",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.25 Audit 3"
+ },
+ {
+  "claim": "Agents: Codex v0.140.0 + GPT-5.5 (mid, xhigh); Claude Code v2.1.191 + Opus 4.8, Sonnet 5 (xhigh); Lean v4.29.1",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.7 §4.1; p.15 A.1"
+ },
+ {
+  "claim": "90-minute budget",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "Fig 3 caption p.8"
+ },
+ {
+  "claim": "Full solves cp/po: GPT-xh 27/25, Opus 8/10, GPT-mid 2/6, Sonnet 2/2",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8; Fig 3(a,b)"
+ },
+ {
+  "claim": "GPT-xh reaches 25 and 23 full solves within 45 minutes",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8"
+ },
+ {
+  "claim": "10 instances resist all eight configurations",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.2; p.8; p.11"
+ },
+ {
+  "claim": "GPT-xh passes 87.3% specs cp, 85.8% po",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8"
+ },
+ {
+  "claim": "172 matched pairs: 26 both, 13 cp only, 17 po only, 116 neither",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8; Fig 4(a)"
+ },
+ {
+  "claim": "5 substitution pairs across 3 repos close 250 specs in cp vs 201 in po",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8; p.26 Appendix G"
+ },
+ {
+  "claim": "Full solves have ~2x proof text; median proof lines 1,181 vs 626 (cp), 1,320 vs 562 (po)",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8 text; Fig 4(c) p.9"
+ },
+ {
+  "claim": "Helpers hold median 73.6% (cp) / 71.6% (po) of proof lines; 80/82 share helper >=2 specs, 65/82 >=5",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.8; Fig 5(a,b) p.9"
+ },
+ {
+  "claim": "Pass rate by helper-chain depth: 83.9%->50.6% cp, 80.1%->39.1% po",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.9; Fig 5(c)"
+ },
+ {
+  "claim": "GPT-xh fixes median 65 impl lines by minute 30; proof 883->1,077 lines",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.9; Fig 6 p.10"
+ },
+ {
+  "claim": "GPT-xh <=25% specs failing in 35/43 cp, 34/43 po; a third of residual fail at build, 14% cheat; Opus/Sonnet ~78% no proof body",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.10; Fig 7(a,b)"
+ },
+ {
+  "claim": "Only 6 of 16 unfinished GPT-xh cp repos within 5 specs; 9 have >10 left",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.10; Fig 7(c)"
+ },
+ {
+  "claim": "Existence & coverage failure rate 47.1%; supplied helper +14.9pp, repeated API +11.7pp",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.11; Fig 8"
+ },
+ {
+  "claim": "Cost per cell GPT-xh $2,865/$2,964; Opus $1,983/$2,279; GPT-mid $928/$1,094; Sonnet $633/$791",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "Table 2 p.15"
+ },
+ {
+  "claim": "$ per full solve: GPT-xh $106 cp vs $182-$464 others",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "Table 5 p.22"
+ },
+ {
+  "claim": "223 of 344 cells costs estimated (killed at cap)",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.22 §E.4"
+ },
+ {
+  "claim": "23% of all spending on the 10 unsolved instances",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.23"
+ },
+ {
+  "claim": "Union over configurations: 33 instances = GPT-xh alone; 2,486/2,705 (91.9%) specs; 219 never passed",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.22 §E.3"
+ },
+ {
+  "claim": "verdict: Opus cp 112/119; 7-spec residual shared by all configs (94.1%)",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.20 §E.1"
+ },
+ {
+  "claim": "piggybank: all 8 configs pass the same 17/23; 6 failing quantify over ChainState/ChainTrace",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.20-21 §E.1"
+ },
+ {
+  "claim": "spec_balance_on_chain text",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/piggybank/PiggybankV2/Spec/PiggyBankCorrect.lean lines 153-161"
+ },
+ {
+  "claim": "Opus code-and-proof: 1,095 residual, 1,074 unattempted, 21 axiom",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.21 §E.2"
+ },
+ {
+  "claim": "impl_broken: 7 of 344 cells, all score zero; Huffman Opus 116/127 po vs 0 cp",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.26-27 Appendix G"
+ },
+ {
+  "claim": "munkres: 409-line Hungarian reference vs 164-line permutation enumeration; 12/19 in po for every config",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.26"
+ },
+ {
+  "claim": "galoistools: Opus leaves 76 scratch files; refGfStrip_eq_gfStripAux in 16; cell closes 17/48",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.28"
+ },
+ {
+  "claim": "Scratch files: Opus 32/86 cells, Sonnet 31; 360 files; Opus scratch cells 59.0% vs 69.8%",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.28 H.1"
+ },
+ {
+  "claim": "deposit_sc: GPT-xh closes all 79 both modes; 6,052 lines, 99 helpers; 54.3% in helpers",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.29 H.2"
+ },
+ {
+  "claim": "sortedcontainers: GPT-xh 49/49 cp vs 24/49 po; linear scan replaces bisection; O(n) vs O(log n)",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.30-31 H.4"
+ },
+ {
+  "claim": "Limitations: Lean only; no concurrent/temporal protocols; audit does not ensure semantic correctness",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1)",
+  "locator": "p.11 Limitations"
+ },
+ {
+  "claim": "Fig 2 BankLedger example (repo version nests impl.bankLedger)",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "reference/BankLedger/BankLedger/Spec/Account.lean lines 13-17"
+ },
+ {
+  "claim": "Code-and-proof slots prove_/unsat_/sat_",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "reference/BankLedger/BankLedger/Proof_modecodeproof/Account.lean lines 7-53"
+ },
+ {
+  "claim": "joint_unsat macro",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/verdict/Verdict/Harness.lean lines 54-66"
+ },
+ {
+  "claim": "dijkstar minimality spec and frozen walk notion",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/dijkstar/Dijkstar/Spec/ShortestPath.lean lines 45-55, 200-212"
+ },
+ {
+  "claim": "dijkstar reference is Bellman-Ford relaxation",
+  "source": "github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "benchmarks/dijkstar/manifest.json line 3; Impl/ShortestPath.lean lines 59-89"
+ },
+ {
+  "claim": "No author-contribution statement; clone has single commit by Zhe Ye",
+  "source": "papers/vero.pdf (arXiv 2608.13522v1) + github.com/sunblaze-ucb/vero @ 0a7325df9e9e6dbc275c0ad483b3d1cbe38d9b09",
+  "locator": "p.1 (only asterisk); git log"
+ }
+]

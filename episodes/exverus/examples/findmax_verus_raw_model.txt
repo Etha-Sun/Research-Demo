@@ -1,0 +1,15 @@
+SOURCE: ExVerus paper, Figure 1 bottom-right panel "SMT-LIB query execution output (simplified)", page 3; text p.3-4 §2.2.
+Copied from research/exverus/examples/02c_findmax_cex_outputs.txt (transcribed from the rendered figure).
+TRIMS for screen: kept figure lines 6, 7, 625, 980-981, 1095 (line numbers dropped, "..." between them);
+dropped lines 1007-1009 and 1094. The figure itself is already a simplified excerpt of a 3,130-line log.
+---- on screen below ----
+unknown
+(:reason-unknown "(incomplete quantifiers)")
+...
+(define-fun i@ () Int 537)
+...
+(define-fun vstd!slice.spec_slice_len.?
+    ((x!0 Dcr) (x!1 Type) (x!2 Poly)) Int
+    1681)
+...
+    Poly!val!31)

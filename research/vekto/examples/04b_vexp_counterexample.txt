@@ -1,0 +1,16 @@
+# SOURCES:
+#  [S1] research/bugs/xnnpack/XNN-005-f32-vexp-nan-clamp/README.zh-CN.md ("事实", "判断", supplement, user ruling)
+#  [S2] research/project-plan-20261102/CONDITIONS.zh-CN.md, row V-008
+# Translated from Chinese by the research agent; numbers copied exactly.
+
+Pair: E3-03 f32-vexp, XNNPACK NEON (A) vs XNNPACK x86 FMA3 rational-3-2-div (B), both from template src/f32-vexp/rational-3-2.c.in.
+Code: vz_prime = xnn_min_f32(xnn_max_f32(vz_prime, vm127), v128);   (template lines 80/134/174)        [S1]
+Semantics: NEON vmaxq_f32 propagates NaN; x86 _mm*_max_ps returns the SECOND operand when an operand is NaN (here vm127);
+       the scalar fallback a > b ? a : b also returns b.                                                   [S1]
+Counterexample: input 0x7fc00000 (NaN): FMA3 kernel returns +0.0, NEON kernel returns NaN.
+       Exhaustive C-level check over all 2^32 inputs: all differences are NaN inputs; Coq lane theorem exp_lane_nan_counterexample. [S1]
+Fix: swap operands -> xnn_min_f32(v128, xnn_max_f32(vm127, vz_prime)); bit-identical to NEON on all 2^32 inputs; for all
+       non-NaN inputs the output is bit-for-bit unchanged (x86 exhaustive). Performance not measured.         [S1]
+Resolution: main result "original A != B" kept; A == B_fixed proved (V-008), supervisor recheck rc=0 on 11-10.  [S2]
+User ruling 2026-11-09 (P-NaN): XNN-005..008 counted as ONE class of error ("XNNPACK does not specify NaN behaviour; the same
+       operator behaves differently across ISAs"); simple fixes are applied, otherwise prove under C-017 (no NaN). [S1]

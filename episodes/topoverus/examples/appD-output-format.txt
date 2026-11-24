@@ -1,0 +1,8 @@
+# SOURCE: TopoVerus paper (arXiv 2611.13627v1), Appendix D.1 user message, PDF p.21
+#   (copy: research/topoverus/BRIEF.md §6 and research/topoverus/examples/paper-appD-prompts.txt)
+# Verbatim, no edits.
+# ---- screen text below ----
+Respond with these sections in order:
+1. <counterexample> with [State], [Execution Trace], [Violation]
+2. <reasoning> with a concise repair plan
+3. A single ```rust ... ``` block with the complete fixed program

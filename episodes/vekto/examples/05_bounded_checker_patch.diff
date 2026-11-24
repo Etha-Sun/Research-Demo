@@ -1,0 +1,10 @@
+# SOURCE: research/project-plan-20261102/final-minmax-reproduction/diagnostic-neon-model.patch (copied in research/vekto/examples/02g_bounded_checker_neon_model_patch.diff)
+# Diagnostic patch to the earlier SALTyRN bounded (cvc5) checker's NEON model (neon/ops/core.hpp). Shown: the 6 added lines,
+# verbatim, "+" markers kept, leading indentation reduced by 8 spaces. Without it the checker returned VERIFIED on vmax;
+# with it the same harness returned COUNTEREXAMPLE. Screen content starts below this header.
++if (op == Kind::FLOATINGPOINT_MAX || op == Kind::FLOATINGPOINT_MIN) {
++    Term either_nan = tm.mkTerm(Kind::OR, {
++        tm.mkTerm(Kind::FLOATINGPOINT_IS_NAN, {a_fp}),
++        tm.mkTerm(Kind::FLOATINGPOINT_IS_NAN, {b_fp})});
++    res_fp = tm.mkTerm(Kind::ITE, {either_nan, tm.mkFloatingPointNaN(8, 24), res_fp});
++}
